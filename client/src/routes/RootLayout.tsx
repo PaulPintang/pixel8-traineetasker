@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Navigation from "../components/Navigation";
+import LoaderFallback from "../components/LoaderFallback";
 
 const RootLayout = () => {
   return (
@@ -11,7 +12,7 @@ const RootLayout = () => {
       <Header />
       <Toaster />
       <Navigation />
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<LoaderFallback />}>
         <div className="bg-slate-50  bg-opacity-30 w-full border-gray-100 px-4 pt-[18px]">
           <Outlet />
         </div>
