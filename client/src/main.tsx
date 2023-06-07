@@ -7,7 +7,7 @@ import "./index.css";
 
 import RootLayout from "./routes/RootLayout";
 import { Protected } from "./middleware/Protected";
-const Dashboard = lazy(() => import("./routes/Dashboard"));
+const Dashboard = lazy(() => import("./routes/Dashboard/Dashboard"));
 const TimeSheets = lazy(() => import("./routes/TimeSheets"));
 const Tasks = lazy(() => import("./routes/Tasks"));
 const DailyTimeRecord = lazy(() => import("./routes/DailyTimeRecord"));

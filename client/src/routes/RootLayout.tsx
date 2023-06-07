@@ -7,12 +7,14 @@ import Navigation from "../components/Navigation";
 
 const RootLayout = () => {
   return (
-    <Container>
+    <Container size="lg">
       <Header />
       <Toaster />
       <Navigation />
       <Suspense fallback={<p>Loading...</p>}>
-        <Outlet />{" "}
+        <div className="bg-slate-50  bg-opacity-30 w-full border-gray-100 px-4 pt-[18px]">
+          <Outlet />
+        </div>
       </Suspense>
     </Container>
   );

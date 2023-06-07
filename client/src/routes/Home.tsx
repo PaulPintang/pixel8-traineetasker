@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { login, logout } from "../features/auth/authSlice";
 import ToastNotify from "../components/ToastNotify";
 
-const Dashboard = lazy(() => import("./Dashboard"));
+const Dashboard = lazy(() => import("./Dashboard/Dashboard"));
 
 const Home = () => {
   const dispatch = useAppDispatch();
