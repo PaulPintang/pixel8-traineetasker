@@ -29,24 +29,24 @@ const Header = () => {
     <Flex justify="space-between" align="center">
       <Image src={logo} width={205} className="relative" left={-20} />
       <Group>
-        {/* {pathname !== "/" && (
+        {pathname !== "/" && (
           <NavLink to="/" className="text-white">
-            <Button size="xs" color="cyan">
-              View Documentation
+            <Button size="xs" color="cyan" variant="white">
+              Documentation
             </Button>
           </NavLink>
         )}
 
         {pathname === "/" && (
           <NavLink to="dashboard" className="text-white">
-            <Button size="xs" color="cyan">
+            <Button size="xs" color="cyan" variant="white">
               Your Dashboard
             </Button>
           </NavLink>
-        )} */}
-        <Badge color="teal" variant="dot" className="text-gray-700">
+        )}
+        {/* <Badge color="teal" variant="dot" className="text-gray-700">
           Administrator
-        </Badge>
+        </Badge> */}
         {/* <Button>Login to start</Button> */}
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>

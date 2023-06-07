@@ -25,8 +25,13 @@ const Navigation = () => {
             radius={0}
             variant="white"
             color={pathname === "/dashboard" ? "dark" : "gray"}
+            className={`${
+              pathname === "/dashboard" ? "bg-slate-50 bg-opacity-30" : ""
+            }`}
           >
-            <Text c={pathname === "/dashboard" ? "dark" : ""}>Dashboard</Text>
+            <Text c={pathname === "/dashboard" ? "dark" : "gray"}>
+              Dashboard
+            </Text>
           </Button>
         </NavLink>
         <NavLink to="tasks" className="text-gray-700">
@@ -36,8 +41,11 @@ const Navigation = () => {
             radius={0}
             variant="white"
             color={pathname === "/tasks" ? "dark" : "gray"}
+            className={`${
+              pathname === "/tasks" ? "bg-slate-50 bg-opacity-30" : ""
+            }`}
           >
-            <Text c={pathname === "/tasks" ? "dark" : ""}>Your Task</Text>
+            <Text c={pathname === "/tasks" ? "dark" : "gray"}>Your Task</Text>
           </Button>
         </NavLink>
         <NavLink to="timesheet" className="text-gray-700">
@@ -47,8 +55,13 @@ const Navigation = () => {
             radius={0}
             variant="white"
             color={pathname === "/timesheet" ? "dark" : "gray"}
+            className={`${
+              pathname === "/timesheet" ? "bg-slate-50 bg-opacity-30" : ""
+            }`}
           >
-            <Text c={pathname === "/timesheet" ? "dark" : ""}>Timesheets</Text>
+            <Text c={pathname === "/timesheet" ? "dark" : "gray"}>
+              Timesheets
+            </Text>
           </Button>
         </NavLink>
         <NavLink to="dtr" className="text-gray-700">
@@ -58,8 +71,11 @@ const Navigation = () => {
             radius={0}
             variant="white"
             color={pathname === "/dtr" ? "dark" : "gray"}
+            className={`${
+              pathname === "/dtr" ? "bg-slate-50 bg-opacity-30" : ""
+            }`}
           >
-            <Text c={pathname === "/dtr" ? "dark" : ""}>DTR</Text>
+            <Text c={pathname === "/dtr" ? "dark" : "gray"}>DTR</Text>
           </Button>
         </NavLink>
       </Group>

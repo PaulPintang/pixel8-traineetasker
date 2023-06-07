@@ -38,10 +38,10 @@ const AccountsTable = () => {
       <td className="hidden md:table-cell lg:table-cell">
         <Text>
           <Avatar.Group spacing="sm">
-            <Avatar src={avatar} radius="xl" size={30} />
-            <Avatar src={avatar} radius="xl" size={30} />
-            <Avatar src={avatar} radius="xl" size={30} />
-            <Avatar radius="xl" size={30}>
+            <Avatar src={avatar} radius="xl" size={27} />
+            <Avatar src={avatar} radius="xl" size={27} />
+            <Avatar src={avatar} radius="xl" size={27} />
+            <Avatar radius="xl" size={27}>
               +13
             </Avatar>
           </Avatar.Group>
@@ -50,10 +50,10 @@ const AccountsTable = () => {
       <td className="hidden md:table-cell lg:table-cell">
         <Text>
           <Avatar.Group spacing="sm">
-            <Avatar src={avatar} radius="xl" size={30} />
-            <Avatar src={avatar} radius="xl" size={30} />
-            <Avatar src={avatar} radius="xl" size={30} />
-            <Avatar radius="xl" size={30}>
+            <Avatar src={avatar} radius="xl" size={27} />
+            <Avatar src={avatar} radius="xl" size={27} />
+            <Avatar src={avatar} radius="xl" size={27} />
+            <Avatar radius="xl" size={27}>
               +5
             </Avatar>
           </Avatar.Group>

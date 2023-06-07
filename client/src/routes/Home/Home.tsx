@@ -21,7 +21,7 @@ const Home = () => {
           <Flex justify="space-between">
             <Text>Manage accounts</Text>
             <Button size="xs" color="cyan">
-              Add Supervisor
+              Add Account
             </Button>
           </Flex>
           <AccountsTable />
