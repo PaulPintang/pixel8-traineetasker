@@ -146,14 +146,14 @@ const DailyTimeRecord = () => {
 
   return (
     <>
-      <Flex justify="space-between">
+      <Flex justify="space-between" align="center" pb={6}>
         <TimeSheetsLabels />
 
         <Button color="yellow" size="xs">
           Start Time In
         </Button>
       </Flex>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-180px)]">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)]">
         <div className="h-[96%]">
           <table className="border-collapse border-none w-full">
             <thead>

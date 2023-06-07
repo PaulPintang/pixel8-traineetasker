@@ -9,9 +9,12 @@ import {
   IconCalendarStats,
   IconReport,
 } from "@tabler/icons-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const Navigation = () => {
+  const location = useLocation();
+  const { pathname } = location;
+
   return (
     <Flex>
       <Group spacing={0}>
@@ -21,9 +24,9 @@ const Navigation = () => {
             size="xs"
             radius={0}
             variant="white"
-            color="dark"
+            color={pathname === "/dashboard" ? "dark" : "gray"}
           >
-            <Text>Dashboard</Text>
+            <Text c={pathname === "/dashboard" ? "dark" : ""}>Dashboard</Text>
           </Button>
         </NavLink>
         <NavLink to="tasks" className="text-gray-700">
@@ -32,9 +35,9 @@ const Navigation = () => {
             size="xs"
             radius={0}
             variant="white"
-            color="dark"
+            color={pathname === "/tasks" ? "dark" : "gray"}
           >
-            Your Task
+            <Text c={pathname === "/tasks" ? "dark" : ""}>Your Task</Text>
           </Button>
         </NavLink>
         <NavLink to="timesheet" className="text-gray-700">
@@ -43,9 +46,9 @@ const Navigation = () => {
             size="xs"
             radius={0}
             variant="white"
-            color="dark"
+            color={pathname === "/timesheet" ? "dark" : "gray"}
           >
-            Timesheets
+            <Text c={pathname === "/timesheet" ? "dark" : ""}>Timesheets</Text>
           </Button>
         </NavLink>
         <NavLink to="dtr" className="text-gray-700">
@@ -54,9 +57,9 @@ const Navigation = () => {
             size="xs"
             radius={0}
             variant="white"
-            color="dark"
+            color={pathname === "/dtr" ? "dark" : "gray"}
           >
-            DTR
+            <Text c={pathname === "/dtr" ? "dark" : ""}>DTR</Text>
           </Button>
         </NavLink>
       </Group>

@@ -133,7 +133,7 @@ const TimeSheets = () => {
 
   return (
     <>
-      <Flex justify="space-between">
+      <Flex justify="space-between" pb={6} align="center">
         <TimeSheetsLabels />
         <Group className="uppercase font-semibold" fz={12}>
           <Group spacing={8} c="dark">
@@ -143,7 +143,7 @@ const TimeSheets = () => {
           <Button size="xs">Start task</Button>
         </Group>
       </Flex>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-180px)]">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)]">
         <div className="h-[96%]">
           <table className="border-collapse border-none w-full">
             <thead>

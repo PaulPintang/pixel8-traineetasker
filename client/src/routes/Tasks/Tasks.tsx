@@ -15,25 +15,25 @@ const Tasks = () => {
         <TaskUrgent />
       </Flex>
       <Grid className="bg-white" mt={15}>
-        <Grid.Col span={3}>
+        <Grid.Col span={3} className="space-y-2">
           <Text className="uppercase text-xs font-semibold text-gray-500">
             New Task
           </Text>
           <NewTask />
         </Grid.Col>
-        <Grid.Col span={3}>
+        <Grid.Col span={3} className="space-y-2">
           <Text className="uppercase text-xs font-semibold text-gray-500">
             In-Progress
           </Text>
           <InProgress />
         </Grid.Col>
-        <Grid.Col span={3}>
+        <Grid.Col span={3} className="space-y-2">
           <Text className="uppercase text-xs font-semibold text-gray-500">
             For Qa
           </Text>
           <ForQa />
         </Grid.Col>
-        <Grid.Col span={3}>
+        <Grid.Col span={3} className="space-y-2">
           <Text className="uppercase text-xs font-semibold text-gray-500">
             Completed
           </Text>
