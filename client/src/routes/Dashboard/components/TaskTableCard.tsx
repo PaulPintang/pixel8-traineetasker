@@ -172,7 +172,6 @@ const TaskTableCard = () => {
                 ></th> */}
               </tr>
             </thead>
-
             <tbody className="text-xs text-gray-600">{rows}</tbody>
           </table>
         </div>

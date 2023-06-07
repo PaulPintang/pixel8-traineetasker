@@ -9,7 +9,7 @@ const InfoCard = () => {
           Sofware Development
         </Text>
         <Box component="div" p={5} pl={10}>
-          <Group>
+          <Group spacing={10}>
             <Text fz={12} className="text-gray-500 font-semibold">
               OJT Required hours:
             </Text>
@@ -17,7 +17,7 @@ const InfoCard = () => {
               468 hours
             </Text>
           </Group>
-          <Group>
+          <Group spacing={10}>
             <Text fz={12} className="text-gray-500 font-semibold">
               Started:
             </Text>
@@ -33,15 +33,15 @@ const InfoCard = () => {
           Daily Summary
         </Text>
         <Box component="div" p={5} pl={10}>
-          <Group>
+          <Group spacing={10}>
             <Text fz={12} className="text-gray-500 font-semibold">
-              NO. of tasks today:
+              No. of tasks today:
             </Text>
             <Text fz={12} c="dimmed">
               01
             </Text>
           </Group>
-          <Group>
+          <Group spacing={10}>
             <Text fz={12} className="text-gray-500 font-semibold">
               Total hours in timesheet:
             </Text>

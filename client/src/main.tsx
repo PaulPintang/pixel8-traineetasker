@@ -14,7 +14,7 @@ const Tasks = lazy(() => import("./routes/Tasks/Tasks"));
 const DailyTimeRecord = lazy(
   () => import("./routes/DailyTimeRecord/DailyTimeRecord")
 );
-const Home = lazy(() => import("./routes/Home"));
+const Home = lazy(() => import("./routes/Home/Home"));
 const ErrorPage = lazy(() => import("./routes/ErrorPage"));
 
 const router = createBrowserRouter([
