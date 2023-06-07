@@ -102,7 +102,7 @@ const sheets = [
   },
 ];
 
-const TimeSheets = () => {
+const DailyTimeRecord = () => {
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
@@ -113,21 +113,34 @@ const TimeSheets = () => {
   const items = chunk(data, 10);
 
   const rows = items[page - 1]?.map((task) => (
-    <tr>
-      <td className="hidden md:table-cell lg:table-cell pl-3">
-        <Text>{task.date}</Text>
+    <tr className="border-none ">
+      <td className="dark:text-gray-400 py-2 hidden md:table-cell lg:table-cell pl-3">
+        {task.date}
       </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3">
-        <Text>{task.task}</Text>
+      <td className="dark:text-gray-400 py-2 hidden md:table-cell lg:table-cell">
+        <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-1">
+            <div className="bg-yellow-300 w-2 h-2" />
+            <span>234</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="bg-indigo-300 w-2 h-2" />
+            <span>234</span>
+          </div>
+        </div>
       </td>
-      <td className="hidden md:table-cell lg:table-cell">
-        <Text>{task.ticket}</Text>
+      <td className="dark:text-gray-400 py-2 hidden md:table-cell lg:table-cell ">
+        <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-1">
+            <div className="bg-yellow-300 w-2 h-2" />
+            <span>4234</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="bg-indigo-300 w-2 h-2" />
+            <span>423</span>
+          </div>
+        </div>
       </td>
-      <td className="px-5 py-2 hidden md:table-cell lg:table-cell ">
-        <Text>{task.spent}</Text>
-      </td>
-      <td className=" py-2 hidden md:table-cell lg:table-cell"></td>
-      <td className="dark:text-gray-400  hidden md:table-cell lg:table-cell"></td>
     </tr>
   ));
 
@@ -135,13 +148,10 @@ const TimeSheets = () => {
     <>
       <Flex justify="space-between">
         <TimeSheetsLabels />
-        <Group className="uppercase font-semibold" fz={12}>
-          <Group spacing={8} c="dark">
-            <Text>Current task:</Text>
-            <Text>2843249813</Text>
-          </Group>
-          <Button size="xs">Start task</Button>
-        </Group>
+
+        <Button color="yellow" size="xs">
+          Start Time In
+        </Button>
       </Flex>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-180px)]">
         <div className="h-[96%]">
@@ -150,40 +160,27 @@ const TimeSheets = () => {
               <tr>
                 <th
                   scope="col"
-                  className="md:px-3 lg:px-3 pl-3 py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm rounded-tl-md"
+                  className="md:px-3 lg:px-3 pl-3 py-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider  bg-gray-100 shadow-sm rounded-tl-md"
                 >
-                  <Text>Date</Text>
+                  Date
                 </th>
                 <th
                   scope="col"
-                  className="rounded-tr-md md:rounded-none lg:rounded-none py-3 md:pr-3 lg:pr-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm"
+                  className="rounded-tr-md md:rounded-none lg:rounded-none py-3 md:pr-3 lg:pr-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider  bg-gray-100 shadow-sm"
                 >
-                  <Text>Task Name</Text>
+                  Morning
                 </th>
                 <th
                   scope="col"
-                  className="hidden md:table-cell lg:table-cell px-5 py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider bg-gray-100 shadow-sm"
                 >
-                  <Text>Ticket No.</Text>
-                </th>
-
-                <th
-                  scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
-                >
-                  <Text>Spent</Text>
+                  Afternoon
                 </th>
                 <th
                   scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider bg-gray-100 shadow-sm"
                 >
-                  <Text>Status</Text>
-                </th>
-                <th
-                  scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
-                >
-                  <Text>Expand</Text>
+                  Status
                 </th>
               </tr>
             </thead>
@@ -210,4 +207,4 @@ const TimeSheets = () => {
   );
 };
 
-export default TimeSheets;
+export default DailyTimeRecord;

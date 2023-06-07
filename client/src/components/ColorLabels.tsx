@@ -118,7 +118,7 @@ export const TimeSheetsLabels = () => {
   return (
     <Group>
       <Flex align="center" gap={8}>
-        <div className="bg-violet-400 w-2 h-2 mb-1"></div>
+        <div className="bg-yellow-300 w-2 h-2 mb-1"></div>
         <Text
           fz="sm"
           className="text-gray-400  text-[10px] uppercase font-semibold "
@@ -128,7 +128,7 @@ export const TimeSheetsLabels = () => {
       </Flex>
 
       <Flex align="center" gap={8}>
-        <div className="bg-yellow-300 w-2 h-2 mb-1"></div>
+        <div className="bg-violet-400 w-2 h-2 mb-1"></div>
         <Text
           fz="sm"
           className="text-gray-400  text-[10px] uppercase font-semibold "

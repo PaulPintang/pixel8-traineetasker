@@ -11,7 +11,9 @@ import { Protected } from "./middleware/Protected";
 const Dashboard = lazy(() => import("./routes/Dashboard/Dashboard"));
 const TimeSheets = lazy(() => import("./routes/TimeSheets/TimeSheets"));
 const Tasks = lazy(() => import("./routes/Tasks/Tasks"));
-const DailyTimeRecord = lazy(() => import("./routes/DailyTimeRecord"));
+const DailyTimeRecord = lazy(
+  () => import("./routes/DailyTimeRecord/DailyTimeRecord")
+);
 const Home = lazy(() => import("./routes/Home"));
 const ErrorPage = lazy(() => import("./routes/ErrorPage"));
 
