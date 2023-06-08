@@ -44,11 +44,11 @@ const router = createBrowserRouter([
         path: "dtr",
         element: <DailyTimeRecord />,
       },
+      {
+        path: "profile/:id",
+        element: <Profile />,
+      },
     ],
-  },
-  {
-    path: "profile/:id",
-    element: <Profile />,
   },
 ]);
 

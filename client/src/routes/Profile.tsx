@@ -6,6 +6,7 @@ import avatar from "../assets/avatar.png";
 import Tasks from "./Tasks/Tasks";
 import { useParams } from "react-router-dom";
 import { members } from "./Dashboard/components/MembersTableCard";
+import RemoveTraineeModal from "../components/modals/RemoveTraineeModal";
 
 const Profile = () => {
   const { id } = useParams();
@@ -46,6 +47,7 @@ const Profile = () => {
       </Grid>
       <Divider my={20} />
       <Tasks />
+      <RemoveTraineeModal />
     </>
   );
 };
