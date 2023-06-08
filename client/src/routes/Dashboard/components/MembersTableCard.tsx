@@ -10,12 +10,21 @@ import {
   Select,
   Button,
   Image,
+  Menu,
+  Checkbox,
 } from "@mantine/core";
-import { IconExternalLink, IconId } from "@tabler/icons-react";
+import {
+  IconDots,
+  IconEdit,
+  IconExternalLink,
+  IconId,
+  IconUser,
+} from "@tabler/icons-react";
 import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
 import avatar from "../../../assets/avatar.png";
 import { Link } from "react-router-dom";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 export const members = [
   {
@@ -114,20 +123,53 @@ const MembersTableCard = () => {
           {member.completedTask} <span className="font-normal">tasks</span>
         </Text>
       </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 ">
+      {/* <td className="hidden md:table-cell lg:table-cell pl-3 ">
         <Link to={`../profile/${member.id}`}>
           <ActionIcon variant="light" color="cyan">
             <IconId size={19} />
           </ActionIcon>
         </Link>
+      </td> */}
+      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <Menu shadow="md">
+          <Menu.Target>
+            <ActionIcon variant="white" color="cyan">
+              <IconDots size={19} />
+            </ActionIcon>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Label>Manage intern</Menu.Label>
+            <Flex direction="column" align="start">
+              <Link to={`../profile/${member.id}`}>
+                <Button
+                  leftIcon={<IconInfoCircle size={16} />}
+                  variant="white"
+                  color="dark"
+                  size="xs"
+                >
+                  View
+                </Button>
+              </Link>
+              <Button
+                leftIcon={<IconUser size={16} />}
+                variant="white"
+                color="cyan"
+                size="xs"
+              >
+                Assign
+              </Button>
+            </Flex>
+          </Menu.Dropdown>
+        </Menu>
       </td>
     </tr>
   ));
 
   return (
     <>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-375px)]">
-        <div className="h-[94%] overflow-hidden">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-370px)]">
+        <div className="h-[93%] overflow-hidden">
           <table className="border-collapse border-none w-full">
             <thead>
               <tr>
@@ -186,21 +228,7 @@ const MembersTableCard = () => {
 
         <Flex justify="space-between">
           <Group align="center">
-            {/* <Select
-              size="xs"
-              value={filterBy}
-              onChange={setFilterBy}
-              w={150}
-              placeholder="Filter"
-              data={[
-                { value: "", label: "All tasks" },
-                { value: "new", label: "New" },
-                { value: "inprogress", label: "In-Progress" },
-                { value: "forqa", label: "For-QA" },
-                { value: "failed", label: "Failed" },
-                { value: "completed", label: "Completed" },
-              ]}
-            /> */}
+            <Checkbox size="xs" color="cyan" label="Show no current task" />
             <Flex>
               <Group spacing={3}>
                 <Text fz="xs" className="uppercase font-semibold text-gray-700">

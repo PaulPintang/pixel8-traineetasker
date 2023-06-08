@@ -14,14 +14,14 @@ import {
 import empty from "../../../assets/emptytodo.png";
 import avatar from "../../../assets/avatar.png";
 import { members } from "./MembersTableCards";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { IconInfoCircle, IconUser } from "@tabler/icons-react";
 import AssignModal from "../../../components/modals/AssignTaskModal";
 
 const MembersAssignTask = () => {
   return (
     <>
       <Card className="h-[290px] rounded-md shadow-md ">
-        <Flex justify="space-between" align="center">
+        {/* <Flex justify="space-between" align="center">
           <Text c="dark" fw="bold" className="uppercase" fz="sm" pb={8}>
             Assign task
           </Text>
@@ -31,7 +31,7 @@ const MembersAssignTask = () => {
           >
             <IconInfoCircle size={18} className="text-gray-700" />
           </Tooltip>
-        </Flex>
+        </Flex> */}
         <ScrollArea className="h-[84%]" scrollbarSize={8}>
           <div className="text-[13px] space-y-2">
             {members.map((member) => (
@@ -54,15 +54,20 @@ const MembersAssignTask = () => {
                       </Group>
                     </div>
                   </Group>
-                  <Button size="xs" variant="light" color="cyan">
-                    Assign a task
+                  <Button
+                    leftIcon={<IconUser size={16} />}
+                    variant="white"
+                    color="cyan"
+                    size="xs"
+                  >
+                    Assign
                   </Button>
                 </Flex>
               </>
             ))}
           </div>
         </ScrollArea>
-        <Flex pt={4}>
+        {/* <Flex pt={4}>
           <Group spacing={3}>
             <Text fz="xs" className="uppercase font-semibold text-gray-700">
               Total:
@@ -71,7 +76,7 @@ const MembersAssignTask = () => {
               {members.length} member{members.length >= 2 && "s"}
             </Text>
           </Group>
-        </Flex>
+        </Flex> */}
       </Card>
     </>
   );

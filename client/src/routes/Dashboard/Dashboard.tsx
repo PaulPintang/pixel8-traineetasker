@@ -27,7 +27,7 @@ import AssignTaskModal from "../../components/modals/AssignTaskModal";
 const Dashboard = () => {
   return (
     <>
-      <Grid>
+      <Grid pb={5}>
         <Grid.Col className="space-y-1" span={8}>
           <TasksLabels />
           <TaskCards />
@@ -35,16 +35,16 @@ const Dashboard = () => {
         <Grid.Col span={4}>
           <InfoCard />
         </Grid.Col>
-        <Grid.Col span={8}>
-          {/* <TaskTableCard /> */}
+
+        {/* <Grid.Col span={8}>
+          <TaskTableCard />
           <MembersTableCard />
         </Grid.Col>
         <Grid.Col className="bg-bl ue-300" span={4}>
-          {/* <TasksTodoCard /> */}
-          <MembersAssignTask />
-        </Grid.Col>
+          <TasksTodoCard />
+        </Grid.Col> */}
       </Grid>
-
+      <MembersTableCard />
       <AssignTaskModal />
     </>
   );
