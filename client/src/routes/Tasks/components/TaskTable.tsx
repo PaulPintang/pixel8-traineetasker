@@ -8,85 +8,57 @@ import {
   Tooltip,
   ActionIcon,
   Select,
+  Button,
+  Badge,
+  Menu,
+  Image,
 } from "@mantine/core";
-import { IconExternalLink } from "@tabler/icons-react";
+import {
+  IconDots,
+  IconEdit,
+  IconExternalLink,
+  IconId,
+  IconUser,
+} from "@tabler/icons-react";
 import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
+import avatar from "../../../assets/avatar.png";
+import { tasks } from "../../Dashboard/components/TaskTableCard";
 
-export const tasks = [
-  {
-    task: "Dashboard",
-    ticket: 12.011,
-    deliverable: "C",
-    status: "completed",
-    spent: 8,
-  },
-  {
-    task: "Header",
-    ticket: 14.007,
-    deliverable: "N",
-    status: "new",
-    spent: 12,
-  },
-  {
-    task: "Data from backend",
-    ticket: 88.906,
-    deliverable: "Y",
-    status: "inprogress",
-    spent: 10,
-  },
-  {
-    task: "Modals",
-    ticket: 137.33,
-    deliverable: "Ba",
-    status: "failed",
-    spent: 13,
-  },
-  {
-    task: "component table",
-    ticket: 140.12,
-    deliverable: "Ce",
-    status: "failed",
-    spent: 8,
-  },
-  {
-    task: "table paginatiom",
-    ticket: 140.12,
-    deliverable: "Ce",
-    status: "inprogress",
-    spent: 10,
-  },
-];
-
-const TaskTableCard = () => {
+const TaskTable = () => {
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
-  const data = tasks?.filter((task) =>
-    filterBy ? task.status === filterBy : task
-  );
+  //   const data = members?.filter((member) =>
+  //     filterBy ? member.status === filterBy : member
+  //   );
 
-  const items = chunk(data, 5);
+  const items = chunk(tasks, 10);
 
   const rows = items[page - 1]?.map((task) => (
     <tr>
-      <td className="hidden md:table-cell lg:table-cell pl-3">
-        <Text>{task.task}</Text>
+      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <Text className="font-semibold">{task.deliverable}</Text>
       </td>
-      <td className="hidden md:table-cell lg:table-cell">
-        <Text>{task.ticket}</Text>
+      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <Text className="font-semibold">{task.deliverable}</Text>
       </td>
-      <td className="px-5 py-2 hidden md:table-cell lg:table-cell ">
-        <Text>{task.spent}</Text>
+      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <Text className="font-semibold">{task.deliverable}</Text>
       </td>
-      <td className=" py-2 hidden md:table-cell lg:table-cell">
+      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <Badge color="teal" size="xs" variant="dot" className="text-gray-500">
+          Available Task
+        </Badge>
+      </td>
+      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
         <div className="flex bg-gray-100  rounded items-center max-w-max px-2 py-1 gap-2">
           <div
             className={`w-2 h-2 ${
               task.status === "new"
                 ? "bg-indigo-300"
                 : task.status === "inprogress"
-                ? "bg-blue-300"
+                ? "bg-violet-400"
                 : task.status === "completed"
                 ? "bg-green-300"
                 : task.status === "forqa"
@@ -100,7 +72,7 @@ const TaskTableCard = () => {
               task.status === "new"
                 ? "text-indigo-300"
                 : task.status === "inprogress"
-                ? "text-blue-300"
+                ? "text-violet-400"
                 : task.status === "completed"
                 ? "text-green-300"
                 : task.status === "forqa"
@@ -112,26 +84,53 @@ const TaskTableCard = () => {
           </Text>
         </div>
       </td>
-      <td className="dark:text-gray-400  hidden md:table-cell lg:table-cell">
-        <Tooltip
-          label={<small>View Deliverable</small>}
-          withArrow
-          color="indigo"
-          position="bottom"
-          py={2}
-        >
-          <ActionIcon color="indigo" size="sm">
-            <IconExternalLink className="text-sm" />
-          </ActionIcon>
-        </Tooltip>
+
+      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <Menu shadow="md">
+          <Menu.Target>
+            <ActionIcon variant="white" color="cyan">
+              <IconDots size={19} />
+            </ActionIcon>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Label>Manage task</Menu.Label>
+            <Flex direction="column" align="start">
+              <Button
+                leftIcon={<IconUser size={16} />}
+                variant="white"
+                color="cyan"
+                size="xs"
+              >
+                Assign
+              </Button>
+              <Button
+                leftIcon={<IconEdit size={16} />}
+                variant="white"
+                size="xs"
+                color="dark"
+              >
+                Edit
+              </Button>
+              <Button
+                leftIcon={<IconUser size={16} />}
+                variant="white"
+                size="xs"
+                color="red"
+              >
+                Delete
+              </Button>
+            </Flex>
+          </Menu.Dropdown>
+        </Menu>
       </td>
     </tr>
   ));
 
   return (
     <>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-375px)]">
-        <div className="h-[92%]">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-200px)] mt-4">
+        <div className="h-[96%] overflow-hidden">
           <table className="border-collapse border-none w-full">
             <thead>
               <tr>
@@ -139,21 +138,27 @@ const TaskTableCard = () => {
                   scope="col"
                   className="md:px-3 lg:px-3 pl-3 py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm rounded-tl-md"
                 >
-                  <Text>Task Name</Text>
+                  <Text>Date Added</Text>
                 </th>
                 <th
                   scope="col"
                   className="rounded-tr-md md:rounded-none lg:rounded-none py-3 md:pr-3 lg:pr-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm"
                 >
-                  <Text>Ticket No.</Text>
+                  <Text>Task Name</Text>
                 </th>
                 <th
                   scope="col"
-                  className="hidden md:table-cell lg:table-cell px-5 py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
-                  <Text>Spent</Text>
+                  <Text>Ticket No.</Text>
                 </th>
 
+                <th
+                  scope="col"
+                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                >
+                  <Text>Assigned to</Text>
+                </th>
                 <th
                   scope="col"
                   className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
@@ -162,7 +167,7 @@ const TaskTableCard = () => {
                 </th>
                 <th
                   scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="md:px-3 lg:px-3 pl-3 py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm rounded-tr-md"
                 >
                   <Text>Action</Text>
                 </th>
@@ -178,7 +183,7 @@ const TaskTableCard = () => {
 
         <Flex justify="space-between">
           <Group align="center">
-            <Select
+            {/* <Select
               size="xs"
               value={filterBy}
               onChange={setFilterBy}
@@ -192,14 +197,14 @@ const TaskTableCard = () => {
                 { value: "failed", label: "Failed" },
                 { value: "completed", label: "Completed" },
               ]}
-            />
+            /> */}
             <Flex>
               <Group spacing={3}>
                 <Text fz="xs" className="uppercase font-semibold text-gray-700">
                   Total:
                 </Text>
                 <Text fz="xs">
-                  {data.length} task{data.length >= 2 && "s"}
+                  {tasks.length} task{tasks.length >= 2 && "s"}
                 </Text>
               </Group>
             </Flex>
@@ -218,4 +223,4 @@ const TaskTableCard = () => {
   );
 };
 
-export default TaskTableCard;
+export default TaskTable;
