@@ -18,6 +18,7 @@ import {
   IconEdit,
   IconExternalLink,
   IconId,
+  IconInfoCircle,
   IconUser,
 } from "@tabler/icons-react";
 import { chunk } from "lodash";
@@ -47,14 +48,14 @@ const TaskTable = () => {
         <Text className="font-semibold">{task.deliverable}</Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Badge color="teal" size="xs" variant="dot" className="text-gray-500">
+        <Badge color="teal" size="md" variant="dot" className="text-gray-500">
           Available Task
         </Badge>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <div className="flex bg-gray-100  rounded items-center max-w-max px-2 py-1 gap-2">
+        <Group className="rounded bg-gray-50 max-w-max px-2 py-1 gap-2">
           <div
-            className={`w-2 h-2 ${
+            className={`p-1 ${
               task.status === "new"
                 ? "bg-indigo-300"
                 : task.status === "inprogress"
@@ -68,7 +69,7 @@ const TaskTable = () => {
           ></div>
           <Text
             fw="bold"
-            className={`text-[10px] ${
+            className={`text-[11px] ${
               task.status === "new"
                 ? "text-indigo-300"
                 : task.status === "inprogress"
@@ -82,7 +83,7 @@ const TaskTable = () => {
           >
             {task.status}
           </Text>
-        </div>
+        </Group>
       </td>
 
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
@@ -96,6 +97,14 @@ const TaskTable = () => {
           <Menu.Dropdown>
             <Menu.Label>Manage task</Menu.Label>
             <Flex direction="column" align="start">
+              <Button
+                leftIcon={<IconInfoCircle size={16} />}
+                variant="white"
+                color="dark"
+                size="xs"
+              >
+                View
+              </Button>
               <Button
                 leftIcon={<IconUser size={16} />}
                 variant="white"

@@ -38,7 +38,9 @@ const MembersAssignTask = () => {
                 <Group spacing={10}>
                   <Image src={avatar} width={35} />
                   <div className="-space-y-[2px]">
-                    <Text className="font-semibold">{member.name}</Text>
+                    <Text className="font-semibold" color="dark">
+                      {member.name}
+                    </Text>
                     <Group spacing={5}>
                       <div className="bg-green-300 p-1"></div>
                       <Text fw="bold" fz={12}>
