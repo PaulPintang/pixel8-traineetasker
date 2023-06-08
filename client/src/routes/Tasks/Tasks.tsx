@@ -44,7 +44,7 @@ const Tasks = () => {
           <Completed />
         </Grid.Col>
       </Grid>
-      {/* <TaskTable /> */}
+      <TaskTable />
     </>
   );
 };
