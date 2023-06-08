@@ -26,16 +26,17 @@ import { useState, useEffect, ReactNode } from "react";
 import avatar from "../../../assets/avatar.png";
 import { tasks } from "../../Dashboard/components/TaskTableCard";
 import AddTaskModal from "../../../components/modals/AddTaskModal";
+import ViewTaskModal from "../../../components/modals/ViewTaskModal";
 
 const TaskTable = () => {
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
-  //   const data = members?.filter((member) =>
-  //     filterBy ? member.status === filterBy : member
-  //   );
+  const data = tasks?.filter((task) =>
+    filterBy ? task.status === filterBy : task
+  );
 
-  const items = chunk(tasks, 10);
+  const items = chunk(data, 10);
 
   const rows = items[page - 1]?.map((task) => (
     <tr>
@@ -140,7 +141,7 @@ const TaskTable = () => {
   return (
     <>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-200px)] mt-4">
-        <div className="h-[96%] overflow-hidden">
+        <div className="h-[95%] overflow-hidden">
           <table className="border-collapse border-none w-full">
             <thead>
               <tr>
@@ -193,7 +194,7 @@ const TaskTable = () => {
 
         <Flex justify="space-between">
           <Group align="center">
-            {/* <Select
+            <Select
               size="xs"
               value={filterBy}
               onChange={setFilterBy}
@@ -207,14 +208,14 @@ const TaskTable = () => {
                 { value: "failed", label: "Failed" },
                 { value: "completed", label: "Completed" },
               ]}
-            /> */}
+            />
             <Flex>
               <Group spacing={3}>
                 <Text fz="xs" className="uppercase font-semibold text-gray-700">
                   Total:
                 </Text>
                 <Text fz="xs">
-                  {tasks.length} task{tasks.length >= 2 && "s"}
+                  {data.length} task{data.length >= 2 && "s"}
                 </Text>
               </Group>
             </Flex>
@@ -224,13 +225,14 @@ const TaskTable = () => {
             value={page}
             onChange={setPage}
             size="xs"
-            color="teal"
+            color="cyan"
             withEdges
           />
         </Flex>
       </Card>
       {/* Modals */}
       <AddTaskModal />
+      <ViewTaskModal />
     </>
   );
 };

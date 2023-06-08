@@ -13,12 +13,12 @@ const Tasks = () => {
     <>
       <Flex justify="space-between">
         <ManageTaskLabels />
-        {/* <Button color="cyan" size="xs">
+        <Button color="cyan" size="xs">
           Add task
-        </Button> */}
-        <TaskUrgent />
+        </Button>
+        {/* <TaskUrgent /> */}
       </Flex>
-      <Grid className="bg-white" mt={15}>
+      {/* <Grid className="bg-white" mt={15}>
         <Grid.Col span={3} className="space-y-2">
           <Text className="uppercase text-xs font-semibold text-gray-500">
             New Task
@@ -43,7 +43,7 @@ const Tasks = () => {
           </Text>
           <Completed />
         </Grid.Col>
-      </Grid>
+      </Grid> */}
       <TaskTable />
     </>
   );

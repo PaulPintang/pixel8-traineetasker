@@ -228,7 +228,6 @@ const MembersTableCard = () => {
 
         <Flex justify="space-between">
           <Group align="center">
-            <Checkbox size="xs" color="cyan" label="Show no current task" />
             <Flex>
               <Group spacing={3}>
                 <Text fz="xs" className="uppercase font-semibold text-gray-700">
@@ -239,13 +238,15 @@ const MembersTableCard = () => {
                 </Text>
               </Group>
             </Flex>
+            <Checkbox size="xs" color="cyan" label="No current task" />
+            <Checkbox size="xs" color="cyan" label="With for-QA task" />
           </Group>
           <Pagination
             total={items.length}
             value={page}
             onChange={setPage}
             size="xs"
-            color="teal"
+            color="cyan"
             withEdges
           />
         </Flex>

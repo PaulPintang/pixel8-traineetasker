@@ -209,7 +209,7 @@ const TaskTableCard = () => {
             value={page}
             onChange={setPage}
             size="xs"
-            color="teal"
+            color="cyan"
             withEdges
           />
         </Flex>
