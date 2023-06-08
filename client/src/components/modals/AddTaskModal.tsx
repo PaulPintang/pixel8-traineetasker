@@ -29,7 +29,7 @@ const AddTaskModal = () => {
   return (
     <Modal
       size="sm"
-      opened={true}
+      opened={false}
       onClose={() => console.log()}
       title="Add new task"
     >

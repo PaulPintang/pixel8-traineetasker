@@ -22,6 +22,7 @@ import TaskTableCard from "./components/TaskTableCard";
 import TasksTodoCard from "./components/TasksTodoCard";
 import MembersTableCard from "./components/MembersTableCard";
 import MembersAssignTask from "./components/MembersAssignTask";
+import AssignTaskModal from "../../components/modals/AssignTaskModal";
 
 const Dashboard = () => {
   return (
@@ -43,6 +44,8 @@ const Dashboard = () => {
           <MembersAssignTask />
         </Grid.Col>
       </Grid>
+
+      <AssignTaskModal />
     </>
   );
 };
