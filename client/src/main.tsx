@@ -8,6 +8,7 @@ import "./index.css";
 
 import RootLayout from "./routes/RootLayout";
 import { Protected } from "./middleware/Protected";
+import Profile from "./routes/Profile";
 const Dashboard = lazy(() => import("./routes/Dashboard/Dashboard"));
 const TimeSheets = lazy(() => import("./routes/TimeSheets/TimeSheets"));
 const Tasks = lazy(() => import("./routes/Tasks/Tasks"));
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
         element: <DailyTimeRecord />,
       },
     ],
+  },
+  {
+    path: "profile/:id",
+    element: <Profile />,
   },
 ]);
 

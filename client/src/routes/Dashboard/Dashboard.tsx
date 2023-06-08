@@ -20,7 +20,7 @@ import TaskCards from "./components/TaskCards";
 import InfoCard from "./components/InfoCard";
 import TaskTableCard from "./components/TaskTableCard";
 import TasksTodoCard from "./components/TasksTodoCard";
-import MembersTableCards from "./components/MembersTableCards";
+import MembersTableCard from "./components/MembersTableCard";
 import MembersAssignTask from "./components/MembersAssignTask";
 
 const Dashboard = () => {
@@ -36,7 +36,7 @@ const Dashboard = () => {
         </Grid.Col>
         <Grid.Col span={8}>
           {/* <TaskTableCard /> */}
-          <MembersTableCards />
+          <MembersTableCard />
         </Grid.Col>
         <Grid.Col className="bg-bl ue-300" span={4}>
           {/* <TasksTodoCard /> */}

@@ -15,9 +15,11 @@ import { IconExternalLink, IconId } from "@tabler/icons-react";
 import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
 import avatar from "../../../assets/avatar.png";
+import { Link } from "react-router-dom";
 
 export const members = [
   {
+    id: 1,
     name: "Juann wewwhwhw",
     email: "juan@gmail.com",
     gender: "Male",
@@ -27,6 +29,7 @@ export const members = [
     completedTask: 12,
   },
   {
+    id: 2,
     name: "John wewwhwhw",
     email: "juan@gmail.com",
     gender: "Male",
@@ -36,9 +39,9 @@ export const members = [
     completedTask: 8,
   },
   {
+    id: 3,
     name: "Jane wewwhwhw",
     email: "juan@gmail.com",
-
     gender: "Female",
     requiredHours: 168,
     pendingHours: 13,
@@ -46,9 +49,9 @@ export const members = [
     completedTask: 5,
   },
   {
+    id: 4,
     name: "Loki wewwhwhw",
     email: "juan@gmail.com",
-
     gender: "Male",
     requiredHours: 68,
     pendingHours: 13,
@@ -56,9 +59,9 @@ export const members = [
     completedTask: 10,
   },
   {
+    id: 5,
     name: "Joy wewwhwhw",
     email: "juan@gmail.com",
-
     gender: "Female",
     requiredHours: 228,
     pendingHours: 13,
@@ -112,9 +115,11 @@ const MembersTableCard = () => {
         </Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <ActionIcon variant="light" color="cyan">
-          <IconId size={19} />
-        </ActionIcon>
+        <Link to={`../profile/${member.id}`}>
+          <ActionIcon variant="light" color="cyan">
+            <IconId size={19} />
+          </ActionIcon>
+        </Link>
       </td>
     </tr>
   ));
