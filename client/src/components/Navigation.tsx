@@ -1,4 +1,4 @@
-import { Button, Flex, Group, Text } from "@mantine/core";
+import { Button, Flex, Group, Text, Avatar, Tooltip } from "@mantine/core";
 import {
   IconPhoto,
   IconMessageCircle,
@@ -10,13 +10,14 @@ import {
   IconReport,
 } from "@tabler/icons-react";
 import { NavLink, useLocation } from "react-router-dom";
+import avatar from "../assets/avatar.png";
 
 const Navigation = () => {
   const location = useLocation();
   const { pathname } = location;
 
   return (
-    <Flex>
+    <Flex justify="space-between" align="center">
       <Group spacing={0}>
         <NavLink to="dashboard" className="text-gray-700">
           <Button
@@ -45,10 +46,38 @@ const Navigation = () => {
               pathname === "/tasks" ? "bg-slate-50 bg-opacity-30" : ""
             }`}
           >
-            <Text c={pathname === "/tasks" ? "dark" : "gray"}>Your Task</Text>
+            <Text c={pathname === "/tasks" ? "dark" : "gray"}>Manage Task</Text>
           </Button>
         </NavLink>
-        <NavLink to="timesheet" className="text-gray-700">
+        <NavLink to="tasks" className="text-gray-700">
+          <Button
+            leftIcon={<IconChecklist size={18} />}
+            size="xs"
+            radius={0}
+            variant="white"
+            color={pathname === "/tasks" ? "dark" : "gray"}
+            className={`${
+              pathname === "/tasks" ? "bg-slate-50 bg-opacity-30" : ""
+            }`}
+          >
+            <Text c={pathname === "/tasks" ? "dark" : "gray"}>Members</Text>
+          </Button>
+        </NavLink>
+        {/* <NavLink to="tasks" className="text-gray-700">
+          <Button
+            leftIcon={<IconChecklist size={18} />}
+            size="xs"
+            radius={0}
+            variant="white"
+            color={pathname === "/tasks" ? "dark" : "gray"}
+            className={`${
+              pathname === "/tasks" ? "bg-slate-50 bg-opacity-30" : ""
+            }`}
+          >
+            <Text c={pathname === "/tasks" ? "dark" : "gray"}>Your Task</Text>
+          </Button>
+        </NavLink> */}
+        {/* <NavLink to="timesheet" className="text-gray-700">
           <Button
             leftIcon={<IconCalendarStats size={18} />}
             size="xs"
@@ -77,7 +106,15 @@ const Navigation = () => {
           >
             <Text c={pathname === "/dtr" ? "dark" : "gray"}>DTR</Text>
           </Button>
-        </NavLink>
+        </NavLink>*/}
+      </Group>
+      <Group spacing={10}>
+        <Text fz="xs" className="text-gray-800 font-semibold">
+          Today:
+        </Text>
+        <Text fz="xs" c="dimmed">
+          Wednesday, June 07 2023
+        </Text>
       </Group>
     </Flex>
   );

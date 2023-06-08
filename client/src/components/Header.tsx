@@ -47,6 +47,9 @@ const Header = () => {
         {/* <Badge color="teal" variant="dot" className="text-gray-700">
           Administrator
         </Badge> */}
+        <Badge color="teal" variant="dot" className="text-gray-700">
+          Designer
+        </Badge>
         {/* <Button>Login to start</Button> */}
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
