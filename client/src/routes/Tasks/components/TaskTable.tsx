@@ -25,6 +25,7 @@ import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
 import avatar from "../../../assets/avatar.png";
 import { tasks } from "../../Dashboard/components/TaskTableCard";
+import AddTaskModal from "../../../components/modals/AddTaskModal";
 
 const TaskTable = () => {
   const [page, setPage] = useState(1);
@@ -228,6 +229,8 @@ const TaskTable = () => {
           />
         </Flex>
       </Card>
+      {/* Modals */}
+      <AddTaskModal />
     </>
   );
 };
