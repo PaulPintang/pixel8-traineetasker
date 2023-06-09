@@ -14,10 +14,16 @@ import {
   ActionIcon,
   Textarea,
   Paper,
+  Tooltip,
   Avatar,
 } from "@mantine/core";
 import avatar from "../../assets/avatar.png";
-import { IconMessage, IconSend } from "@tabler/icons-react";
+import {
+  IconChecks,
+  IconExclamationCircle,
+  IconMessage,
+  IconSend,
+} from "@tabler/icons-react";
 const ViewTaskModal = () => {
   return (
     <Modal
@@ -32,9 +38,33 @@ const ViewTaskModal = () => {
         </Breadcrumbs>
       }
     >
-      <Title order={4} c="dark" pb={15}>
-        Header page
-      </Title>
+      <Group position="apart" pb={15}>
+        <Title order={4} c="dark">
+          Header page
+        </Title>
+        <Group spacing={10}>
+          <Tooltip
+            withArrow
+            color="cyan"
+            position="bottom"
+            label={<Text fz="xs">mark as completed</Text>}
+          >
+            <ActionIcon color="cyan">
+              <IconChecks size={20} />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip
+            withArrow
+            color="red"
+            position="bottom"
+            label={<Text fz="xs">mark as failed</Text>}
+          >
+            <ActionIcon color="red">
+              <IconExclamationCircle size={20} />
+            </ActionIcon>
+          </Tooltip>
+        </Group>
+      </Group>
       <div className="space-y-2">
         <Group align="flex-start">
           <Text className="w-1/4" c="dimmed" fz="sm">
@@ -136,7 +166,7 @@ const ViewTaskModal = () => {
                 You've mark this task as completed
               </Text>
               <Text size="xs" mt={4}>
-                2 hours ago
+                Friday, June 7 2023 at 11:53 AM
               </Text>
             </Timeline.Item>
             <Timeline.Item
