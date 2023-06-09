@@ -1,7 +1,6 @@
 import { Modal, Autocomplete, Button, Text, Group, Box } from "@mantine/core";
-import { tasks } from "../../../Dashboard/components/TaskTableCard";
-import { members } from "../../../Dashboard/components/MembersTableCard";
-
+import { tasks } from "../../../../data/tasks";
+import { members } from "../../../../data/members";
 interface ModalProps {
   assign: boolean;
   toggle: () => void;

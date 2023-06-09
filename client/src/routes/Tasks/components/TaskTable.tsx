@@ -24,16 +24,18 @@ import {
 import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
 import avatar from "../../../assets/avatar.png";
-import { tasks } from "../../Dashboard/components/TaskTableCard";
 import { useDisclosure } from "@mantine/hooks";
 import AssignMemberModal from "./modals/AssignMemberModal";
+import { Dispatch, SetStateAction } from "react";
+import { tasks } from "../../../data/tasks";
 
 interface Props {
+  setViewId: Dispatch<SetStateAction<string | number | null>>;
   view: () => void;
   update: () => void;
 }
 
-const TaskTable = ({ view, update }: Props) => {
+const TaskTable = ({ view, update, setViewId }: Props) => {
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
@@ -47,13 +49,13 @@ const TaskTable = ({ view, update }: Props) => {
   const rows = items[page - 1]?.map((task) => (
     <tr>
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Text className="font-semibold">{task.deliverable}</Text>
+        <Text className="font-semibold">added date</Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Text className="font-semibold">{task.deliverable}</Text>
+        <Text className="font-semibold">{task.taskname}</Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Text className="font-semibold">{task.deliverable}</Text>
+        <Text className="font-semibold">{task.ticketno}</Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
         <Badge color="teal" size="md" variant="dot" className="text-gray-500">
@@ -106,7 +108,10 @@ const TaskTable = ({ view, update }: Props) => {
             <Menu.Label>Manage task</Menu.Label>
             <Flex direction="column" align="start">
               <Button
-                onClick={view}
+                onClick={() => {
+                  view();
+                  setViewId(task.id!);
+                }}
                 leftIcon={<IconInfoCircle size={16} />}
                 variant="white"
                 color="dark"

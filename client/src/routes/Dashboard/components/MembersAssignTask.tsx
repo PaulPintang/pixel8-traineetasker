@@ -13,9 +13,8 @@ import {
 } from "@mantine/core";
 import empty from "../../../assets/emptytodo.png";
 import avatar from "../../../assets/avatar.png";
-import { members } from "./MembersTableCards";
 import { IconInfoCircle, IconUser } from "@tabler/icons-react";
-import AssignModal from "../../../components/modals/AssignTaskModal";
+import { members } from "../../../data/members";
 
 const MembersAssignTask = () => {
   return (

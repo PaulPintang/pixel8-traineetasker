@@ -24,13 +24,16 @@ import {
   IconMessage,
   IconSend,
 } from "@tabler/icons-react";
+import { tasks } from "../../../../data/tasks";
 
 interface ModalProps {
+  viewId: string | number | null;
   view: boolean;
   toggle: () => void;
 }
 
-const ViewTaskModal = ({ view, toggle }: ModalProps) => {
+const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
+  const task = tasks.find((task) => task.id === viewId);
   return (
     <Modal
       size="sm"
@@ -39,14 +42,16 @@ const ViewTaskModal = ({ view, toggle }: ModalProps) => {
       title={
         <Breadcrumbs className="text-xs text-gray-500">
           <Text>Tasks</Text>
-          <Text>Header page sadas</Text>
-          <Text c="dark">In progress</Text>
+          <Text>{task?.taskname}</Text>
+          <Text c="dark" className="capitalize">
+            {task?.status}
+          </Text>
         </Breadcrumbs>
       }
     >
       <Group position="apart" pb={15}>
         <Title order={4} c="dark">
-          Header page
+          {task?.taskname}
         </Title>
         <Group spacing={10}>
           <Tooltip
@@ -85,13 +90,13 @@ const ViewTaskModal = ({ view, toggle }: ModalProps) => {
           <Text className="w-1/4" c="dimmed" fz="sm">
             Ticket No.
           </Text>
-          <Text fz="sm">dsada3ewqeqwg</Text>
+          <Text fz="sm">{task?.ticketno}</Text>
         </Group>
         <Group align="flex-start">
           <Text className="w-1/4" c="dimmed" fz="sm">
             Status
           </Text>
-          <Text fz="sm">In-progress</Text>
+          <Text fz="sm">{task?.status}</Text>
         </Group>
       </div>
 

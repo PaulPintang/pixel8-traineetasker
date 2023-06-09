@@ -5,10 +5,9 @@ import InfoCard from "../Dashboard/components/InfoCard";
 import avatar from "../../assets/avatar.png";
 import Tasks from "../Tasks/Tasks";
 import { useParams } from "react-router-dom";
-import { members } from "../Dashboard/components/MembersTableCard";
 import RemoveTraineeModal from "./RemoveTraineeModal";
 import { useDisclosure } from "@mantine/hooks";
-
+import { members } from "../../data/members";
 const Profile = () => {
   const [remove, { toggle }] = useDisclosure(false);
   const { id } = useParams();

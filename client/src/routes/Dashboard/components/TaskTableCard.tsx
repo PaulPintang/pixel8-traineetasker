@@ -15,55 +15,12 @@ import { IconExternalLink, IconInfoCircle } from "@tabler/icons-react";
 import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
 import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
-
-export const tasks = [
-  {
-    task: "Dashboard",
-    ticket: 12.011,
-    deliverable: "C",
-    status: "completed",
-    spent: 8,
-  },
-  {
-    task: "Header",
-    ticket: 14.007,
-    deliverable: "N",
-    status: "new",
-    spent: 12,
-  },
-  {
-    task: "Data from backend",
-    ticket: 88.906,
-    deliverable: "Y",
-    status: "inprogress",
-    spent: 10,
-  },
-  {
-    task: "Modals",
-    ticket: 137.33,
-    deliverable: "Ba",
-    status: "failed",
-    spent: 13,
-  },
-  {
-    task: "component table",
-    ticket: 140.12,
-    deliverable: "Ce",
-    status: "failed",
-    spent: 8,
-  },
-  {
-    task: "table paginatiom",
-    ticket: 140.12,
-    deliverable: "Ce",
-    status: "inprogress",
-    spent: 10,
-  },
-];
+import { tasks } from "../../../data/tasks";
 
 const TaskTableCard = () => {
   const [view, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
+  const [viewId, setViewId] = useState<string | number | null>(null);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
   const data = tasks?.filter((task) =>
@@ -75,10 +32,10 @@ const TaskTableCard = () => {
   const rows = items[page - 1]?.map((task) => (
     <tr>
       <td className="hidden md:table-cell lg:table-cell pl-3">
-        <Text>{task.task}</Text>
+        <Text>{task.taskname}</Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell">
-        <Text>{task.ticket}</Text>
+        <Text>{task.ticketno}</Text>
       </td>
       <td className="px-5 py-2 hidden md:table-cell lg:table-cell ">
         <Text>{task.spent}</Text>
@@ -118,7 +75,10 @@ const TaskTableCard = () => {
       </td>
       <td className="dark:text-gray-400  hidden md:table-cell lg:table-cell">
         <Button
-          onClick={toggle}
+          onClick={() => {
+            toggle();
+            setViewId(task.id!);
+          }}
           leftIcon={<IconInfoCircle size={16} />}
           variant="white"
           color="cyan"
@@ -216,7 +176,7 @@ const TaskTableCard = () => {
           />
         </Flex>
       </Card>
-      <ViewTaskModal view={view} toggle={toggle} />
+      <ViewTaskModal viewId={viewId} view={view} toggle={toggle} />
     </>
   );
 };

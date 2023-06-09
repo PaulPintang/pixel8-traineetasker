@@ -1,6 +1,5 @@
 import { Modal, Autocomplete, Button, Text, Group, Box } from "@mantine/core";
-import { tasks } from "../../Dashboard/components/TaskTableCard";
-
+import { tasks } from "../../../data/tasks";
 interface ModalProps {
   assign: boolean;
   toggle: () => void;
@@ -27,7 +26,7 @@ const AssignTaskModal = ({ assign, toggle }: ModalProps) => {
         <Autocomplete
           // value={assignedTo}
           // onChange={setAssignTo}
-          data={tasks.map((task) => task.task)}
+          data={tasks.map((task) => task.taskname!)}
           dropdownPosition="bottom"
           placeholder="Pick one"
         />

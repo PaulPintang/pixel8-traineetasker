@@ -42,7 +42,7 @@ const Dashboard = () => {
           <TasksTodoCard />
         </Grid.Col>
       </Grid>
-      {/* <MembersTableCard /> */}
+      <MembersTableCard />
     </>
   );
 };

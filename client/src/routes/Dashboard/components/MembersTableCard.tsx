@@ -27,59 +27,7 @@ import { Link } from "react-router-dom";
 import { IconInfoCircle } from "@tabler/icons-react";
 import AssignTaskModal from "./AssignTaskModal";
 import { useDisclosure } from "@mantine/hooks";
-
-export const members = [
-  {
-    id: 1,
-    name: "Juann wewwhwhw",
-    email: "juan@gmail.com",
-    gender: "Male",
-    requiredHours: 468,
-    pendingHours: 123,
-    renderedHours: 302,
-    completedTask: 12,
-  },
-  {
-    id: 2,
-    name: "John wewwhwhw",
-    email: "juan@gmail.com",
-    gender: "Male",
-    requiredHours: 268,
-    pendingHours: 12,
-    renderedHours: 312,
-    completedTask: 8,
-  },
-  {
-    id: 3,
-    name: "Jane wewwhwhw",
-    email: "juan@gmail.com",
-    gender: "Female",
-    requiredHours: 168,
-    pendingHours: 13,
-    renderedHours: 222,
-    completedTask: 5,
-  },
-  {
-    id: 4,
-    name: "Loki wewwhwhw",
-    email: "juan@gmail.com",
-    gender: "Male",
-    requiredHours: 68,
-    pendingHours: 13,
-    renderedHours: 32,
-    completedTask: 10,
-  },
-  {
-    id: 5,
-    name: "Joy wewwhwhw",
-    email: "juan@gmail.com",
-    gender: "Female",
-    requiredHours: 228,
-    pendingHours: 13,
-    renderedHours: 202,
-    completedTask: 3,
-  },
-];
+import { members } from "../../../data/members";
 
 const MembersTableCard = () => {
   const [assign, { toggle }] = useDisclosure();

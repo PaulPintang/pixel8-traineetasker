@@ -15,57 +15,7 @@ import { IconExternalLink, IconId } from "@tabler/icons-react";
 import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
 import avatar from "../../../assets/avatar.png";
-
-export const members = [
-  {
-    name: "Juann wewwhwhw",
-    email: "juan@gmail.com",
-    gender: "Male",
-    requiredHours: 468,
-    pendingHours: 123,
-    renderedHours: 302,
-    completedTask: 12,
-  },
-  {
-    name: "John wewwhwhw",
-    email: "juan@gmail.com",
-    gender: "Male",
-    requiredHours: 268,
-    pendingHours: 12,
-    renderedHours: 312,
-    completedTask: 8,
-  },
-  {
-    name: "Jane wewwhwhw",
-    email: "juan@gmail.com",
-
-    gender: "Female",
-    requiredHours: 168,
-    pendingHours: 13,
-    renderedHours: 222,
-    completedTask: 5,
-  },
-  {
-    name: "Loki wewwhwhw",
-    email: "juan@gmail.com",
-
-    gender: "Male",
-    requiredHours: 68,
-    pendingHours: 13,
-    renderedHours: 32,
-    completedTask: 10,
-  },
-  {
-    name: "Joy wewwhwhw",
-    email: "juan@gmail.com",
-
-    gender: "Female",
-    requiredHours: 228,
-    pendingHours: 13,
-    renderedHours: 202,
-    completedTask: 3,
-  },
-];
+import { members } from "../../../data/members";
 
 const ManageTaskTable = () => {
   const [page, setPage] = useState(1);
