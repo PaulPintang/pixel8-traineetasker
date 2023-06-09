@@ -10,10 +10,16 @@ import {
   Flex,
 } from "@mantine/core";
 import { IconChecks, IconExternalLink } from "@tabler/icons-react";
+interface Props {
+  toggle: () => void;
+}
 
-const Completed = () => {
+const Completed = ({ toggle }: Props) => {
   return (
-    <Card className="h- rounded-md shadow-md">
+    <Card
+      className="cursor-pointer hover:shadow-xl rounded-md shadow-md"
+      onClick={toggle}
+    >
       <div className="bg-indigo-300 w-8 h-1"></div>
       <Box pt={15} className="space-y-1">
         <Text fw="bold" c="dark" fz="sm">

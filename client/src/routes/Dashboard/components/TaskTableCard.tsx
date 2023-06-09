@@ -7,11 +7,14 @@ import {
   Pagination,
   Tooltip,
   ActionIcon,
+  Button,
   Select,
 } from "@mantine/core";
-import { IconExternalLink } from "@tabler/icons-react";
+import { useDisclosure } from "@mantine/hooks";
+import { IconExternalLink, IconInfoCircle } from "@tabler/icons-react";
 import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
+import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
 
 export const tasks = [
   {
@@ -59,6 +62,7 @@ export const tasks = [
 ];
 
 const TaskTableCard = () => {
+  const [view, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
@@ -113,17 +117,15 @@ const TaskTableCard = () => {
         </div>
       </td>
       <td className="dark:text-gray-400  hidden md:table-cell lg:table-cell">
-        <Tooltip
-          label={<small>View Deliverable</small>}
-          withArrow
-          color="indigo"
-          position="bottom"
-          py={2}
+        <Button
+          onClick={toggle}
+          leftIcon={<IconInfoCircle size={16} />}
+          variant="white"
+          color="cyan"
+          size="xs"
         >
-          <ActionIcon color="indigo" size="sm">
-            <IconExternalLink className="text-sm" />
-          </ActionIcon>
-        </Tooltip>
+          View
+        </Button>
       </td>
     </tr>
   ));
@@ -214,6 +216,7 @@ const TaskTableCard = () => {
           />
         </Flex>
       </Card>
+      <ViewTaskModal view={view} toggle={toggle} />
     </>
   );
 };

@@ -26,32 +26,32 @@ const Tasks = () => {
         </Button>
         {/* <TaskUrgent /> */}
       </Flex>
-      {/* <Grid className="bg-white" mt={15}>
+      <Grid className="bg-white" mt={15}>
         <Grid.Col span={3} className="space-y-2">
           <Text className="uppercase text-xs font-semibold text-gray-500">
             New Task
           </Text>
-          <NewTask />
+          <NewTask toggle={toggleView.toggle} />
         </Grid.Col>
         <Grid.Col span={3} className="space-y-2">
           <Text className="uppercase text-xs font-semibold text-gray-500">
             In-Progress
           </Text>
-          <InProgress />
+          <InProgress toggle={toggleView.toggle} />
         </Grid.Col>
         <Grid.Col span={3} className="space-y-2">
           <Text className="uppercase text-xs font-semibold text-gray-500">
             For Qa
           </Text>
-          <ForQa />
+          <ForQa toggle={toggleView.toggle} />
         </Grid.Col>
         <Grid.Col span={3} className="space-y-2">
           <Text className="uppercase text-xs font-semibold text-gray-500">
             Completed
           </Text>
-          <Completed />
+          <Completed toggle={toggleView.toggle} />
         </Grid.Col>
-      </Grid> */}
+      </Grid>
       <TaskTable view={toggleView.toggle} update={toggleUpdate.toggle} />
 
       {/* Modals */}

@@ -35,15 +35,14 @@ const Dashboard = () => {
           <InfoCard />
         </Grid.Col>
 
-        {/* <Grid.Col span={8}>
+        <Grid.Col span={8}>
           <TaskTableCard />
-          <MembersTableCard />
         </Grid.Col>
         <Grid.Col className="bg-bl ue-300" span={4}>
           <TasksTodoCard />
-        </Grid.Col> */}
+        </Grid.Col>
       </Grid>
-      <MembersTableCard />
+      {/* <MembersTableCard /> */}
     </>
   );
 };
