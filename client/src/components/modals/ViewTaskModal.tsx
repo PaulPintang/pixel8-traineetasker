@@ -14,6 +14,7 @@ import {
   ActionIcon,
   Textarea,
   Paper,
+  Avatar,
 } from "@mantine/core";
 import avatar from "../../assets/avatar.png";
 import { IconMessage, IconSend } from "@tabler/icons-react";
@@ -58,12 +59,7 @@ const ViewTaskModal = () => {
         </Group>
       </div>
 
-      <Tabs
-        // value={activeTab}
-        // onTabChange={setActiveTab}
-        pt={10}
-        color="cyan"
-      >
+      <Tabs defaultValue="first" pt={10} color="cyan">
         <Tabs.List>
           <Tabs.Tab className="w-2/4 text-xs" value="first">
             Comments
@@ -72,80 +68,118 @@ const ViewTaskModal = () => {
             Timeline
           </Tabs.Tab>
         </Tabs.List>
-        <div className="p-3 max-h-[358px] overflow-y-scroll" id="b-scrollbar">
-          <Tabs.Panel value="first" className="space-y-2">
-            <Group spacing={10}>
-              <Image src={avatar} width={20} />
-              <Text c="dimmed" fw="bold" fz="xs">
-                Your comment
+        <Tabs.Panel value="first" className="space-y-2">
+          <Group spacing={10} pt={10}>
+            <Image src={avatar} width={20} />
+            <Text c="dimmed" fw="bold" fz="xs">
+              Your comment
+            </Text>
+          </Group>
+          <Flex gap={5}>
+            <Textarea
+              className="w-full"
+              placeholder="Add your comment"
+              autosize
+              maxRows={2}
+              size="xs"
+            />
+            <ActionIcon color="cyan" variant="white" size="lg">
+              <IconSend size={19} />
+            </ActionIcon>
+          </Flex>
+          <section className="space-y-3">
+            <Paper component="div" className="bg-slate-50 space-y-2" p={11}>
+              <Text fz="xs" c="dark">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Repellendus cumque unde
               </Text>
-            </Group>
-            <Flex gap={5}>
-              <Textarea
-                className="w-full"
-                placeholder="Add your comment"
-                autosize
-                maxRows={2}
-                size="xs"
-              />
-              <ActionIcon color="cyan" variant="white" size="lg">
-                <IconSend size={19} />
-              </ActionIcon>
-            </Flex>
-            <section className="space-y-3">
-              <Paper component="div" className="bg-slate-50 space-y-2" p={11}>
-                <Text fz="xs" c="dark">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Repellendus cumque unde
-                </Text>
-                <Group position="apart">
-                  <Group spacing={10}>
-                    <Image src={avatar} width={20} />
-                    <Text fz="xs" fw="bold">
-                      Juan Dela Cruz
-                    </Text>
-                  </Group>
-                  <Text c="dimmed" fz="xs">
-                    2 min ago
+              <Group position="apart">
+                <Group spacing={10}>
+                  <Image src={avatar} width={20} />
+                  <Text fz="xs" fw="bold">
+                    Juan Dela Cruz
                   </Text>
                 </Group>
-              </Paper>
-              <Paper component="div" className="bg-slate-50 space-y-2" p={11}>
-                <Text fz="xs" c="dark">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                <Text c="dimmed" fz="xs">
+                  2 min ago
                 </Text>
-                <Group position="apart">
-                  <Text c="dimmed" fz="xs">
-                    8 min ago
+              </Group>
+            </Paper>
+            <Paper component="div" className="bg-slate-50 space-y-2" p={11}>
+              <Text fz="xs" c="dark">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              </Text>
+              <Group position="apart">
+                <Text c="dimmed" fz="xs">
+                  8 min ago
+                </Text>
+                <Group spacing={10}>
+                  <Image src={avatar} width={20} />
+                  <Text fz="xs" fw="bold">
+                    You
                   </Text>
-                  <Group spacing={10}>
-                    <Image src={avatar} width={20} />
-                    <Text fz="xs" fw="bold">
-                      You
-                    </Text>
-                  </Group>
                 </Group>
-              </Paper>
-            </section>
-          </Tabs.Panel>
-          <Tabs.Panel value="second" className="space-y-2">
-            <div className="flex items-start gap-2">
-              {/* <MdError className="text-red-300 text-sm mt-[2px]" /> */}
-              <div className="text-xs flex flex-col gap-[1px]">
-                <Text className="text-gray-700">
-                  Your ticket no. <b>63243520324</b> is failed!
-                </Text>
-                <Text className="text-gray-600  text-[11px]">Comment:</Text>
-                <Text className="text-gray-500  text-[11px]">
-                  December 12, 2022 at 09:05 AM
-                </Text>
-                <Button size="xs" className="w-2/4" color="teal">
-                  Revise
-                </Button>
-              </div>
-            </div>
-          </Tabs.Panel>
-        </div>
+              </Group>
+            </Paper>
+          </section>
+        </Tabs.Panel>
+        <Tabs.Panel value="second" className="space-y-2">
+          <Timeline
+            active={0}
+            bulletSize={14}
+            lineWidth={3}
+            pt={10}
+            color="cyan"
+          >
+            <Timeline.Item title="Task Completed" className="text-sm">
+              <Text color="dimmed" size="xs">
+                You've mark this task as completed
+              </Text>
+              <Text size="xs" mt={4}>
+                2 hours ago
+              </Text>
+            </Timeline.Item>
+            <Timeline.Item
+              title="Mark as done"
+              className="text-sm"
+              bullet={<Avatar src={avatar} size={20} radius="xl" />}
+            >
+              <Text color="dimmed" size="xs">
+                Task for-QA
+              </Text>
+              <Text size="xs" mt={4}>
+                Friday, June 7 2023 at 11:53 AM
+              </Text>
+            </Timeline.Item>
+            <Timeline.Item
+              title="Task in progress"
+              lineVariant="dotted"
+              className="text-sm"
+              bullet={<Avatar src={avatar} size={20} radius="xl" />}
+            >
+              <Text color="dark" fw="bold" size="xs">
+                Paul Justine Pintang{" "}
+                <span className="text-gray-500 font-normal">
+                  is doing this task
+                </span>
+              </Text>
+              <Text size="xs" mt={4}>
+                Friday, June 7 2023 at 11:53 AM
+              </Text>
+            </Timeline.Item>
+            <Timeline.Item title="Task added" className="text-sm">
+              <Text color="dark" fw="bold" size="xs">
+                You{" "}
+                <span className="text-gray-500 font-normal">
+                  added this task
+                </span>
+              </Text>
+              <Text size="xs" mt={4}>
+                Friday, June 7 2023 at 07:53 AM
+              </Text>
+            </Timeline.Item>
+          </Timeline>
+        </Tabs.Panel>
       </Tabs>
     </Modal>
   );
