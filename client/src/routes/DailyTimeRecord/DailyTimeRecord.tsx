@@ -2,10 +2,11 @@ import { Card, Text, Flex, Group, Button, Pagination } from "@mantine/core";
 import { chunk } from "lodash";
 import { useState } from "react";
 import { TimeSheetsLabels } from "../../components/ColorLabels";
+import { IconClock } from "@tabler/icons-react";
 
 const sheets = [
   {
-    date: "Date",
+    date: "Monday, January 4 2023",
     task: "Dashboard",
     ticket: 12.011,
     deliverable: "C",
@@ -13,7 +14,7 @@ const sheets = [
     spent: 8,
   },
   {
-    date: "Date",
+    date: "Monday, January 3 2023",
     task: "Header",
     ticket: 14.007,
     deliverable: "N",
@@ -21,7 +22,7 @@ const sheets = [
     spent: 12,
   },
   {
-    date: "Date",
+    date: "Monday, January 2 2023",
     task: "Data from backend",
     ticket: 88.906,
     deliverable: "Y",
@@ -29,76 +30,12 @@ const sheets = [
     spent: 10,
   },
   {
-    date: "Date",
+    date: "Monday, January 1 2023",
     task: "Modals",
     ticket: 137.33,
     deliverable: "Ba",
     status: "failed",
     spent: 13,
-  },
-  {
-    date: "Date",
-    task: "component table",
-    ticket: 140.12,
-    deliverable: "Ce",
-    status: "failed",
-    spent: 8,
-  },
-  {
-    date: "Date",
-    task: "table paginatiom",
-    ticket: 140.12,
-    deliverable: "Ce",
-    status: "inprogress",
-    spent: 10,
-  },
-  {
-    date: "Date",
-    task: "Dashboard",
-    ticket: 12.011,
-    deliverable: "C",
-    status: "completed",
-    spent: 8,
-  },
-  {
-    date: "Date",
-    task: "Header",
-    ticket: 14.007,
-    deliverable: "N",
-    status: "new",
-    spent: 12,
-  },
-  {
-    date: "Date",
-    task: "Data from backend",
-    ticket: 88.906,
-    deliverable: "Y",
-    status: "inprogress",
-    spent: 10,
-  },
-  {
-    date: "Date",
-    task: "Modals",
-    ticket: 137.33,
-    deliverable: "Ba",
-    status: "failed",
-    spent: 13,
-  },
-  {
-    date: "Date",
-    task: "component table",
-    ticket: 140.12,
-    deliverable: "Ce",
-    status: "failed",
-    spent: 8,
-  },
-  {
-    date: "Date",
-    task: "table paginatiom",
-    ticket: 140.12,
-    deliverable: "Ce",
-    status: "inprogress",
-    spent: 10,
   },
 ];
 
@@ -114,32 +51,29 @@ const DailyTimeRecord = () => {
 
   const rows = items[page - 1]?.map((task) => (
     <tr className="border-none ">
-      <td className="dark:text-gray-400 py-2 hidden md:table-cell lg:table-cell pl-3">
-        {task.date}
+      <td className="hidden md:table-cell lg:table-cell pl-3">
+        <Text>{task.date}</Text>
       </td>
-      <td className="dark:text-gray-400 py-2 hidden md:table-cell lg:table-cell">
-        <div className="flex gap-2 items-center">
-          <div className="flex items-center gap-1">
-            <div className="bg-yellow-300 w-2 h-2" />
-            <span>234</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="bg-indigo-300 w-2 h-2" />
-            <span>234</span>
-          </div>
-        </div>
+      <td className="hidden md:table-cell lg:table-cell">
+        <Flex>
+          <Group spacing={8}>
+            <IconClock size={16} className="text-yellow-400" />
+            <span>08:00 AM</span> - <span>12:00 PM</span>
+          </Group>
+        </Flex>
       </td>
-      <td className="dark:text-gray-400 py-2 hidden md:table-cell lg:table-cell ">
-        <div className="flex gap-2 items-center">
-          <div className="flex items-center gap-1">
-            <div className="bg-yellow-300 w-2 h-2" />
-            <span>4234</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="bg-indigo-300 w-2 h-2" />
-            <span>423</span>
-          </div>
-        </div>
+      <td className="hidden md:table-cell lg:table-cell">
+        <Flex>
+          <Group spacing={8}>
+            <IconClock size={16} className="text-violet-400" />
+            <span>01:00 PM</span> - <span>05:00 PM</span>
+          </Group>
+        </Flex>
+      </td>
+      <td className="py-2 hidden md:table-cell lg:table-cell ">
+        <Text fw="bold" fz="xs">
+          recording
+        </Text>
       </td>
     </tr>
   ));
@@ -178,7 +112,7 @@ const DailyTimeRecord = () => {
                 </th>
                 <th
                   scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider bg-gray-100 shadow-sm"
+                  className="py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm rounded-tr-md"
                 >
                   Status
                 </th>

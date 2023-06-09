@@ -91,27 +91,29 @@ const MembersTableCard = () => {
 
           <Menu.Dropdown>
             <Menu.Label>Manage intern</Menu.Label>
-            <Flex direction="column" align="start">
-              <Link to={`../profile/${member.id}`}>
+            <Menu.Item p={0} className="bg-white hover:bg-white">
+              <Flex direction="column" align="start">
+                <Link to={`../profile/${member.id}`}>
+                  <Button
+                    leftIcon={<IconInfoCircle size={16} />}
+                    variant="white"
+                    color="dark"
+                    size="xs"
+                  >
+                    View
+                  </Button>
+                </Link>
                 <Button
-                  leftIcon={<IconInfoCircle size={16} />}
+                  onClick={toggle}
+                  leftIcon={<IconUser size={16} />}
                   variant="white"
-                  color="dark"
+                  color="cyan"
                   size="xs"
                 >
-                  View
+                  Assign
                 </Button>
-              </Link>
-              <Button
-                onClick={toggle}
-                leftIcon={<IconUser size={16} />}
-                variant="white"
-                color="cyan"
-                size="xs"
-              >
-                Assign
-              </Button>
-            </Flex>
+              </Flex>
+            </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       </td>

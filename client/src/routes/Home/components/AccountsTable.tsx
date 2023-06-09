@@ -1,6 +1,6 @@
 import { Text, Avatar, Button, ActionIcon } from "@mantine/core";
 import avatar from "../../../assets/avatar.png";
-import { IconEdit } from "@tabler/icons-react";
+import { IconEdit, IconInfoCircle } from "@tabler/icons-react";
 
 const accounts = [
   {
@@ -66,12 +66,9 @@ const AccountsTable = () => {
         </Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell">
-        {/* <Button size="xs" color="cyan">
-          Edit account
-        </Button> */}
-        <ActionIcon color="cyan">
-          <IconEdit size={20} />
-        </ActionIcon>
+        <Button variant="white" color="dark" size="xs">
+          Edit
+        </Button>
       </td>
     </tr>
   ));
@@ -84,7 +81,7 @@ const AccountsTable = () => {
             scope="col"
             className="md:px-3 lg:px-3 pl-3 py-3 text-left text-[12px] font-[600] text-gray-400 border-transparent tracking-wider  bg-gray-100 shadow-sm rounded-tl-md"
           >
-            <Text>Name</Text>
+            <Text>Account</Text>
           </th>
           <th
             scope="col"

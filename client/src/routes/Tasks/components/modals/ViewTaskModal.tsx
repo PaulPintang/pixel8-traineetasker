@@ -16,6 +16,7 @@ import {
   Paper,
   Tooltip,
   Avatar,
+  Badge,
 } from "@mantine/core";
 import avatar from "../../../../assets/avatar.png";
 import {
@@ -96,7 +97,29 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
           <Text className="w-1/4" c="dimmed" fz="sm">
             Status
           </Text>
-          <Text fz="sm">{task?.status}</Text>
+          <Text fz="sm">
+            {task?.status === "inprogress" ? (
+              <Badge variant="filled" color="violet" size="sm">
+                {task?.status}
+              </Badge>
+            ) : task?.status === "forqa" ? (
+              <Badge variant="filled" color="yellow" size="sm">
+                {task?.status}
+              </Badge>
+            ) : task?.status === "completed" ? (
+              <Badge variant="filled" color="green" size="sm">
+                {task?.status}
+              </Badge>
+            ) : task?.status === "failed" ? (
+              <Badge variant="filled" color="red" size="sm">
+                {task?.status}
+              </Badge>
+            ) : (
+              <Badge variant="filled" color="blue" size="sm">
+                {task?.status}
+              </Badge>
+            )}
+          </Text>
         </Group>
       </div>
 
@@ -123,6 +146,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
               autosize
               maxRows={2}
               size="xs"
+              spellCheck="false"
             />
             <ActionIcon color="cyan" variant="white" size="lg">
               <IconSend size={19} />

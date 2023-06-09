@@ -39,6 +39,8 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
+  const [opened, setOpened] = useState(false);
+  const [menuId, setMenuId] = useState<string | number | null>(null);
 
   const data = tasks?.filter((task) =>
     filterBy ? task.status === filterBy : task
@@ -97,7 +99,7 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
       </td>
 
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Menu shadow="md">
+        <Menu shadow="md" closeOnItemClick>
           <Menu.Target>
             <ActionIcon variant="white" color="cyan">
               <IconDots size={19} />
@@ -106,46 +108,55 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
 
           <Menu.Dropdown>
             <Menu.Label>Manage task</Menu.Label>
-            <Flex direction="column" align="start">
-              <Button
-                onClick={() => {
-                  view();
-                  setViewId(task.id!);
-                }}
-                leftIcon={<IconInfoCircle size={16} />}
-                variant="white"
-                color="dark"
-                size="xs"
-              >
-                View
-              </Button>
-              <Button
-                onClick={toggle}
-                leftIcon={<IconUser size={16} />}
-                variant="white"
-                color="cyan"
-                size="xs"
-              >
-                Assign
-              </Button>
-              <Button
-                onClick={update}
-                leftIcon={<IconEdit size={16} />}
-                variant="white"
-                size="xs"
-                color="dark"
-              >
-                Edit
-              </Button>
-              <Button
-                leftIcon={<IconUser size={16} />}
-                variant="white"
-                size="xs"
-                color="red"
-              >
-                Delete
-              </Button>
-            </Flex>
+            <Menu.Item p={0} className="bg-white hover:bg-white">
+              <Flex direction="column" align="start">
+                <Button
+                  onClick={() => {
+                    view();
+                    setViewId(task.id!);
+                    // setOpened(false);
+                  }}
+                  leftIcon={<IconInfoCircle size={16} />}
+                  variant="white"
+                  color="dark"
+                  size="xs"
+                >
+                  View
+                </Button>
+                <Button
+                  onClick={() => {
+                    toggle();
+                    // setOpened(false);
+                  }}
+                  leftIcon={<IconUser size={16} />}
+                  variant="white"
+                  color="cyan"
+                  size="xs"
+                >
+                  Assign
+                </Button>
+                <Button
+                  onClick={() => {
+                    update();
+                    // setOpened(false);
+                  }}
+                  leftIcon={<IconEdit size={16} />}
+                  variant="white"
+                  size="xs"
+                  color="dark"
+                >
+                  Edit
+                </Button>
+                <Button
+                  leftIcon={<IconUser size={16} />}
+                  variant="white"
+                  size="xs"
+                  color="red"
+                >
+                  Delete
+                </Button>
+              </Flex>
+            </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       </td>

@@ -60,42 +60,42 @@ const TaskUrgent = ({ setViewId, toggle }: Props) => {
               Failed
             </Tabs.Tab>
           </Tabs.List>
-          {/* <div className="max-h-[358px]"> */}
           <Tabs.Panel value="first" className="space-y-2 p-2 h-full">
             <ScrollArea.Autosize mah={258} scrollbarSize={7}>
               {tasks
                 .filter((task) => task.status === "completed")
                 .map((task) => (
-                  <Flex
-                    gap={5}
-                    className="hover:bg-slate-50 hover:opacity-80 transition-all rounded-md p-2 cursor-pointer"
-                    onClick={() => {
-                      toggle();
-                      setViewId(task.id!);
-                      console.log("css");
-                    }}
-                  >
-                    <IconCircleCheckFilled
-                      className="text-green-300 mt-[2px]"
-                      size={18}
-                    />
-                    <div className="text-xs flex flex-col gap-[1px]">
-                      <Text className="text-gray-700">
-                        Your ticket no. <b>63243520324</b> is completed!
-                      </Text>
-                      <Group spacing={10}>
-                        <Text className="text-gray-600  text-[11px] font-semibold">
-                          Task name:
+                  <Menu.Item p={0} className="bg-white hover:bg-white">
+                    <Flex
+                      gap={5}
+                      className="hover:bg-slate-50 hover:opacity-80 transition-all rounded-md p-2 cursor-pointer"
+                      onClick={() => {
+                        toggle();
+                        setViewId(task.id!);
+                      }}
+                    >
+                      <IconCircleCheckFilled
+                        className="text-green-300 mt-[2px]"
+                        size={18}
+                      />
+                      <div className="text-xs flex flex-col gap-[1px]">
+                        <Text className="text-gray-700">
+                          Your ticket no. <b>63243520324</b> is completed!
                         </Text>
-                        <Text className="text-gray-600  text-[11px]">
-                          {task.taskname}
+                        <Group spacing={10}>
+                          <Text className="text-gray-600  text-[11px] font-semibold">
+                            Task name:
+                          </Text>
+                          <Text className="text-gray-600  text-[11px]">
+                            {task.taskname}
+                          </Text>
+                        </Group>
+                        <Text className="text-gray-500  text-[11px]">
+                          December 12, 2022 at 09:05 AM
                         </Text>
-                      </Group>
-                      <Text className="text-gray-500  text-[11px]">
-                        December 12, 2022 at 09:05 AM
-                      </Text>
-                    </div>
-                  </Flex>
+                      </div>
+                    </Flex>
+                  </Menu.Item>
                 ))}
             </ScrollArea.Autosize>
           </Tabs.Panel>
@@ -104,40 +104,40 @@ const TaskUrgent = ({ setViewId, toggle }: Props) => {
               {tasks
                 .filter((task) => task.status === "failed")
                 .map((task) => (
-                  <Flex
-                    gap={5}
-                    className="hover:bg-slate-50 hover:opacity-80 transition-all rounded-md p-2 cursor-pointer"
-                    onClick={() => {
-                      toggle();
-                      setViewId(task.id!);
-                      console.log("css");
-                    }}
-                  >
-                    <IconExclamationCircle
-                      className="text-red-300 mt-[2px]"
-                      size={18}
-                    />
-                    <div className="text-xs flex flex-col gap-[1px]">
-                      <Text className="text-gray-700">
-                        Your ticket no. <b>{task.ticketno}</b> is failed!
-                      </Text>
-                      <Group spacing={10}>
-                        <Text className="text-gray-600  text-[11px] font-semibold">
-                          Task name:
+                  <Menu.Item p={0} className="bg-white hover:bg-white">
+                    <Flex
+                      gap={5}
+                      className="hover:bg-slate-50 hover:opacity-80 transition-all rounded-md p-2 cursor-pointer"
+                      onClick={() => {
+                        toggle();
+                        setViewId(task.id!);
+                      }}
+                    >
+                      <IconExclamationCircle
+                        className="text-red-300 mt-[2px]"
+                        size={18}
+                      />
+                      <div className="text-xs flex flex-col gap-[1px]">
+                        <Text className="text-gray-700">
+                          Your ticket no. <b>{task.ticketno}</b> is failed!
                         </Text>
-                        <Text className="text-gray-600  text-[11px]">
-                          {task.taskname}
+                        <Group spacing={10}>
+                          <Text className="text-gray-600  text-[11px] font-semibold">
+                            Task name:
+                          </Text>
+                          <Text className="text-gray-600  text-[11px]">
+                            {task.taskname}
+                          </Text>
+                        </Group>
+                        <Text className="text-gray-500  text-[11px]">
+                          December 12, 2022 at 09:05 AM
                         </Text>
-                      </Group>
-                      <Text className="text-gray-500  text-[11px]">
-                        December 12, 2022 at 09:05 AM
-                      </Text>
-                    </div>
-                  </Flex>
+                      </div>
+                    </Flex>
+                  </Menu.Item>
                 ))}
             </ScrollArea.Autosize>
           </Tabs.Panel>
-          {/* </div> */}
         </Tabs>
       </Menu.Dropdown>
     </Menu>

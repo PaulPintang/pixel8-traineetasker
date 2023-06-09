@@ -8,6 +8,7 @@ import {
   IconChecklist,
   IconCalendarStats,
   IconReport,
+  IconClock,
 } from "@tabler/icons-react";
 import { NavLink, useLocation } from "react-router-dom";
 import avatar from "../assets/avatar.png";
@@ -50,7 +51,7 @@ const Navigation = () => {
           </Button>
         </NavLink>
 
-        {/* <NavLink to="tasks" className="text-gray-700">
+        <NavLink to="tasks" className="text-gray-700">
           <Button
             leftIcon={<IconChecklist size={18} />}
             size="xs"
@@ -63,8 +64,8 @@ const Navigation = () => {
           >
             <Text c={pathname === "/tasks" ? "dark" : "gray"}>Your Task</Text>
           </Button>
-        </NavLink> */}
-        {/* <NavLink to="timesheet" className="text-gray-700">
+        </NavLink>
+        <NavLink to="timesheet" className="text-gray-700">
           <Button
             leftIcon={<IconCalendarStats size={18} />}
             size="xs"
@@ -93,15 +94,25 @@ const Navigation = () => {
           >
             <Text c={pathname === "/dtr" ? "dark" : "gray"}>DTR</Text>
           </Button>
-        </NavLink>*/}
+        </NavLink>
       </Group>
-      <Group spacing={10}>
-        <Text fz="xs" className="text-gray-800 font-semibold">
-          Today:
-        </Text>
-        <Text fz="xs" c="dimmed">
-          Wednesday, June 07 2023
-        </Text>
+      <Group>
+        <Group spacing={10}>
+          <Text fz="xs" className="text-gray-800 font-semibold">
+            Schedule:
+          </Text>
+          <Text fz="xs" c="dimmed">
+            8:00 AM - 5:00 PM
+          </Text>
+        </Group>
+        <Group spacing={10}>
+          <Text fz="xs" className="text-gray-800 font-semibold">
+            Today:
+          </Text>
+          <Text fz="xs" c="dimmed">
+            Wednesday, June 07 2023
+          </Text>
+        </Group>
       </Group>
     </Flex>
   );
