@@ -25,6 +25,8 @@ import { useState, useEffect, ReactNode } from "react";
 import avatar from "../../../assets/avatar.png";
 import { Link } from "react-router-dom";
 import { IconInfoCircle } from "@tabler/icons-react";
+import AssignTaskModal from "./AssignTaskModal";
+import { useDisclosure } from "@mantine/hooks";
 
 export const members = [
   {
@@ -80,6 +82,7 @@ export const members = [
 ];
 
 const MembersTableCard = () => {
+  const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
@@ -152,6 +155,7 @@ const MembersTableCard = () => {
                 </Button>
               </Link>
               <Button
+                onClick={toggle}
                 leftIcon={<IconUser size={16} />}
                 variant="white"
                 color="cyan"
@@ -251,6 +255,7 @@ const MembersTableCard = () => {
           />
         </Flex>
       </Card>
+      <AssignTaskModal assign={assign} toggle={toggle} />
     </>
   );
 };

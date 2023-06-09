@@ -8,10 +8,15 @@ import {
   Text,
 } from "@mantine/core";
 import { useState } from "react";
-import { ITask } from "../../interfaces/task.interface";
+import { ITask } from "../../../../interfaces/task.interface";
 import { IconLink, IconPlus } from "@tabler/icons-react";
 
-const AddTaskModal = () => {
+interface ModalProps {
+  update: boolean;
+  toggle: () => void;
+}
+
+const UpdateTaskModal = ({ update, toggle }: ModalProps) => {
   const [toAddTask, setToAddTask] = useState<ITask>({
     taskname: "",
     ticketno: "",
@@ -27,12 +32,7 @@ const AddTaskModal = () => {
   };
 
   return (
-    <Modal
-      size="sm"
-      opened={false}
-      onClose={() => console.log()}
-      title="Add new task"
-    >
+    <Modal size="sm" opened={update} onClose={toggle} title="Update task">
       <div className="py-2 space-y-3">
         <div className="space-y-1">
           <p className="text-[10px] text-gray-400 uppercase font-semibold">
@@ -79,27 +79,22 @@ const AddTaskModal = () => {
       </div>
 
       <Flex>
-        <Button
-          variant="white"
-          color="gray"
-          mt="md"
-          // onClick={handleUpdateTask}
-          fullWidth
-        >
+        <Button variant="white" color="gray" mt="md" onClick={toggle} fullWidth>
           Cancel
         </Button>
 
         <Button
+          color="teal"
           mt="md"
           onClick={handleAddTask}
           fullWidth
           disabled={Object.values(toAddTask!).includes("") ? true : false}
         >
-          Add task
+          Update task
         </Button>
       </Flex>
     </Modal>
   );
 };
 
-export default AddTaskModal;
+export default UpdateTaskModal;

@@ -17,19 +17,25 @@ import {
   Tooltip,
   Avatar,
 } from "@mantine/core";
-import avatar from "../../assets/avatar.png";
+import avatar from "../../../../assets/avatar.png";
 import {
   IconChecks,
   IconExclamationCircle,
   IconMessage,
   IconSend,
 } from "@tabler/icons-react";
-const ViewTaskModal = () => {
+
+interface ModalProps {
+  view: boolean;
+  toggle: () => void;
+}
+
+const ViewTaskModal = ({ view, toggle }: ModalProps) => {
   return (
     <Modal
       size="sm"
-      opened={true}
-      onClose={() => console.log()}
+      opened={view}
+      onClose={toggle}
       title={
         <Breadcrumbs className="text-xs text-gray-500">
           <Text>Tasks</Text>

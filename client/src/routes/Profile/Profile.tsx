@@ -1,14 +1,16 @@
 import { Grid, Text, Group, Flex, Image, Button, Divider } from "@mantine/core";
-import TaskCards from "./Dashboard/components/TaskCards";
-import { TasksLabels } from "../components/ColorLabels";
-import InfoCard from "./Dashboard/components/InfoCard";
-import avatar from "../assets/avatar.png";
-import Tasks from "./Tasks/Tasks";
+import TaskCards from "../Dashboard/components/TaskCards";
+import { TasksLabels } from "../../components/ColorLabels";
+import InfoCard from "../Dashboard/components/InfoCard";
+import avatar from "../../assets/avatar.png";
+import Tasks from "../Tasks/Tasks";
 import { useParams } from "react-router-dom";
-import { members } from "./Dashboard/components/MembersTableCard";
-import RemoveTraineeModal from "../components/modals/RemoveTraineeModal";
+import { members } from "../Dashboard/components/MembersTableCard";
+import RemoveTraineeModal from "./RemoveTraineeModal";
+import { useDisclosure } from "@mantine/hooks";
 
 const Profile = () => {
+  const [remove, { toggle }] = useDisclosure(false);
   const { id } = useParams();
 
   const user = members.find((member) => member.id === Number(id));
@@ -30,7 +32,14 @@ const Profile = () => {
               </Text>
 
               <div className="pt-1">
-                <Button size="xs" variant="light" color="red" pt- fullWidth>
+                <Button
+                  onClick={toggle}
+                  size="xs"
+                  variant="light"
+                  color="red"
+                  pt-
+                  fullWidth
+                >
                   Remove Trainee
                 </Button>
               </div>
@@ -47,7 +56,7 @@ const Profile = () => {
       </Grid>
       <Divider my={20} />
       <Tasks />
-      <RemoveTraineeModal />
+      <RemoveTraineeModal remove={remove} toggle={toggle} />
     </>
   );
 };

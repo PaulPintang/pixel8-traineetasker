@@ -1,10 +1,15 @@
 import { Modal, Title, Text, Flex, Button, TextInput } from "@mantine/core";
 
-const RemoveTraineeModal = () => {
+interface ModalProps {
+  remove: boolean;
+  toggle: () => void;
+}
+
+const RemoveTraineeModal = ({ remove, toggle }: ModalProps) => {
   return (
     <Modal
-      opened={false}
-      onClose={() => console.log("")}
+      opened={remove}
+      onClose={toggle}
       size="xs"
       centered
       withCloseButton={false}
@@ -25,7 +30,7 @@ const RemoveTraineeModal = () => {
           autoFocus
         />
         <Flex gap={10} pt={10}>
-          <Button variant="light" color="gray" fullWidth>
+          <Button onClick={toggle} variant="light" color="gray" fullWidth>
             Cancel
           </Button>
           <Button

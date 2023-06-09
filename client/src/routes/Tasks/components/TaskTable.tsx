@@ -25,10 +25,16 @@ import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
 import avatar from "../../../assets/avatar.png";
 import { tasks } from "../../Dashboard/components/TaskTableCard";
-import AddTaskModal from "../../../components/modals/AddTaskModal";
-import ViewTaskModal from "../../../components/modals/ViewTaskModal";
+import { useDisclosure } from "@mantine/hooks";
+import AssignMemberModal from "./modals/AssignMemberModal";
 
-const TaskTable = () => {
+interface Props {
+  view: () => void;
+  update: () => void;
+}
+
+const TaskTable = ({ view, update }: Props) => {
+  const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
@@ -100,6 +106,7 @@ const TaskTable = () => {
             <Menu.Label>Manage task</Menu.Label>
             <Flex direction="column" align="start">
               <Button
+                onClick={view}
                 leftIcon={<IconInfoCircle size={16} />}
                 variant="white"
                 color="dark"
@@ -108,6 +115,7 @@ const TaskTable = () => {
                 View
               </Button>
               <Button
+                onClick={toggle}
                 leftIcon={<IconUser size={16} />}
                 variant="white"
                 color="cyan"
@@ -116,6 +124,7 @@ const TaskTable = () => {
                 Assign
               </Button>
               <Button
+                onClick={update}
                 leftIcon={<IconEdit size={16} />}
                 variant="white"
                 size="xs"
@@ -230,9 +239,7 @@ const TaskTable = () => {
           />
         </Flex>
       </Card>
-      {/* Modals */}
-      <AddTaskModal />
-      <ViewTaskModal />
+      <AssignMemberModal assign={assign} toggle={toggle} />
     </>
   );
 };

@@ -1,12 +1,17 @@
 import { Modal, Autocomplete, Button, Text, Group, Box } from "@mantine/core";
-import { tasks } from "../../routes/Dashboard/components/TaskTableCard";
+import { tasks } from "../../Dashboard/components/TaskTableCard";
 
-const AssignTaskModal = () => {
+interface ModalProps {
+  assign: boolean;
+  toggle: () => void;
+}
+
+const AssignTaskModal = ({ assign, toggle }: ModalProps) => {
   return (
     <Modal
       size="sm"
-      opened={false}
-      onClose={() => console.log("")}
+      opened={assign}
+      onClose={toggle}
       title="Assign task"
       centered
     >
