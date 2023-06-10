@@ -5,10 +5,10 @@ const LoaderFallback = () => {
     <LoadingOverlay
       className="h-screen"
       loader={
-        <Button variant="white" color="teal" size="xs" mb={55} loading>
-          <Text c="teal" fz="sm" className="tracking-wide">
+        <Button variant="white" color="dark" size="md" mb={55} loading>
+          {/* <Text c="teal" fz="sm" className="tracking-wide">
             Loading . . .
-          </Text>
+          </Text> */}
         </Button>
       }
       visible={true}

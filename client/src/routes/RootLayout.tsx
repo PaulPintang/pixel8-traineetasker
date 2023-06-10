@@ -5,18 +5,21 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Navigation from "../components/Navigation";
 import LoaderFallback from "../components/LoaderFallback";
+import ProvideDetails from "../components/StepperInfo/ProvideDetails";
+import StepperInfo from "../components/StepperInfo/StepperInfo";
 
 const RootLayout = () => {
   return (
     <Container size="lg">
       <Header />
       <Toaster />
-      <Navigation />
       <Suspense fallback={<LoaderFallback />}>
+        {/* <Navigation /> */}
         {/* <div className="pt-[18px]"> */}
-        <div className="bg-slate-50  bg-opacity-30 w-full border-gray-100 px-4 pt-[18px]">
+        {/* <div className="bg-slate-50  bg-opacity-30 w-full border-gray-100 px-4 pt-[18px]">
           <Outlet />
-        </div>
+        </div> */}
+        <StepperInfo />
       </Suspense>
     </Container>
   );
