@@ -1,6 +1,6 @@
 import { Card, Text, Flex, Group, Button, Pagination } from "@mantine/core";
 import { chunk } from "lodash";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TimeSheetsLabels } from "../../components/ColorLabels";
 import { IconClock } from "@tabler/icons-react";
 
@@ -39,26 +39,62 @@ const sheets = [
   },
 ];
 
+interface Records {
+  date: string;
+  status: "recording" | "recorded";
+  morning: {
+    in: string;
+    out: string;
+  };
+  afternoon: {
+    in: string;
+    out: string;
+  };
+}
+
 const DailyTimeRecord = () => {
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
+  const [dtr, setDtr] = useState<Records>({
+    date: "",
+    status: "recording",
+    morning: {
+      in: "",
+      out: "",
+    },
+    afternoon: {
+      in: "",
+      out: "",
+    },
+  });
+  const [records, setRecords] = useState<Records[]>([]);
 
-  const data = sheets?.filter((task) =>
-    filterBy ? task.status === filterBy : task
-  );
+  const handleTimeIn = () => {
+    setRecords([
+      ...records,
+      {
+        ...dtr,
+        morning: {
+          ...dtr.morning,
+          in: "in",
+        },
+      },
+    ]);
+  };
 
-  const items = chunk(data, 10);
+  const items = chunk(records, 10);
 
-  const rows = items[page - 1]?.map((task) => (
+  const rows = items[page - 1]?.map((record) => (
     <tr className="border-none ">
       <td className="hidden md:table-cell lg:table-cell pl-3">
-        <Text>{task.date}</Text>
+        <Text>{record.date}</Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell">
         <Flex>
           <Group spacing={8}>
             <IconClock size={16} className="text-yellow-400" />
-            <span>08:00 AM</span> - <span>12:00 PM</span>
+            {/* <span>08:00 AM</span> - <span>12:00 PM</span> */}
+            <span>{record.morning.in}</span> - <span>{record.morning.out}</span>
           </Group>
         </Flex>
       </td>
@@ -66,13 +102,15 @@ const DailyTimeRecord = () => {
         <Flex>
           <Group spacing={8}>
             <IconClock size={16} className="text-violet-400" />
-            <span>01:00 PM</span> - <span>05:00 PM</span>
+            {/* <span>01:00 PM</span> - <span>05:00 PM</span> */}
+            <span>{record.afternoon.in}</span> -{" "}
+            <span>{record.morning.out}</span>
           </Group>
         </Flex>
       </td>
       <td className="py-2 hidden md:table-cell lg:table-cell ">
         <Text fw="bold" fz="xs">
-          recording
+          {record.status}
         </Text>
       </td>
     </tr>
@@ -83,8 +121,8 @@ const DailyTimeRecord = () => {
       <Flex justify="space-between" align="center" pb={6}>
         <TimeSheetsLabels />
 
-        <Button color="yellow" size="xs">
-          Start Time In
+        <Button color="yellow" size="xs" onClick={handleTimeIn}>
+          Time In
         </Button>
       </Flex>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)]">
