@@ -5,6 +5,7 @@ import { MantineProvider } from "@mantine/core";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 import "./index.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import RootLayout from "./routes/RootLayout";
 import { Protected } from "./middleware/Protected";
@@ -55,15 +56,17 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
-      <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        theme={{
-          fontFamily: "Lato, sans-serif",
-        }}
-      >
-        <RouterProvider router={router} />
-      </MantineProvider>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_OAUTH_CLIENT_ID}>
+        <MantineProvider
+          withGlobalStyles
+          withNormalizeCSS
+          theme={{
+            fontFamily: "Lato, sans-serif",
+          }}
+        >
+          <RouterProvider router={router} />
+        </MantineProvider>
+      </GoogleOAuthProvider>
     </Provider>
   </React.StrictMode>
 );

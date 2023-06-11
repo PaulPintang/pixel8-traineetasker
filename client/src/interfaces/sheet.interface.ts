@@ -1,4 +1,4 @@
-export interface Sheets {
+export interface ISheets {
   member: string;
   date: string;
   task: string;

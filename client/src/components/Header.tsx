@@ -14,7 +14,10 @@ import { NavLink, useLocation } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import logo from "../assets/Pixel8-Official-Logo.jpg";
 import avatar from "../assets/avatar.png";
+import { useGoogleLogin } from "@react-oauth/google";
 import { IconLogout } from "@tabler/icons-react";
+import axios from "axios";
+import { setUser, logout } from "../features/auth/authSlice";
 
 type Link = {
   isActive: boolean;
@@ -22,9 +25,28 @@ type Link = {
 };
 
 const Header = () => {
-  const { isAuth } = useAppSelector((state) => state.auth);
   const location = useLocation();
   const { pathname } = location;
+
+  const GoogleUseAuth = useGoogleLogin({
+    onSuccess: (res) => {
+      const OAuth = async () => {
+        const auth = await axios.get(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${res.access_token}`,
+            },
+          }
+        );
+        // do the query
+        console.log(auth);
+      };
+
+      OAuth().catch((error) => console.log(error));
+    },
+  });
+
   return (
     <Flex justify="space-between" align="center">
       <Image src={logo} width={205} className="relative" left={-20} />
@@ -50,7 +72,7 @@ const Header = () => {
         {/* <Badge color="teal" variant="dot" className="text-gray-700">
           Designer
         </Badge> */}
-        {/* <Button>Login to start</Button> */}
+        <Button onClick={() => GoogleUseAuth()}>Login to start</Button>
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
             <ActionIcon radius="xl" size={38} variant="transparent">

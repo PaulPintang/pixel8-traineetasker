@@ -7,6 +7,7 @@ import Navigation from "../components/Navigation";
 import LoaderFallback from "../components/LoaderFallback";
 import ProvideDetails from "../components/StepperInfo/ProvideDetails";
 import StepperInfo from "../components/StepperInfo/StepperInfo";
+import TestRTK from "./TestRTK";
 
 const RootLayout = () => {
   return (
@@ -17,9 +18,10 @@ const RootLayout = () => {
         <Navigation />
         {/* <div className="pt-[18px]"> */}
         <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]">
-          <Outlet />
+          {/* <Outlet /> */}
         </div>
-        <StepperInfo />
+        {/* <StepperInfo /> */}
+        <TestRTK />
       </Suspense>
     </Container>
   );
