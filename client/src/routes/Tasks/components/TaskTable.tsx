@@ -99,7 +99,12 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
       </td>
 
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Menu shadow="md" closeOnItemClick>
+        <Menu
+          shadow="md"
+          transitionProps={{ transition: "rotate-right", duration: 150 }}
+          closeOnItemClick
+          withArrow
+        >
           <Menu.Target>
             <ActionIcon variant="white" color="cyan">
               <IconDots size={19} />

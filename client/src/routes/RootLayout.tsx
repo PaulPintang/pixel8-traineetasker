@@ -14,11 +14,11 @@ const RootLayout = () => {
       <Header />
       <Toaster />
       <Suspense fallback={<LoaderFallback />}>
-        {/* <Navigation /> */}
+        <Navigation />
         {/* <div className="pt-[18px]"> */}
-        {/* <div className="bg-slate-50  bg-opacity-30 w-full border-gray-100 px-4 pt-[18px]">
+        <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]">
           <Outlet />
-        </div> */}
+        </div>
         <StepperInfo />
       </Suspense>
     </Container>

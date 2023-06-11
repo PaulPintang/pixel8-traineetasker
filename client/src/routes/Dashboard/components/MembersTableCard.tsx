@@ -52,21 +52,21 @@ const MembersTableCard = () => {
         </Group>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <Text className="font-semibold">{member.gender}</Text>
+        <Text className="font-semibold"></Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
         <Text className="font-semibold">
-          {member.requiredHours} <span className="font-normal">hours</span>
+          {member.hours.ojtHours} <span className="font-normal">hours</span>
         </Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
         <Text className="font-semibold">
-          {member.pendingHours} <span className="font-normal">hours</span>
+          {member.hours.pending} <span className="font-normal">hours</span>
         </Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
         <Text className="font-semibold">
-          {member.renderedHours} <span className="font-normal">hours</span>
+          {member.hours.rendered} <span className="font-normal">hours</span>
         </Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
@@ -82,7 +82,11 @@ const MembersTableCard = () => {
         </Link>
       </td> */}
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Menu shadow="md">
+        <Menu
+          shadow="md"
+          transitionProps={{ transition: "rotate-right", duration: 150 }}
+          withArrow
+        >
           <Menu.Target>
             <ActionIcon variant="white" color="cyan">
               <IconDots size={19} />

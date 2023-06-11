@@ -10,4 +10,5 @@ export interface ITask {
   timeline?: string;
   comments?: string;
   spent?: string;
+  todos: string[];
 }
