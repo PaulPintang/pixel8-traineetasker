@@ -5,24 +5,27 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Navigation from "../components/Navigation";
 import LoaderFallback from "../components/LoaderFallback";
-import ProvideDetails from "../components/StepperInfo/ProvideDetails";
 import StepperInfo from "../components/StepperInfo/StepperInfo";
-import TestRTK from "./TestRTK";
+import { useAppSelector } from "../app/hooks";
 
 const RootLayout = () => {
+  const { user } = useAppSelector((state) => state.auth);
   return (
     <Container size="lg">
       <Header />
       <Toaster />
-      <Suspense fallback={<LoaderFallback />}>
-        <Navigation />
-        {/* <div className="pt-[18px]"> */}
-        <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]">
-          {/* <Outlet /> */}
-        </div>
-        {/* <StepperInfo /> */}
-        <TestRTK />
-      </Suspense>
+      {user?.school === "" ||
+      user?.course === "" ||
+      user?.hours?.ojtHours === 0 ? (
+        <StepperInfo />
+      ) : (
+        <Suspense fallback={<LoaderFallback />}>
+          <Navigation />
+          <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]">
+            <Outlet />
+          </div>
+        </Suspense>
+      )}
     </Container>
   );
 };

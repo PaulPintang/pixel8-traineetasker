@@ -1,12 +1,14 @@
 export interface IUser {
-  id: string | number;
-  name: string;
-  email: string;
-  picture: string;
-  hours: {
+  _id?: string;
+  name?: string;
+  email?: string;
+  picture?: string;
+  school?: string;
+  course?: string;
+  hours?: {
     ojtHours: number;
     rendered: number;
     pending: number;
   };
-  completedTask: number;
+  completedTask?: number;
 }

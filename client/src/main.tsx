@@ -31,23 +31,43 @@ const router = createBrowserRouter([
       },
       {
         path: "dashboard",
-        element: <Dashboard />,
+        element: (
+          <Protected>
+            <Dashboard />
+          </Protected>
+        ),
       },
       {
         path: "timesheet",
-        element: <TimeSheets />,
+        element: (
+          <Protected>
+            <TimeSheets />
+          </Protected>
+        ),
       },
       {
         path: "tasks",
-        element: <Tasks />,
+        element: (
+          <Protected>
+            <Tasks />
+          </Protected>
+        ),
       },
       {
         path: "dtr",
-        element: <DailyTimeRecord />,
+        element: (
+          <Protected>
+            <DailyTimeRecord />
+          </Protected>
+        ),
       },
       {
         path: "profile/:id",
-        element: <Profile />,
+        element: (
+          <Protected>
+            <Profile />
+          </Protected>
+        ),
       },
     ],
   },
