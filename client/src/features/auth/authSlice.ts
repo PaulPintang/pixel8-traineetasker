@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IUser } from "../../interfaces/user.interface";
+import { IAccount, ITrainee } from "../../interfaces/user.interface";
 
 interface AuthState {
-  user: IUser | null;
+  user: IAccount | null;
 }
 
 const initialState: AuthState = {

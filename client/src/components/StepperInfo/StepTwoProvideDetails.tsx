@@ -10,28 +10,16 @@ import {
   NumberInput,
 } from "@mantine/core";
 import { Props } from "./StepperInfo";
-import { useUpdateUserMutation } from "../../features/api/user/userApiSlice";
 import { useAppDispatch } from "../../app/hooks";
 import { setUser } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
-const ProvideDetails = ({ setUserInfo, userInfo }: Props) => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const [updateUser, { isLoading }] = useUpdateUserMutation();
-
-  const updateInfo = async () => {
-    try {
-      const user = await updateUser({
-        _id: userInfo._id,
-        course: userInfo.course,
-        school: userInfo.school,
-        hours: userInfo.hours,
-      }).unwrap();
-      dispatch(setUser(user));
-      navigate("dashboard");
-    } catch (error) {}
-  };
+const StepTwoProvideDetails = ({
+  setUserInfo,
+  userInfo,
+  setStep,
+  isLoading,
+}: Props) => {
   return (
     <Box component="div">
       <Text c="dimmed">2/2</Text>
@@ -68,7 +56,7 @@ const ProvideDetails = ({ setUserInfo, userInfo }: Props) => {
         <Group spacing={0}>
           {!isLoading && (
             <Button
-              onClick={() => setUserInfo({ ...userInfo, course: "" })}
+              onClick={() => setStep(1)}
               variant="white"
               color="gray"
               p={0}
@@ -80,7 +68,7 @@ const ProvideDetails = ({ setUserInfo, userInfo }: Props) => {
             <Button
               variant="white"
               color="cyan"
-              onClick={updateInfo}
+              type="submit"
               loading={isLoading}
             >
               Done
@@ -94,4 +82,4 @@ const ProvideDetails = ({ setUserInfo, userInfo }: Props) => {
   );
 };
 
-export default ProvideDetails;
+export default StepTwoProvideDetails;

@@ -1,8 +1,12 @@
-export interface IUser {
+export interface IAccount {
   _id?: string;
   name?: string;
   email?: string;
   picture?: string;
+  role?: "admin" | "supervisor" | "trainee" | "";
+}
+
+export interface ITrainee extends IAccount {
   school?: string;
   course?: string;
   hours?: {
@@ -11,4 +15,9 @@ export interface IUser {
     pending: number;
   };
   completedTask?: number;
+}
+
+export interface IPixel8Acc extends IAccount {
+  course: string;
+  trainees: number;
 }

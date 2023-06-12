@@ -1,10 +1,8 @@
 import { Box, Text, Title, Button, Stack, Radio, Flex } from "@mantine/core";
-import { IUser } from "../../interfaces/user.interface";
 import { Props } from "./StepperInfo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const SelectField = ({ setUserInfo, userInfo }: Props) => {
-  const [value, setValue] = useState("developer");
+const StepOneSelectField = ({ setUserInfo, userInfo, setStep }: Props) => {
   return (
     <Box component="div">
       <Text c="dimmed">1/2</Text>
@@ -17,7 +15,10 @@ const SelectField = ({ setUserInfo, userInfo }: Props) => {
         <Text c="dark" pb={10}>
           Our company offer
         </Text>
-        <Radio.Group value={value} onChange={setValue}>
+        <Radio.Group
+          value={userInfo.course}
+          onChange={(value) => setUserInfo({ ...userInfo, course: value })}
+        >
           <Stack spacing={10}>
             <Radio
               value="developer"
@@ -32,7 +33,7 @@ const SelectField = ({ setUserInfo, userInfo }: Props) => {
       <Flex justify="end" pt={70}>
         <Button
           className=""
-          onClick={() => setUserInfo({ ...userInfo, course: value })}
+          onClick={() => setStep(2)}
           variant="white"
           color="cyan"
         >
@@ -43,4 +44,4 @@ const SelectField = ({ setUserInfo, userInfo }: Props) => {
   );
 };
 
-export default SelectField;
+export default StepOneSelectField;

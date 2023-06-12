@@ -14,13 +14,11 @@ const RootLayout = () => {
     <Container size="lg">
       <Header />
       <Toaster />
-      {user?.school === "" ||
-      user?.course === "" ||
-      user?.hours?.ojtHours === 0 ? (
+      {user?.role === "" ? (
         <StepperInfo />
       ) : (
         <Suspense fallback={<LoaderFallback />}>
-          <Navigation />
+          {user && <Navigation />}
           <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]">
             <Outlet />
           </div>

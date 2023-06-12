@@ -19,7 +19,7 @@ import { IconLogout } from "@tabler/icons-react";
 import axios from "axios";
 import { setUser, logout } from "../features/auth/authSlice";
 import {
-  useCreatUserMutation,
+  useLoginMutation,
   useLogoutUserMutation,
 } from "../features/api/user/userApiSlice";
 
@@ -32,7 +32,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { pathname } = location;
-  const [createUser, create] = useCreatUserMutation();
+  const [loginUser, loginState] = useLoginMutation();
   const [logoutUser, logoutState] = useLogoutUserMutation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
@@ -49,7 +49,7 @@ const Header = () => {
           }
         );
         const { name, email, picture } = user.data;
-        const data = await createUser({ name, email, picture }).unwrap();
+        const data = await loginUser({ name, email, picture }).unwrap();
         dispatch(setUser(data));
         navigate("dashboard");
       };
@@ -90,7 +90,7 @@ const Header = () => {
           Administrator
         </Badge> */}
 
-        {user?.course && (
+        {user?.role && (
           <Badge color="teal" variant="dot" className="text-gray-700">
             Designer
           </Badge>
@@ -126,7 +126,7 @@ const Header = () => {
             onClick={() => GoogleUseAuth()}
             size="xs"
             color="cyan"
-            loading={create.isLoading}
+            loading={loginState.isLoading}
           >
             Login to start
           </Button>

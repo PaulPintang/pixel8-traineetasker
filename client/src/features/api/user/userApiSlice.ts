@@ -1,13 +1,13 @@
 import { method } from "lodash";
 import { apiSlice } from "../apiSlice";
-import { IUser } from "../../../interfaces/user.interface";
+import { IAccount } from "../../../interfaces/user.interface";
 // ? endpoint must be in env
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    creatUser: builder.mutation<IUser, IUser>({
+    login: builder.mutation<IAccount, IAccount>({
       query: (user) => ({
-        url: "user/create",
+        url: "auth/login",
         method: "POST",
         body: user,
       }),
@@ -15,24 +15,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     logoutUser: builder.mutation<any, void>({
       query: () => ({
-        url: "user/logout",
+        url: "auth/logout",
         method: "POST",
-      }),
-      invalidatesTags: ["User"],
-    }),
-    updateUser: builder.mutation<IUser, IUser>({
-      query: (data) => ({
-        url: `user/${data._id}`,
-        method: "PATCH",
-        body: data,
       }),
       invalidatesTags: ["User"],
     }),
   }),
 });
 
-export const {
-  useCreatUserMutation,
-  useLogoutUserMutation,
-  useUpdateUserMutation,
-} = userApiSlice;
+export const { useLoginMutation, useLogoutUserMutation } = userApiSlice;
