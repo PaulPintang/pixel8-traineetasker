@@ -1,20 +1,26 @@
+import { lazy, useState } from "react";
 import { Flex, Grid, Text, Button } from "@mantine/core";
 import { ManageTaskLabels } from "../../components/ColorLabels";
-import NewTask from "./components/NewTask";
-import InProgress from "./components/InProgress";
-import ForQa from "./components/ForQa";
-import Completed from "./components/Completed";
+const NewTask = lazy(() => import("./components/NewTask"));
+const InProgress = lazy(() => import("./components/InProgress"));
+const ForQa = lazy(() => import("./components/ForQa"));
+const Completed = lazy(() => import("./components/Completed"));
+// import NewTask from "./components/NewTask";
+// import InProgress from "./components/InProgress";
+// import ForQa from "./components/ForQa";
+// import Completed from "./components/Completed";
 import { IconBug, IconUrgent } from "@tabler/icons-react";
 import TaskUrgent from "./components/TaskUrgent";
-import TaskTable from "./components/TaskTable";
-import { addModal } from "../../features/modals/modalSlice";
+const TaskTable = lazy(() => import("./components/TaskTable"));
+// import TaskTable from "./components/TaskTable";
 import AddTaskModal from "./components/modals/AddTaskModal";
 import { useDisclosure } from "@mantine/hooks";
 import ViewTaskModal from "./components/modals/ViewTaskModal";
 import UpdateTaskModal from "./components/modals/UpdateTaskModal";
-import { useState } from "react";
+import { useAppSelector } from "../../app/hooks";
 
 const Tasks = () => {
+  const { user } = useAppSelector((state) => state.auth);
   const [add, toggleAdd] = useDisclosure(false);
   const [update, toggleUpdate] = useDisclosure(false);
   const [view, toggleView] = useDisclosure(false);
@@ -23,42 +29,49 @@ const Tasks = () => {
     <>
       <Flex justify="space-between">
         <ManageTaskLabels />
-        <Button color="cyan" size="xs" onClick={toggleAdd.toggle}>
-          Add task
-        </Button>
-        <TaskUrgent setViewId={setViewId} toggle={toggleView.toggle} />
+        {user?.role === "trainee" ? (
+          <TaskUrgent setViewId={setViewId} toggle={toggleView.toggle} />
+        ) : (
+          <Button color="cyan" size="xs" onClick={toggleAdd.toggle}>
+            Add task
+          </Button>
+        )}
       </Flex>
-      <Grid className="bg-white" mt={15}>
-        <Grid.Col span={3} className="space-y-2">
-          <Text className="uppercase text-xs font-semibold text-gray-500">
-            New Task
-          </Text>
-          <NewTask setViewId={setViewId} toggle={toggleView.toggle} />
-        </Grid.Col>
-        <Grid.Col span={3} className="space-y-2">
-          <Text className="uppercase text-xs font-semibold text-gray-500">
-            In-Progress
-          </Text>
-          <InProgress setViewId={setViewId} toggle={toggleView.toggle} />
-        </Grid.Col>
-        <Grid.Col span={3} className="space-y-2">
-          <Text className="uppercase text-xs font-semibold text-gray-500">
-            For Qa
-          </Text>
-          <ForQa setViewId={setViewId} toggle={toggleView.toggle} />
-        </Grid.Col>
-        <Grid.Col span={3} className="space-y-2">
-          <Text className="uppercase text-xs font-semibold text-gray-500">
-            Completed
-          </Text>
-          <Completed setViewId={setViewId} toggle={toggleView.toggle} />
-        </Grid.Col>
-      </Grid>
-      <TaskTable
-        setViewId={setViewId}
-        view={toggleView.toggle}
-        update={toggleUpdate.toggle}
-      />
+
+      {user?.role === "trainee" ? (
+        <Grid className="bg-white" mt={15}>
+          <Grid.Col span={3} className="space-y-2">
+            <Text className="uppercase text-xs font-semibold text-gray-500">
+              New Task
+            </Text>
+            <NewTask setViewId={setViewId} toggle={toggleView.toggle} />
+          </Grid.Col>
+          <Grid.Col span={3} className="space-y-2">
+            <Text className="uppercase text-xs font-semibold text-gray-500">
+              In-Progress
+            </Text>
+            <InProgress setViewId={setViewId} toggle={toggleView.toggle} />
+          </Grid.Col>
+          <Grid.Col span={3} className="space-y-2">
+            <Text className="uppercase text-xs font-semibold text-gray-500">
+              For Qa
+            </Text>
+            <ForQa setViewId={setViewId} toggle={toggleView.toggle} />
+          </Grid.Col>
+          <Grid.Col span={3} className="space-y-2">
+            <Text className="uppercase text-xs font-semibold text-gray-500">
+              Completed
+            </Text>
+            <Completed setViewId={setViewId} toggle={toggleView.toggle} />
+          </Grid.Col>
+        </Grid>
+      ) : (
+        <TaskTable
+          setViewId={setViewId}
+          view={toggleView.toggle}
+          update={toggleUpdate.toggle}
+        />
+      )}
 
       {/* Modals */}
       <AddTaskModal add={add} toggle={toggleAdd.toggle} />

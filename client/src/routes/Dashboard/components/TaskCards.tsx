@@ -8,8 +8,10 @@ import {
   IconUrgent,
 } from "@tabler/icons-react";
 import React from "react";
+import { useAppSelector } from "../../../app/hooks";
 
 const TaskCards = () => {
+  const { user } = useAppSelector((state) => state.auth);
   return (
     <Grid grow>
       <Grid.Col className="bg-re d-300" span={4}>
@@ -19,103 +21,170 @@ const TaskCards = () => {
             <ActionIcon radius={50} disabled>
               <IconStar size={18} />
             </ActionIcon>
-            <Text fz={13} c="dimmed">
-              All Tasks
-            </Text>
-            {/* <Text fz={13} c="dimmed">
-              New Tasks
-            </Text> */}
-            <Text>1</Text>
+            {user?.role === "trainee" ? (
+              <>
+                <Text fz={13} c="dimmed">
+                  New Task
+                </Text>
+                <Text>1</Text>
+              </>
+            ) : (
+              <>
+                <Text fz={13} c="dimmed">
+                  All Tasks
+                </Text>
+                <Text>1</Text>
+              </>
+            )}
           </Flex>
         </Card>
       </Grid.Col>
       <Grid.Col className="bg-re d-300" span={4}>
         <Card className="h-[80px] bg-opacity-60 rounded-md shadow-md ">
-          <div className="bg-blue-300 w-8 h-1"></div>
-          {/* <div className="bg-red-300 w-8 h-1"></div> */}
+          {user?.role === "trainee" ? (
+            <div className="bg-red-300 w-8 h-1"></div>
+          ) : (
+            <div className="bg-blue-300 w-8 h-1"></div>
+          )}
           <Flex pt={10} justify="space-between" align="center">
             <ActionIcon radius={50} disabled>
               <IconUrgent size={18} />
             </ActionIcon>
-            <Text fz={13} c="dimmed">
-              Available
-            </Text>
-            {/* <Text fz={13} c="dimmed">
-              Failed
-            </Text> */}
+
             <Text>1</Text>
+            {user?.role === "trainee" ? (
+              <>
+                <Text fz={13} c="dimmed">
+                  Failed
+                </Text>
+                <Text>1</Text>
+              </>
+            ) : (
+              <>
+                <Text fz={13} c="dimmed">
+                  Available
+                </Text>
+                <Text>1</Text>
+              </>
+            )}
           </Flex>
         </Card>
       </Grid.Col>
       <Grid.Col className="bg-re d-300" span={4}>
         <Card className="h-[80px] bg-opacity-60 rounded-md shadow-md ">
-          <div className="bg-violet-300 w-8 h-1"></div>
-          {/* <div className="bg-green-300 w-8 h-1"></div> */}
+          {user?.role === "trainee" ? (
+            <div className="bg-green-300 w-8 h-1"></div>
+          ) : (
+            <div className="bg-violet-300 w-8 h-1"></div>
+          )}
           <Flex pt={10} justify="space-between" align="center">
             <ActionIcon radius={50} disabled>
               <IconSquareRoundedCheck size={18} />
             </ActionIcon>
-            {/* <Text fz={13} c="dimmed">
-              Completed
-            </Text> */}
-            <Text fz={13} c="dimmed">
-              In Progress
-            </Text>
-            <Text>1</Text>
+
+            {user?.role === "trainee" ? (
+              <>
+                <Text fz={13} c="dimmed">
+                  Completed
+                </Text>
+                <Text>1</Text>
+              </>
+            ) : (
+              <>
+                <Text fz={13} c="dimmed">
+                  In Progress
+                </Text>
+                <Text>1</Text>
+              </>
+            )}
           </Flex>
         </Card>
       </Grid.Col>
       <Grid.Col className="bg-re d-300" span={4}>
         <Card className="h-[80px] bg-opacity-60 rounded-md shadow-md ">
-          <div className="bg-green-300 w-8 h-1"></div>
-          {/* <div className="bg-teal-300 w-8 h-1"></div> */}
+          {user?.role === "trainee" ? (
+            <div className="bg-teal-300 w-8 h-1"></div>
+          ) : (
+            <div className="bg-green-300 w-8 h-1"></div>
+          )}
+
           <Flex pt={10} justify="space-between" align="center">
             <ActionIcon radius={50} disabled>
               <Icon24Hours size={18} />
             </ActionIcon>
-            <Text fz={13} c="dimmed">
-              Completed
-            </Text>
-            {/* <Text fz={13} c="dimmed">
-              OJT hours
-            </Text> */}
-            <Text>219</Text>
+            {user?.role === "trainee" ? (
+              <>
+                <Text fz={13} c="dimmed">
+                  OJT hours
+                </Text>
+                <Text>219</Text>
+              </>
+            ) : (
+              <>
+                <Text fz={13} c="dimmed">
+                  Completed
+                </Text>
+                <Text>1</Text>
+              </>
+            )}
           </Flex>
         </Card>
       </Grid.Col>
       <Grid.Col className="bg-re d-300" span={4}>
         <Card className="h-[80px] bg-opacity-60 rounded-md shadow-md ">
-          <div className="bg-yellow-400 w-8 h-1"></div>
-          {/* <div className="bg-violet-400 w-8 h-1"></div> */}
+          {user?.role === "trainee" ? (
+            <div className="bg-violet-400 w-8 h-1"></div>
+          ) : (
+            <div className="bg-yellow-400 w-8 h-1"></div>
+          )}
           <Flex pt={10} justify="space-between" align="center">
             <ActionIcon radius={50} disabled>
               <IconFilePower size={18} />
             </ActionIcon>
-            <Text fz={13} c="dimmed">
-              For QA
-            </Text>
-            {/* <Text fz={13} c="dimmed">
-              Pending hours
-            </Text> */}
-            <Text>20</Text>
+            {user?.role === "trainee" ? (
+              <>
+                <Text fz={13} c="dimmed">
+                  Pending hours
+                </Text>
+                <Text>20</Text>
+              </>
+            ) : (
+              <>
+                <Text fz={13} c="dimmed">
+                  For QA
+                </Text>
+                <Text>20</Text>
+              </>
+            )}
           </Flex>
         </Card>
       </Grid.Col>
       <Grid.Col className="bg-re d-300" span={4}>
         <Card className="h-[80px] bg-opacity-60 rounded-md shadow-md ">
-          <div className="bg-red-300 w-8 h-1"></div>
-          {/* <div className="bg-green-300 w-8 h-1"></div> */}
+          {user?.role === "trainee" ? (
+            <div className="bg-green-300 w-8 h-1"></div>
+          ) : (
+            <div className="bg-red-300 w-8 h-1"></div>
+          )}
           <Flex pt={10} justify="space-between" align="center">
             <ActionIcon radius={50} disabled>
               <IconCalendarCheck size={18} />
             </ActionIcon>
-            <Text fz={13} c="dimmed">
-              Failed
-            </Text>
-            {/* <Text fz={13} c="dimmed">
-              Total Today
-            </Text> */}
-            <Text>1</Text>
+            {user?.role === "trainee" ? (
+              <>
+                <Text fz={13} c="dimmed">
+                  Total Today
+                </Text>
+                <Text>1</Text>
+              </>
+            ) : (
+              <>
+                <Text fz={13} c="dimmed">
+                  Failed
+                </Text>
+                <Text>20</Text>
+              </>
+            )}
           </Flex>
         </Card>
       </Grid.Col>

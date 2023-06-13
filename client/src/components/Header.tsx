@@ -49,6 +49,7 @@ const Header = () => {
           }
         );
         const { name, email, picture } = user.data;
+        // ? OAuth return email info, and do a POST request to create account in database
         const data = await loginUser({ name, email, picture }).unwrap();
         dispatch(setUser(data));
         navigate("dashboard");

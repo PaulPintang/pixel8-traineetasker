@@ -126,7 +126,7 @@ const MembersTableCard = () => {
 
   return (
     <>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-370px)]">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-370px)] w-full">
         <div className="h-[93%] overflow-hidden">
           <table className="border-collapse border-none w-full">
             <thead>

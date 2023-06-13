@@ -1,50 +1,56 @@
 import React from "react";
 import { Box, Card, Flex, Text, Group, Avatar, Tooltip } from "@mantine/core";
 import avatar from "../../../assets/avatar.png";
+import { useAppSelector } from "../../../app/hooks";
 
 const InfoCard = () => {
+  const { user } = useAppSelector((state) => state.auth);
   return (
     <Card className="h- rounded-md shadow-md space-y-[6px]">
       <Box component="div">
         <Text fz={12} className="text-gray-800 font-semibold uppercase">
+          {/* {user?.course} */}
           Designer
         </Text>
-        <Box component="div" p={5} pl={10}>
-          <Group spacing={10}>
-            <Text fz={12} className="text-gray-500 font-semibold">
-              Total members:
-            </Text>
-            <Text fz={12} c="dimmed">
-              23 trainee's
-            </Text>
-          </Group>
-          <Group spacing={10}>
-            <Text fz={12} className="text-gray-500 font-semibold">
-              Completed task:
-            </Text>
-            <Text fz={12} c="dimmed">
-              20 tasks
-            </Text>
-          </Group>
-        </Box>
-        {/* <Box component="div" p={5} pl={10}>
-          <Group spacing={10}>
-            <Text fz={12} className="text-gray-500 font-semibold">
-              OJT Required hours:
-            </Text>
-            <Text fz={12} c="dimmed">
-              468 hours
-            </Text>
-          </Group>
-          <Group spacing={10}>
-            <Text fz={12} className="text-gray-500 font-semibold">
-              Started:
-            </Text>
-            <Text fz={12} c="dimmed">
-              June 07, 2023
-            </Text>
-          </Group>
-        </Box> */}
+        {user?.role === "trainee" ? (
+          <Box component="div" p={5} pl={10}>
+            <Group spacing={10}>
+              <Text fz={12} className="text-gray-500 font-semibold">
+                OJT Required hours:
+              </Text>
+              <Text fz={12} c="dimmed">
+                468 hours
+              </Text>
+            </Group>
+            <Group spacing={10}>
+              <Text fz={12} className="text-gray-500 font-semibold">
+                Started:
+              </Text>
+              <Text fz={12} c="dimmed">
+                June 07, 2023
+              </Text>
+            </Group>
+          </Box>
+        ) : (
+          <Box component="div" p={5} pl={10}>
+            <Group spacing={10}>
+              <Text fz={12} className="text-gray-500 font-semibold">
+                Total members:
+              </Text>
+              <Text fz={12} c="dimmed">
+                23 trainee's
+              </Text>
+            </Group>
+            <Group spacing={10}>
+              <Text fz={12} className="text-gray-500 font-semibold">
+                Completed task:
+              </Text>
+              <Text fz={12} c="dimmed">
+                20 tasks
+              </Text>
+            </Group>
+          </Box>
+        )}
       </Box>
 
       <Box component="div">

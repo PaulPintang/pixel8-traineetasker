@@ -12,8 +12,10 @@ import {
 } from "@tabler/icons-react";
 import { NavLink, useLocation } from "react-router-dom";
 import avatar from "../assets/avatar.png";
+import { useAppSelector } from "../app/hooks";
 
 const Navigation = () => {
+  const { user } = useAppSelector((state) => state.auth);
   const location = useLocation();
   const { pathname } = location;
 
@@ -36,20 +38,6 @@ const Navigation = () => {
             </Text>
           </Button>
         </NavLink>
-        <NavLink to="tasks" className="text-gray-700">
-          <Button
-            leftIcon={<IconChecklist size={18} />}
-            size="xs"
-            radius={0}
-            variant="white"
-            color={pathname === "/tasks" ? "dark" : "gray"}
-            className={`${
-              pathname === "/tasks" ? "bg-slate-50 bg-opacity-30" : ""
-            }`}
-          >
-            <Text c={pathname === "/tasks" ? "dark" : "gray"}>Manage Task</Text>
-          </Button>
-        </NavLink>
 
         <NavLink to="tasks" className="text-gray-700">
           <Button
@@ -62,39 +50,46 @@ const Navigation = () => {
               pathname === "/tasks" ? "bg-slate-50 bg-opacity-30" : ""
             }`}
           >
-            <Text c={pathname === "/tasks" ? "dark" : "gray"}>Your Task</Text>
-          </Button>
-        </NavLink>
-        <NavLink to="timesheet" className="text-gray-700">
-          <Button
-            leftIcon={<IconCalendarStats size={18} />}
-            size="xs"
-            radius={0}
-            variant="white"
-            color={pathname === "/timesheet" ? "dark" : "gray"}
-            className={`${
-              pathname === "/timesheet" ? "bg-slate-50 bg-opacity-30" : ""
-            }`}
-          >
-            <Text c={pathname === "/timesheet" ? "dark" : "gray"}>
-              Timesheets
+            <Text c={pathname === "/tasks" ? "dark" : "gray"}>
+              {user?.role === "trainee" ? "Your Task" : "ManageTask"}
             </Text>
           </Button>
         </NavLink>
-        <NavLink to="dtr" className="text-gray-700">
-          <Button
-            leftIcon={<IconReport size={18} />}
-            size="xs"
-            radius={0}
-            variant="white"
-            color={pathname === "/dtr" ? "dark" : "gray"}
-            className={`${
-              pathname === "/dtr" ? "bg-slate-50 bg-opacity-30" : ""
-            }`}
-          >
-            <Text c={pathname === "/dtr" ? "dark" : "gray"}>DTR</Text>
-          </Button>
-        </NavLink>
+
+        {user?.role === "trainee" && (
+          <>
+            <NavLink to="timesheet" className="text-gray-700">
+              <Button
+                leftIcon={<IconCalendarStats size={18} />}
+                size="xs"
+                radius={0}
+                variant="white"
+                color={pathname === "/timesheet" ? "dark" : "gray"}
+                className={`${
+                  pathname === "/timesheet" ? "bg-slate-50 bg-opacity-30" : ""
+                }`}
+              >
+                <Text c={pathname === "/timesheet" ? "dark" : "gray"}>
+                  Timesheets
+                </Text>
+              </Button>
+            </NavLink>
+            <NavLink to="dtr" className="text-gray-700">
+              <Button
+                leftIcon={<IconReport size={18} />}
+                size="xs"
+                radius={0}
+                variant="white"
+                color={pathname === "/dtr" ? "dark" : "gray"}
+                className={`${
+                  pathname === "/dtr" ? "bg-slate-50 bg-opacity-30" : ""
+                }`}
+              >
+                <Text c={pathname === "/dtr" ? "dark" : "gray"}>DTR</Text>
+              </Button>
+            </NavLink>
+          </>
+        )}
       </Group>
       <Group>
         <Group spacing={10}>

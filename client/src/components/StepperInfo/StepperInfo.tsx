@@ -47,6 +47,7 @@ const StepperInfo = () => {
   const updateTraineeData = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // ? POST request to add trainee after stepper
       const user = await addTrainee(userInfo).unwrap();
       dispatch(setUser(user));
       navigate("dashboard");

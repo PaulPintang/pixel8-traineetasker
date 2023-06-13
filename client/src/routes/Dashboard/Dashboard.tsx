@@ -8,22 +8,18 @@ import {
   Box,
 } from "@mantine/core";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  reset,
-  decrement,
-  increment,
-  incrementByAmount,
-} from "../../features/counter/counterSlice";
-import { useState } from "react";
+
+import { lazy, useState } from "react";
 import { TasksLabels } from "../../components/ColorLabels";
 import TaskCards from "./components/TaskCards";
 import InfoCard from "./components/InfoCard";
 import TaskTableCard from "./components/TaskTableCard";
 import TasksTodoCard from "./components/TasksTodoCard";
-import MembersTableCard from "./components/MembersTableCard";
+const MembersTableCard = lazy(() => import("./components/MembersTableCard"));
 import MembersAssignTask from "./components/MembersAssignTask";
 
 const Dashboard = () => {
+  const { user } = useAppSelector((state) => state.auth);
   return (
     <>
       <Grid pb={5}>
@@ -35,14 +31,19 @@ const Dashboard = () => {
           <InfoCard />
         </Grid.Col>
 
-        <Grid.Col span={8}>
-          <TaskTableCard />
-        </Grid.Col>
-        <Grid.Col className="bg-bl ue-300" span={4}>
-          <TasksTodoCard />
-        </Grid.Col>
+        {user?.role === "trainee" ? (
+          <>
+            <Grid.Col span={8}>
+              <TaskTableCard />
+            </Grid.Col>
+            <Grid.Col className="bg-bl ue-300" span={4}>
+              <TasksTodoCard />
+            </Grid.Col>
+          </>
+        ) : (
+          <MembersTableCard />
+        )}
       </Grid>
-      <MembersTableCard />
     </>
   );
 };

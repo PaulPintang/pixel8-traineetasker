@@ -13,6 +13,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["User"],
     }),
+    refetch: builder.mutation<IAccount, IAccount>({
+      query: (user) => ({
+        url: "account/",
+        method: "POST",
+        body: user,
+      }),
+      invalidatesTags: ["User"],
+    }),
     logoutUser: builder.mutation<any, void>({
       query: () => ({
         url: "auth/logout",
@@ -23,4 +31,5 @@ export const userApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useLogoutUserMutation } = userApiSlice;
+export const { useLoginMutation, useLogoutUserMutation, useRefetchMutation } =
+  userApiSlice;
