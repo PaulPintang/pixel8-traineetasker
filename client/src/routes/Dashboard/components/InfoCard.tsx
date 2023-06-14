@@ -2,15 +2,16 @@ import React from "react";
 import { Box, Card, Flex, Text, Group, Avatar, Tooltip } from "@mantine/core";
 import avatar from "../../../assets/avatar.png";
 import { useAppSelector } from "../../../app/hooks";
+import { useGetTraineeQuery } from "../../../features/api/trainee/traineeApiSlice";
 
 const InfoCard = () => {
   const { user } = useAppSelector((state) => state.auth);
+  const { data: trainee } = useGetTraineeQuery(user?._id!);
   return (
     <Card className="h- rounded-md shadow-md space-y-[6px]">
       <Box component="div">
-        <Text fz={12} className="text-gray-800 font-semibold uppercase">
-          {/* {user?.course} */}
-          Designer
+        <Text fz={12} className="text-gray-800 font-semibold ">
+          {trainee?.name}
         </Text>
         {user?.role === "trainee" ? (
           <Box component="div" p={5} pl={10}>
@@ -19,7 +20,7 @@ const InfoCard = () => {
                 OJT Required hours:
               </Text>
               <Text fz={12} c="dimmed">
-                468 hours
+                {trainee?.hours?.ojtHours} hours
               </Text>
             </Group>
             <Group spacing={10}>

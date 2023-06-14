@@ -9,9 +9,11 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import { useAppSelector } from "../../../app/hooks";
+import { useGetTraineeQuery } from "../../../features/api/trainee/traineeApiSlice";
 
 const TaskCards = () => {
   const { user } = useAppSelector((state) => state.auth);
+  const { data: trainee } = useGetTraineeQuery(user?._id!);
   return (
     <Grid grow>
       <Grid.Col className="bg-re d-300" span={4}>
@@ -117,7 +119,7 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   OJT hours
                 </Text>
-                <Text>219</Text>
+                <Text>{trainee?.hours?.ojtHours}</Text>
               </>
             ) : (
               <>
@@ -146,7 +148,7 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   Pending hours
                 </Text>
-                <Text>20</Text>
+                <Text>{trainee?.hours?.pending}</Text>
               </>
             ) : (
               <>
@@ -173,9 +175,9 @@ const TaskCards = () => {
             {user?.role === "trainee" ? (
               <>
                 <Text fz={13} c="dimmed">
-                  Total Today
+                  Rendered hours
                 </Text>
-                <Text>1</Text>
+                <Text>{trainee?.hours?.rendered}</Text>
               </>
             ) : (
               <>

@@ -21,7 +21,7 @@ import { setUser, logout } from "../features/auth/authSlice";
 import {
   useLoginMutation,
   useLogoutUserMutation,
-} from "../features/api/user/userApiSlice";
+} from "../features/api/auth/authApiSlice";
 
 type Link = {
   isActive: boolean;
@@ -34,13 +34,14 @@ const Header = () => {
   const { pathname } = location;
   const [loginUser, loginState] = useLoginMutation();
   const [logoutUser, logoutState] = useLogoutUserMutation();
+
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
 
   const GoogleUseAuth = useGoogleLogin({
     onSuccess: (res) => {
       const OAuth = async () => {
-        const user = await axios.get(
+        const account = await axios.get(
           "https://www.googleapis.com/oauth2/v3/userinfo",
           {
             headers: {
@@ -48,11 +49,11 @@ const Header = () => {
             },
           }
         );
-        const { name, email, picture } = user.data;
+        const { name, email, picture } = account.data;
         // ? OAuth return email info, and do a POST request to create account in database
-        const data = await loginUser({ name, email, picture }).unwrap();
-        dispatch(setUser(data));
-        navigate("dashboard");
+        const user = await loginUser({ name, email, picture }).unwrap();
+        dispatch(setUser(user));
+        user.role !== "admin" && navigate("dashboard");
       };
 
       OAuth().catch((err) => console.log(err));
@@ -80,20 +81,23 @@ const Header = () => {
           </NavLink>
         )}
 
-        {user && pathname === "/" && (
+        {user && user?.role !== "admin" && pathname === "/" && (
           <NavLink to="dashboard" className="text-white">
             <Button size="xs" color="cyan" variant="white">
               Your Dashboard
             </Button>
           </NavLink>
         )}
-        {/* <Badge color="teal" variant="dot" className="text-gray-700">
-          Administrator
-        </Badge> */}
 
-        {user?.role && (
+        {user && user?.role !== "admin" && user.course && (
           <Badge color="teal" variant="dot" className="text-gray-700">
-            Designer
+            {user?.course}
+          </Badge>
+        )}
+
+        {user?.role === "admin" && (
+          <Badge color="teal" variant="dot" className="text-gray-700">
+            Administrator
           </Badge>
         )}
 

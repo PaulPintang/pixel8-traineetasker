@@ -2,7 +2,11 @@ import { Box, Text, Title, Button, Stack, Radio, Flex } from "@mantine/core";
 import { Props } from "./StepperInfo";
 import { useEffect, useState } from "react";
 
-const StepOneSelectField = ({ setUserInfo, userInfo, setStep }: Props) => {
+const StepOneSelectField = ({
+  setTraineeInfo,
+  traineeInfo,
+  setStep,
+}: Props) => {
   return (
     <Box component="div">
       <Text c="dimmed">1/2</Text>
@@ -16,8 +20,10 @@ const StepOneSelectField = ({ setUserInfo, userInfo, setStep }: Props) => {
           Our company offer
         </Text>
         <Radio.Group
-          value={userInfo.course}
-          onChange={(value) => setUserInfo({ ...userInfo, course: value })}
+          value={traineeInfo.course}
+          onChange={(value) =>
+            setTraineeInfo({ ...traineeInfo, course: value })
+          }
         >
           <Stack spacing={10}>
             <Radio

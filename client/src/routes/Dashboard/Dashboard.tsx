@@ -17,9 +17,11 @@ import TaskTableCard from "./components/TaskTableCard";
 import TasksTodoCard from "./components/TasksTodoCard";
 const MembersTableCard = lazy(() => import("./components/MembersTableCard"));
 import MembersAssignTask from "./components/MembersAssignTask";
+import { useGetTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
 
 const Dashboard = () => {
   const { user } = useAppSelector((state) => state.auth);
+
   return (
     <>
       <Grid pb={5}>

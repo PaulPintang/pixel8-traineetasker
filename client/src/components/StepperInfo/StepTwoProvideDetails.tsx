@@ -15,8 +15,8 @@ import { setUser } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const StepTwoProvideDetails = ({
-  setUserInfo,
-  userInfo,
+  setTraineeInfo,
+  traineeInfo,
   setStep,
   isLoading,
 }: Props) => {
@@ -33,20 +33,20 @@ const StepTwoProvideDetails = ({
           <TextInput
             label="School / University"
             size="md"
-            value={userInfo.school}
+            value={traineeInfo.school}
             onChange={(e) =>
-              setUserInfo({ ...userInfo, school: e.target.value })
+              setTraineeInfo({ ...traineeInfo, school: e.target.value })
             }
           />
           <NumberInput
             label="OJT / Internship hours"
             size="md"
             hideControls
-            value={userInfo.hours?.ojtHours}
+            value={traineeInfo.hours?.ojtHours}
             onChange={(value) =>
-              setUserInfo({
-                ...userInfo,
-                hours: { ...userInfo.hours!, ojtHours: Number(value) },
+              setTraineeInfo({
+                ...traineeInfo,
+                hours: { ...traineeInfo.hours!, ojtHours: Number(value) },
               })
             }
           />
@@ -64,7 +64,7 @@ const StepTwoProvideDetails = ({
               Return
             </Button>
           )}
-          {userInfo.school !== "" && userInfo.hours?.ojtHours !== 0 ? (
+          {traineeInfo.school !== "" && traineeInfo.hours?.ojtHours !== 0 ? (
             <Button
               variant="white"
               color="cyan"

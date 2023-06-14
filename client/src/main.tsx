@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React, { Suspense, lazy } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
@@ -33,7 +33,9 @@ const router = createBrowserRouter([
         path: "dashboard",
         element: (
           <Protected>
-            <Dashboard />
+            <Suspense fallback={<h1>Preparing yoyr dashboard</h1>}>
+              <Dashboard />
+            </Suspense>
           </Protected>
         ),
       },

@@ -13,7 +13,7 @@ import {
   NumberInput,
   Loader,
 } from "@mantine/core";
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useReducer, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { IAccount, ITrainee } from "../../interfaces/user.interface";
 const SelectField = lazy(() => import("./StepOneSelectField"));
@@ -24,8 +24,8 @@ import { useNavigate } from "react-router-dom";
 import { useAddTraineeMutation } from "../../features/api/trainee/traineeApiSlice";
 import { setUser } from "../../features/auth/authSlice";
 export interface Props {
-  userInfo: ITrainee;
-  setUserInfo: Dispatch<SetStateAction<ITrainee>>;
+  traineeInfo: ITrainee;
+  setTraineeInfo: Dispatch<SetStateAction<ITrainee>>;
   setStep: Dispatch<SetStateAction<number>>;
   isLoading?: boolean;
 }
@@ -34,7 +34,8 @@ const StepperInfo = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const [userInfo, setUserInfo] = useState<ITrainee>({
+
+  const [traineeInfo, setTraineeInfo] = useState<ITrainee>({
     ...user,
     course: "",
     school: "",
@@ -44,33 +45,32 @@ const StepperInfo = () => {
 
   const [addTrainee, { isLoading }] = useAddTraineeMutation();
 
-  const updateTraineeData = async (e: React.FormEvent) => {
+  const addTraineeData = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       // ? POST request to add trainee after stepper
-      const user = await addTrainee(userInfo).unwrap();
+      const user = await addTrainee(traineeInfo).unwrap();
       dispatch(setUser(user));
       navigate("dashboard");
     } catch (error) {}
   };
 
-  console.log(userInfo);
   return (
-    <form onSubmit={updateTraineeData}>
+    <form onSubmit={addTraineeData}>
       <div className="h-[calc(100vh-100px)] ">
         <Flex justify="center" align="center" className="h-full">
           <Container size="xs">
             <Suspense fallback={<Loader size="xs" color="gray" />}>
               {step === 1 ? (
                 <SelectField
-                  userInfo={userInfo}
-                  setUserInfo={setUserInfo}
+                  traineeInfo={traineeInfo}
+                  setTraineeInfo={setTraineeInfo}
                   setStep={setStep}
                 />
               ) : (
                 <ProvideDetails
-                  userInfo={userInfo}
-                  setUserInfo={setUserInfo}
+                  traineeInfo={traineeInfo}
+                  setTraineeInfo={setTraineeInfo}
                   setStep={setStep}
                   isLoading={isLoading}
                 />

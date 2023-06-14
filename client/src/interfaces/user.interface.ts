@@ -3,12 +3,12 @@ export interface IAccount {
   name?: string;
   email?: string;
   picture?: string;
-  role?: "admin" | "supervisor" | "trainee" | "";
+  course?: string;
+  role?: "admin" | "supervisor" | "trainee";
 }
 
 export interface ITrainee extends IAccount {
   school?: string;
-  course?: string;
   hours?: {
     ojtHours: number;
     rendered: number;
@@ -18,6 +18,5 @@ export interface ITrainee extends IAccount {
 }
 
 export interface IPixel8Acc extends IAccount {
-  course: string;
   trainees: number;
 }

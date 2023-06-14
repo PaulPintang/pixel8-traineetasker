@@ -1,30 +1,35 @@
 import { Text, Avatar, Button, ActionIcon } from "@mantine/core";
 import avatar from "../../../assets/avatar.png";
 import { IconEdit, IconInfoCircle } from "@tabler/icons-react";
+import { useGetAllAccountQuery } from "../../../features/api/account/accountApiSlice";
 
-const accounts = [
-  {
-    name: "Juan Dela Cruz",
-    email: "juandelacruz@gmail.com",
-    role: "developer",
-    completed: 13,
-  },
-  {
-    name: "Mikasa Ackerman",
-    email: "mikasaackerman@gmail.com",
-    role: "designer",
-    completed: 23,
-  },
-  {
-    name: "Eren Yeager",
-    email: "erenyeager@gmail.com",
-    role: "analyst",
-    completed: 12,
-  },
-];
+// const accounts = [
+//   {
+//     name: "Juan Dela Cruz",
+//     email: "juandelacruz@gmail.com",
+//     role: "developer",
+//     completed: 13,
+//   },
+//   {
+//     name: "Mikasa Ackerman",
+//     email: "mikasaackerman@gmail.com",
+//     role: "designer",
+//     completed: 23,
+//   },
+//   {
+//     name: "Eren Yeager",
+//     email: "erenyeager@gmail.com",
+//     role: "analyst",
+//     completed: 12,
+//   },
+// ];
 
 const AccountsTable = () => {
-  const rows = accounts.map((account) => (
+  const { data: accounts } = useGetAllAccountQuery();
+
+  console.log("accounts", accounts);
+
+  const rows = accounts?.map((account) => (
     <tr>
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-4">
         <Text c="dark">{account.name}</Text>
@@ -61,9 +66,9 @@ const AccountsTable = () => {
       </td>
 
       <td className="hidden md:table-cell lg:table-cell">
-        <Text className="font-semibold text-gray-500">
+        {/* <Text className="font-semibold text-gray-500">
           {account.completed} tasks
-        </Text>
+        </Text> */}
       </td>
       <td className="hidden md:table-cell lg:table-cell">
         <Button variant="white" color="dark" size="xs">

@@ -3,19 +3,11 @@ import { apiSlice } from "../apiSlice";
 import { IAccount } from "../../../interfaces/user.interface";
 // ? endpoint must be in env
 
-export const userApiSlice = apiSlice.injectEndpoints({
+export const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<IAccount, IAccount>({
       query: (user) => ({
-        url: "auth/login",
-        method: "POST",
-        body: user,
-      }),
-      invalidatesTags: ["User"],
-    }),
-    refetch: builder.mutation<IAccount, IAccount>({
-      query: (user) => ({
-        url: "account/",
+        url: "/auth/login",
         method: "POST",
         body: user,
       }),
@@ -23,7 +15,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     logoutUser: builder.mutation<any, void>({
       query: () => ({
-        url: "auth/logout",
+        url: "/auth/logout",
         method: "POST",
       }),
       invalidatesTags: ["User"],
@@ -31,5 +23,4 @@ export const userApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useLogoutUserMutation, useRefetchMutation } =
-  userApiSlice;
+export const { useLoginMutation, useLogoutUserMutation } = authApiSlice;
