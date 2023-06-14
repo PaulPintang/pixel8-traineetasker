@@ -32,14 +32,17 @@ import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { formatDateTime } from "../../../utils/formatDateTime";
 import { useAppSelector } from "../../../app/hooks";
 import { useLocation } from "react-router-dom";
+import { ITask } from "../../../interfaces/task.interface";
+import { ITrainee } from "../../../interfaces/user.interface";
 
 interface Props {
+  trainee: ITrainee;
   setViewId: Dispatch<SetStateAction<string | null>>;
   view: () => void;
   update: () => void;
 }
 
-const TaskTable = ({ view, update, setViewId }: Props) => {
+const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
@@ -49,7 +52,11 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
   const [filterBy, setFilterBy] = useState<string | null>("");
 
   const data = tasks?.filter((task) =>
-    filterBy ? task.status === filterBy : task
+    filterBy
+      ? task.status === filterBy
+      : trainee
+      ? trainee.name === task.assign
+      : task
   );
 
   const items = chunk(data, 10);
@@ -61,15 +68,15 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
         <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
           <Text className="font-semibold">{`${format.date} at ${format.time}`}</Text>
         </td>
-        <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <td className="hidden md:table-cell lg:table-cell  pt-2">
           <Text className="font-semibold">{task.taskname}</Text>
         </td>
-        <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <td className="hidden md:table-cell lg:table-cell  pt-2">
           <Text className="font-semibold">{task.ticketno}</Text>
         </td>
 
         {user?.role === "supervisor" && !pathname.includes("profile") ? (
-          <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+          <td className="hidden md:table-cell lg:table-cell  pt-2">
             {task.assign ? (
               <Text className="font-semibold">{task.assign}</Text>
             ) : (
@@ -87,7 +94,7 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
           ""
         )}
 
-        <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <td className="hidden md:table-cell lg:table-cell  pt-2">
           <Group className="rounded bg-gray-50 max-w-max px-2 py-1 gap-2">
             <div
               className={`p-1 ${
@@ -121,7 +128,7 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
           </Group>
         </td>
 
-        <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <td className="hidden md:table-cell lg:table-cell  pt-2">
           <Menu
             shadow="md"
             transitionProps={{ transition: "rotate-right", duration: 150 }}
@@ -153,18 +160,23 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
                   </Button>
                   {task.status === "new" && (
                     <>
-                      <Button
-                        onClick={() => {
-                          toggle();
-                          // setOpened(false);
-                        }}
-                        leftIcon={<IconUser size={16} />}
-                        variant="white"
-                        color="cyan"
-                        size="xs"
-                      >
-                        Assign
-                      </Button>
+                      {user?.role === "supervisor" ||
+                      pathname.includes("profile") ? (
+                        <Button
+                          onClick={() => {
+                            toggle();
+                            // setOpened(false);
+                          }}
+                          leftIcon={<IconUser size={16} />}
+                          variant="white"
+                          color={task.assign ? "indigo" : "cyan"}
+                          size="xs"
+                        >
+                          {task.assign ? "Reassign" : "Assign"}
+                        </Button>
+                      ) : (
+                        ""
+                      )}
                       <Button
                         onClick={() => {
                           update();

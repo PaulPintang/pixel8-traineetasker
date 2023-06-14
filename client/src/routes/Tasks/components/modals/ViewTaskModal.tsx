@@ -29,6 +29,8 @@ import {
 import { useGetAllTasksQuery } from "../../../../features/api/task/taskApiSlice";
 import { ITask } from "../../../../interfaces/task.interface";
 import { IconUser } from "@tabler/icons-react";
+import { useGetAllTraineeQuery } from "../../../../features/api/trainee/traineeApiSlice";
+import { useAppSelector } from "../../../../app/hooks";
 
 interface ModalProps {
   viewId: string | null;
@@ -38,8 +40,10 @@ interface ModalProps {
 }
 
 const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
+  const { user } = useAppSelector((state) => state.auth);
   const task = tasks?.find((task) => task._id === viewId);
-
+  const { data: trainees } = useGetAllTraineeQuery(user?.course!);
+  const assign = trainees?.find((trainee) => trainee.name === task?.assign);
   return (
     <Modal
       size="sm"
@@ -102,8 +106,13 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
               Assign
             </Text>
             <Group spacing={10}>
-              <Image src={avatar} width={20} />
-              <Text fz="sm">Paul Justine Pintang</Text>
+              <Image
+                src={assign?.picture}
+                width={20}
+                radius="xl"
+                imageProps={{ referrerPolicy: "no-referrer" }}
+              />
+              <Text fz="sm">{task?.assign}</Text>
             </Group>
           </Group>
         )}
@@ -154,7 +163,12 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
         </Tabs.List>
         <Tabs.Panel value="first" className="space-y-2">
           <Group spacing={10} pt={10}>
-            <Image src={avatar} width={20} />
+            <Image
+              src={user?.picture}
+              width={20}
+              radius="xl"
+              imageProps={{ referrerPolicy: "no-referrer" }}
+            />
             <Text c="dimmed" fw="bold" fz="xs">
               Your comment
             </Text>
@@ -180,7 +194,12 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
               </Text>
               <Group position="apart">
                 <Group spacing={10}>
-                  <Image src={avatar} width={20} />
+                  <Image
+                    src={avatar}
+                    width={20}
+                    radius="xl"
+                    imageProps={{ referrerPolicy: "no-referrer" }}
+                  />
                   <Text fz="xs" fw="bold">
                     Juan Dela Cruz
                   </Text>
@@ -199,7 +218,12 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
                   8 min ago
                 </Text>
                 <Group spacing={10}>
-                  <Image src={avatar} width={20} />
+                  <Image
+                    src={avatar}
+                    width={20}
+                    radius="xl"
+                    imageProps={{ referrerPolicy: "no-referrer" }}
+                  />
                   <Text fz="xs" fw="bold">
                     You
                   </Text>
@@ -227,7 +251,14 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
             <Timeline.Item
               title="Mark as done"
               className="text-sm"
-              bullet={<Avatar src={avatar} size={20} radius="xl" />}
+              bullet={
+                <Avatar
+                  src={avatar}
+                  size={20}
+                  radius="xl"
+                  imageProps={{ referrerPolicy: "no-referrer" }}
+                />
+              }
             >
               <Text color="dimmed" size="xs">
                 Task for-QA
@@ -240,7 +271,14 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
               title="Task in progress"
               lineVariant="dotted"
               className="text-sm"
-              bullet={<Avatar src={avatar} size={20} radius="xl" />}
+              bullet={
+                <Avatar
+                  src={avatar}
+                  size={20}
+                  radius="xl"
+                  imageProps={{ referrerPolicy: "no-referrer" }}
+                />
+              }
             >
               <Text color="dark" fw="bold" size="xs">
                 Paul Justine Pintang{" "}

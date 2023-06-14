@@ -19,8 +19,16 @@ import ViewTaskModal from "./components/modals/ViewTaskModal";
 import UpdateTaskModal from "./components/modals/UpdateTaskModal";
 import { useAppSelector } from "../../app/hooks";
 import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
+import { ITrainee } from "../../interfaces/user.interface";
+import { useLocation } from "react-router-dom";
 
-const Tasks = () => {
+interface Props {
+  trainee: ITrainee;
+}
+
+const Tasks = ({ trainee }: Props) => {
+  const location = useLocation();
+  const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
   const [add, toggleAdd] = useDisclosure(false);
   const [update, toggleUpdate] = useDisclosure(false);
@@ -37,9 +45,13 @@ const Tasks = () => {
             setViewId={setViewId}
             toggle={toggleView.toggle}
           />
-        ) : (
+        ) : user?.role === "supervisor" && !pathname.includes("profile") ? (
           <Button color="cyan" size="xs" onClick={toggleAdd.toggle}>
             Add task
+          </Button>
+        ) : (
+          <Button color="cyan" size="xs" onClick={toggleAdd.toggle}>
+            Assign task
           </Button>
         )}
       </Flex>
@@ -73,6 +85,7 @@ const Tasks = () => {
         </Grid>
       ) : (
         <TaskTable
+          trainee={trainee}
           setViewId={setViewId}
           view={toggleView.toggle}
           update={toggleUpdate.toggle}

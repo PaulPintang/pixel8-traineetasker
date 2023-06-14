@@ -49,7 +49,12 @@ const traineesTableCard = () => {
     <tr>
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-3">
         <Group spacing={10}>
-          <Image src={trainee.picture} width={35} radius="xl" />
+          <Image
+            src={trainee.picture}
+            width={35}
+            radius="xl"
+            imageProps={{ referrerPolicy: "no-referrer" }}
+          />
           <div className="-space-y-[2px]">
             <Text className="font-semibold">{trainee.name}</Text>
             <Text c="dimmed">{trainee.email}</Text>

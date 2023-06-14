@@ -1,12 +1,16 @@
 import { Modal, Autocomplete, Button, Text, Group, Box } from "@mantine/core";
 import { tasks } from "../../../../data/tasks";
 import { members } from "../../../../data/members";
+import { useGetAllTraineeQuery } from "../../../../features/api/trainee/traineeApiSlice";
+import { useAppSelector } from "../../../../app/hooks";
 interface ModalProps {
   assign: boolean;
   toggle: () => void;
 }
 
-const AssignMemeberModal = ({ assign, toggle }: ModalProps) => {
+const AssignMemberModal = ({ assign, toggle }: ModalProps) => {
+  const { user } = useAppSelector((state) => state.auth);
+  const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   return (
     <Modal
       size="sm"
@@ -27,7 +31,7 @@ const AssignMemeberModal = ({ assign, toggle }: ModalProps) => {
         <Autocomplete
           // value={assignedTo}
           // onChange={setAssignTo}
-          data={members.map((member) => member.name)}
+          data={trainees!.map((member) => member.name!)}
           dropdownPosition="bottom"
           placeholder="Pick one"
         />
@@ -38,4 +42,4 @@ const AssignMemeberModal = ({ assign, toggle }: ModalProps) => {
   );
 };
 
-export default AssignMemeberModal;
+export default AssignMemberModal;

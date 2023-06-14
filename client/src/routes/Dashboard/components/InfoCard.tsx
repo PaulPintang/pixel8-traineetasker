@@ -166,9 +166,17 @@ const InfoCard = ({ trainee }: Props) => {
                   +2
                 </Avatar> 
               </Tooltip> */}
-              {trainees?.map((user) => (
-                <Tooltip label={user.name} withArrow>
-                  <Avatar src={user.picture} radius="xl" size={27} />
+              {trainees?.map((trainee) => (
+                <Tooltip
+                  label={trainee.name === user?.name ? "You" : trainee.name}
+                  withArrow
+                >
+                  <Avatar
+                    src={trainee.picture}
+                    radius="xl"
+                    size={27}
+                    imageProps={{ referrerPolicy: "no-referrer" }}
+                  />
                 </Tooltip>
               ))}
             </Avatar.Group>

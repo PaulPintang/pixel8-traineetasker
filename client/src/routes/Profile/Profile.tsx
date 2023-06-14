@@ -31,8 +31,9 @@ import { IconReport } from "@tabler/icons-react";
 import { useAppSelector } from "../../app/hooks";
 import {
   useGetAllTraineeQuery,
-  useGetTraineeQuery,
+  useGetTraineeProfileQuery,
 } from "../../features/api/trainee/traineeApiSlice";
+import TaskTable from "../Tasks/components/TaskTable";
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { id } = useParams();
@@ -41,14 +42,18 @@ const Profile = () => {
   const [remove, { toggle }] = useDisclosure(false);
   const [activeTab, setActiveTab] = useState<string | null>("tasks");
 
-  console.log(id);
   const trainee = trainees?.find((member) => member._id! === id);
   return (
     <>
       <Grid>
         <Grid.Col span="content">
           <Flex direction="column" align="center" justify="center" gap="xs">
-            <Image src={trainee?.picture} width={100} radius={100} />
+            <Image
+              src={trainee?.picture}
+              width={100}
+              radius={100}
+              imageProps={{ referrerPolicy: "no-referrer" }}
+            />
             <Flex direction="column" align="center">
               <Text c="dark" fw="bold" fz="sm">
                 {trainee?.name}
@@ -121,7 +126,7 @@ const Profile = () => {
         </Tabs.List>
         <Tabs.Panel value="tasks" pt="xs">
           <Suspense fallback="loading tasks">
-            <Tasks />
+            <Tasks trainee={trainee!} />
           </Suspense>
         </Tabs.Panel>
         <Tabs.Panel value="timesheet" pt="xs">
