@@ -12,21 +12,24 @@ import {
 import { IconChecks, IconExternalLink } from "@tabler/icons-react";
 import { tasks } from "../../../data/tasks";
 import { Dispatch, SetStateAction } from "react";
+import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 interface Props {
-  setViewId: Dispatch<SetStateAction<string | number | null>>;
+  setViewId: Dispatch<SetStateAction<string | null>>;
   toggle: () => void;
 }
 
 const Completed = ({ toggle, setViewId }: Props) => {
-  const completed = tasks.filter((task) => task.status === "completed");
+  const { data: tasks } = useGetAllTasksQuery();
+  const completed = tasks!.filter((task) => task.status === "completed");
   return (
     <div className="space-y-3">
       {completed.map((task) => (
         <Card
+          key={task._id}
           className="cursor-pointer hover:shadow-xl rounded-md shadow-md transition-all"
           onClick={() => {
             toggle();
-            setViewId(task.id!);
+            setViewId(task._id!);
           }}
         >
           <div className="bg-indigo-300 w-8 h-1"></div>

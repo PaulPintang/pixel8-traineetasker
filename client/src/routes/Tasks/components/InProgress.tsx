@@ -13,23 +13,26 @@ import { IconChecks, IconExternalLink } from "@tabler/icons-react";
 import { Dispatch, SetStateAction } from "react";
 import { tasks } from "../../../data/tasks";
 import { ITask } from "../../../interfaces/task.interface";
+import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 interface Props {
-  setViewId: Dispatch<SetStateAction<string | number | null>>;
+  setViewId: Dispatch<SetStateAction<string | null>>;
   toggle: () => void;
 }
 
 const InProgress = ({ toggle, setViewId }: Props) => {
-  const inprogress: ITask[] = tasks.filter(
+  const { data: tasks } = useGetAllTasksQuery();
+  const inprogress: ITask[] = tasks!.filter(
     (task) => task.status === "inprogress"
   );
   return (
     <div className="space-y-3">
       {inprogress.map((task) => (
         <Card
+          key={task._id}
           className="cursor-pointer hover:shadow-xl rounded-md shadow-md transition-all"
           onClick={() => {
             toggle();
-            setViewId(task.id!);
+            setViewId(task._id!);
           }}
         >
           <div className="bg-violet-300 w-8 h-1"></div>

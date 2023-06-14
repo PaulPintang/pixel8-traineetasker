@@ -11,7 +11,7 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
         providesTags: ["Trainee"],
       }),
     }),
-    getTrainee: builder.query<ITrainee, string>({
+    getTraineeProfile: builder.query<ITrainee, string | void>({
       query: (id) => ({
         url: `/trainee/profile/${id}`,
         providesTags: ["Trainee"],
@@ -31,5 +31,5 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetAllTraineeQuery,
   useAddTraineeMutation,
-  useGetTraineeQuery,
+  useGetTraineeProfileQuery,
 } = traineeApiSlice;

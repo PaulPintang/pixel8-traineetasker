@@ -36,12 +36,13 @@ import {
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { id } = useParams();
-  const { data: trainee } = useGetTraineeQuery(id!);
+  // const { data: trainee } = useGetTraineeQuery(id!);
+  const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   const [remove, { toggle }] = useDisclosure(false);
   const [activeTab, setActiveTab] = useState<string | null>("tasks");
 
   console.log(id);
-  // const member = trainee.find((member) => member.id === Number(id));
+  const trainee = trainees?.find((member) => member._id! === id);
   return (
     <>
       <Grid>
@@ -79,7 +80,7 @@ const Profile = () => {
           <TaskCards />
         </Grid.Col>
         <Grid.Col span="content">
-          <InfoCard />
+          <InfoCard trainee={trainee!} />
         </Grid.Col>
       </Grid>
 

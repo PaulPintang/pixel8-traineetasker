@@ -1,10 +1,10 @@
 export interface ITask {
-  id?: string | number | null;
+  _id?: string | null;
   taskname?: string;
   ticketno?: string;
   deliverable?: string;
   status?: "inprogress" | "forqa" | "new" | "failed" | "completed";
-  added?: string;
+  createdAt?: Date;
   started?: string;
   assign?: string;
   timeline?: string;

@@ -10,23 +10,25 @@ import {
   Flex,
 } from "@mantine/core";
 import { IconChecks, IconExternalLink } from "@tabler/icons-react";
-import { tasks } from "../../../data/tasks";
 import { Dispatch, SetStateAction } from "react";
+import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 interface Props {
-  setViewId: Dispatch<SetStateAction<string | number | null>>;
+  setViewId: Dispatch<SetStateAction<string | null>>;
   toggle: () => void;
 }
 
 const ForQa = ({ toggle, setViewId }: Props) => {
-  const forqa = tasks.filter((task) => task.status === "forqa");
+  const { data: tasks } = useGetAllTasksQuery();
+  const forqa = tasks!.filter((task) => task.status === "forqa");
   return (
     <div className="space-y-3">
       {forqa.map((task) => (
         <Card
+          key={task._id}
           className="cursor-pointer hover:shadow-xl rounded-md shadow-md transition-all"
           onClick={() => {
             toggle();
-            setViewId(task.id!);
+            setViewId(task._id!);
           }}
         >
           <div className="bg-yellow-300 w-8 h-1"></div>

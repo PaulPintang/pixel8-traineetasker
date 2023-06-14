@@ -15,12 +15,14 @@ import { IconExternalLink, IconInfoCircle } from "@tabler/icons-react";
 import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
 import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
-import { tasks } from "../../../data/tasks";
+// import { tasks } from "../../../data/tasks";
+import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 
 const TaskTableCard = () => {
+  const { data: tasks } = useGetAllTasksQuery();
   const [view, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
-  const [viewId, setViewId] = useState<string | number | null>(null);
+  const [viewId, setViewId] = useState<string | null>(null);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
   const data = tasks?.filter((task) =>
@@ -77,7 +79,7 @@ const TaskTableCard = () => {
         <Button
           onClick={() => {
             toggle();
-            setViewId(task.id!);
+            setViewId(task._id!);
           }}
           leftIcon={<IconInfoCircle size={16} />}
           variant="white"
@@ -161,7 +163,7 @@ const TaskTableCard = () => {
                   Total:
                 </Text>
                 <Text fz="xs">
-                  {data.length} task{data.length >= 2 && "s"}
+                  {data?.length} task{data?.length! >= 2 && "s"}
                 </Text>
               </Group>
             </Flex>
@@ -176,7 +178,12 @@ const TaskTableCard = () => {
           />
         </Flex>
       </Card>
-      <ViewTaskModal viewId={viewId} view={view} toggle={toggle} />
+      <ViewTaskModal
+        tasks={tasks}
+        viewId={viewId}
+        view={view}
+        toggle={toggle}
+      />
     </>
   );
 };

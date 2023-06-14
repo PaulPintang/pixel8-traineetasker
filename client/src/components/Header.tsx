@@ -110,7 +110,10 @@ const Header = () => {
             </Menu.Target>
 
             <Menu.Dropdown className="">
-              <Menu.Label>Your account</Menu.Label>
+              <Menu.Label>
+                <Text fw="bold">{user.name}</Text>
+                <Text>{user.email}</Text>
+              </Menu.Label>
               <Menu.Divider />
               <Menu.Item className="text-red-400 bg-white hover:bg-white p-0">
                 <Button

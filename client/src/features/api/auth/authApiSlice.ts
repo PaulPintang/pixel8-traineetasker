@@ -11,7 +11,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: user,
       }),
-      invalidatesTags: ["User", "Trainee", "Account"],
+      invalidatesTags: ["User", "Trainee", "Account", "Task"],
     }),
     logoutUser: builder.mutation<any, void>({
       query: () => ({

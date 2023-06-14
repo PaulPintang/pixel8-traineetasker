@@ -9,14 +9,18 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import { useAppSelector } from "../../../app/hooks";
-import { useGetTraineeQuery } from "../../../features/api/trainee/traineeApiSlice";
+import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
 import { useLocation } from "react-router-dom";
+import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 
 const TaskCards = () => {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
-  const { data: trainee } = useGetTraineeQuery(user?._id!);
+  const { data: trainee } = useGetTraineeProfileQuery(user?._id, {
+    skip: user?.role !== "trainee",
+  });
+  const { data: tasks } = useGetAllTasksQuery();
   return (
     <Grid grow>
       <Grid.Col className="bg-re d-300" span={4}>
@@ -31,14 +35,16 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   New Task
                 </Text>
-                <Text>1</Text>
+                <Text>
+                  {tasks?.filter((task) => task.status === "new").length}
+                </Text>
               </>
             ) : (
               <>
                 <Text fz={13} c="dimmed">
                   All Tasks
                 </Text>
-                <Text>1</Text>
+                <Text>{tasks?.length}</Text>
               </>
             )}
           </Flex>
@@ -61,14 +67,18 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   Failed
                 </Text>
-                <Text>1</Text>
+                <Text>
+                  {tasks?.filter((task) => task.status === "failed").length}
+                </Text>
               </>
             ) : (
               <>
                 <Text fz={13} c="dimmed">
                   Available
                 </Text>
-                <Text>1</Text>
+                <Text>
+                  {tasks?.filter((task) => task.status === "new").length}
+                </Text>
               </>
             )}
           </Flex>
@@ -91,14 +101,17 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   Completed
                 </Text>
-                <Text>1</Text>
+                {tasks?.filter((task) => task.status === "completed").length}
+                <Text></Text>
               </>
             ) : (
               <>
                 <Text fz={13} c="dimmed">
                   In Progress
                 </Text>
-                <Text>1</Text>
+                <Text>
+                  {tasks?.filter((task) => task.status === "inprogress").length}
+                </Text>
               </>
             )}
           </Flex>
@@ -128,7 +141,9 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   Completed
                 </Text>
-                <Text>1</Text>
+                <Text>
+                  {tasks?.filter((task) => task.status === "completed").length}
+                </Text>
               </>
             )}
           </Flex>
@@ -157,7 +172,9 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   For QA
                 </Text>
-                <Text>20</Text>
+                <Text>
+                  {tasks?.filter((task) => task.status === "forqa").length}
+                </Text>
               </>
             )}
           </Flex>
@@ -186,7 +203,9 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   Failed
                 </Text>
-                <Text>20</Text>
+                <Text>
+                  {tasks?.filter((task) => task.status === "failed").length}
+                </Text>
               </>
             )}
           </Flex>

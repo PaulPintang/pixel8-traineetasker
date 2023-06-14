@@ -29,20 +29,24 @@ import AssignMemberModal from "./modals/AssignMemberModal";
 import { Dispatch, SetStateAction } from "react";
 // import { tasks } from "../../../data/tasks";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
+import { formatDateTime } from "../../../utils/formatDateTime";
+import { useAppSelector } from "../../../app/hooks";
+import { useLocation } from "react-router-dom";
 
 interface Props {
-  setViewId: Dispatch<SetStateAction<string | number | null>>;
+  setViewId: Dispatch<SetStateAction<string | null>>;
   view: () => void;
   update: () => void;
 }
 
 const TaskTable = ({ view, update, setViewId }: Props) => {
+  const location = useLocation();
+  const { pathname } = location;
+  const { user } = useAppSelector((state) => state.auth);
   const { data: tasks } = useGetAllTasksQuery();
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
-  const [opened, setOpened] = useState(false);
-  const [menuId, setMenuId] = useState<string | number | null>(null);
 
   const data = tasks?.filter((task) =>
     filterBy ? task.status === filterBy : task
@@ -50,125 +54,148 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
 
   const items = chunk(data, 10);
 
-  const rows = items[page - 1]?.map((task) => (
-    <tr>
-      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Text className="font-semibold">added date</Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Text className="font-semibold">{task.taskname}</Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Text className="font-semibold">{task.ticketno}</Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Badge color="teal" size="md" variant="dot" className="text-gray-500">
-          Available Task
-        </Badge>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Group className="rounded bg-gray-50 max-w-max px-2 py-1 gap-2">
-          <div
-            className={`p-1 ${
-              task.status === "new"
-                ? "bg-indigo-300"
-                : task.status === "inprogress"
-                ? "bg-violet-400"
-                : task.status === "completed"
-                ? "bg-green-300"
-                : task.status === "forqa"
-                ? "bg-yellow-300"
-                : "bg-red-300"
-            }`}
-          ></div>
-          <Text
-            fw="bold"
-            className={`text-[11px] ${
-              task.status === "new"
-                ? "text-indigo-300"
-                : task.status === "inprogress"
-                ? "text-violet-400"
-                : task.status === "completed"
-                ? "text-green-300"
-                : task.status === "forqa"
-                ? "text-yellow-300"
-                : "text-red-300"
-            }`}
+  const rows = items[page - 1]?.map((task) => {
+    const format = formatDateTime(task?.createdAt!);
+    return (
+      <tr>
+        <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+          <Text className="font-semibold">{`${format.date} at ${format.time}`}</Text>
+        </td>
+        <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+          <Text className="font-semibold">{task.taskname}</Text>
+        </td>
+        <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+          <Text className="font-semibold">{task.ticketno}</Text>
+        </td>
+
+        {user?.role === "supervisor" && !pathname.includes("profile") ? (
+          <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+            {task.assign ? (
+              <Text className="font-semibold">{task.assign}</Text>
+            ) : (
+              <Badge
+                color="teal"
+                size="md"
+                variant="dot"
+                className="text-gray-500"
+              >
+                Available Task
+              </Badge>
+            )}
+          </td>
+        ) : (
+          ""
+        )}
+
+        <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+          <Group className="rounded bg-gray-50 max-w-max px-2 py-1 gap-2">
+            <div
+              className={`p-1 ${
+                task.status === "new"
+                  ? "bg-indigo-300"
+                  : task.status === "inprogress"
+                  ? "bg-violet-400"
+                  : task.status === "completed"
+                  ? "bg-green-300"
+                  : task.status === "forqa"
+                  ? "bg-yellow-300"
+                  : "bg-red-300"
+              }`}
+            ></div>
+            <Text
+              fw="bold"
+              className={`text-[11px] ${
+                task.status === "new"
+                  ? "text-indigo-300"
+                  : task.status === "inprogress"
+                  ? "text-violet-400"
+                  : task.status === "completed"
+                  ? "text-green-300"
+                  : task.status === "forqa"
+                  ? "text-yellow-300"
+                  : "text-red-300"
+              }`}
+            >
+              {task.status}
+            </Text>
+          </Group>
+        </td>
+
+        <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+          <Menu
+            shadow="md"
+            transitionProps={{ transition: "rotate-right", duration: 150 }}
+            closeOnItemClick
+            withArrow
           >
-            {task.status}
-          </Text>
-        </Group>
-      </td>
+            <Menu.Target>
+              <ActionIcon variant="white" color="cyan">
+                <IconDots size={19} />
+              </ActionIcon>
+            </Menu.Target>
 
-      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Menu
-          shadow="md"
-          transitionProps={{ transition: "rotate-right", duration: 150 }}
-          closeOnItemClick
-          withArrow
-        >
-          <Menu.Target>
-            <ActionIcon variant="white" color="cyan">
-              <IconDots size={19} />
-            </ActionIcon>
-          </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>Manage task</Menu.Label>
+              <Menu.Item p={0} className="bg-white hover:bg-white">
+                <Flex direction="column" align="start">
+                  <Button
+                    onClick={() => {
+                      view();
+                      setViewId(task._id!);
+                      // setOpened(false);
+                    }}
+                    leftIcon={<IconInfoCircle size={16} />}
+                    variant="white"
+                    color="dark"
+                    size="xs"
+                  >
+                    View
+                  </Button>
+                  {task.status === "new" && (
+                    <>
+                      <Button
+                        onClick={() => {
+                          toggle();
+                          // setOpened(false);
+                        }}
+                        leftIcon={<IconUser size={16} />}
+                        variant="white"
+                        color="cyan"
+                        size="xs"
+                      >
+                        Assign
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          update();
+                          // setOpened(false);
+                        }}
+                        leftIcon={<IconEdit size={16} />}
+                        variant="white"
+                        size="xs"
+                        color="dark"
+                      >
+                        Edit
+                      </Button>
 
-          <Menu.Dropdown>
-            <Menu.Label>Manage task</Menu.Label>
-            <Menu.Item p={0} className="bg-white hover:bg-white">
-              <Flex direction="column" align="start">
-                <Button
-                  onClick={() => {
-                    view();
-                    setViewId(task.id!);
-                    // setOpened(false);
-                  }}
-                  leftIcon={<IconInfoCircle size={16} />}
-                  variant="white"
-                  color="dark"
-                  size="xs"
-                >
-                  View
-                </Button>
-                <Button
-                  onClick={() => {
-                    toggle();
-                    // setOpened(false);
-                  }}
-                  leftIcon={<IconUser size={16} />}
-                  variant="white"
-                  color="cyan"
-                  size="xs"
-                >
-                  Assign
-                </Button>
-                <Button
-                  onClick={() => {
-                    update();
-                    // setOpened(false);
-                  }}
-                  leftIcon={<IconEdit size={16} />}
-                  variant="white"
-                  size="xs"
-                  color="dark"
-                >
-                  Edit
-                </Button>
-                <Button
-                  leftIcon={<IconUser size={16} />}
-                  variant="white"
-                  size="xs"
-                  color="red"
-                >
-                  Delete
-                </Button>
-              </Flex>
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-      </td>
-    </tr>
-  ));
+                      <Button
+                        leftIcon={<IconUser size={16} />}
+                        variant="white"
+                        size="xs"
+                        color="red"
+                      >
+                        Delete
+                      </Button>
+                    </>
+                  )}
+                </Flex>
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </td>
+      </tr>
+    );
+  });
 
   return (
     <>
@@ -196,12 +223,18 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
                   <Text>Ticket No.</Text>
                 </th>
 
-                <th
-                  scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
-                >
-                  <Text>Assigned to</Text>
-                </th>
+                {user?.role === "supervisor" &&
+                !pathname.includes("profile") ? (
+                  <th
+                    scope="col"
+                    className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  >
+                    <Text>Assigned to</Text>
+                  </th>
+                ) : (
+                  ""
+                )}
+
                 <th
                   scope="col"
                   className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
@@ -247,7 +280,7 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
                   Total:
                 </Text>
                 <Text fz="xs">
-                  {tasks?.length} task{tasks?.length! >= 2 && "s"}
+                  {data?.length} task{data?.length! >= 2 && "s"}
                 </Text>
               </Group>
             </Flex>

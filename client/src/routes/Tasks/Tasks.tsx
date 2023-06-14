@@ -18,19 +18,25 @@ import { useDisclosure } from "@mantine/hooks";
 import ViewTaskModal from "./components/modals/ViewTaskModal";
 import UpdateTaskModal from "./components/modals/UpdateTaskModal";
 import { useAppSelector } from "../../app/hooks";
+import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 
 const Tasks = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [add, toggleAdd] = useDisclosure(false);
   const [update, toggleUpdate] = useDisclosure(false);
   const [view, toggleView] = useDisclosure(false);
-  const [viewId, setViewId] = useState<string | number | null>(null);
+  const [viewId, setViewId] = useState<string | null>(null);
+  const { data: tasks } = useGetAllTasksQuery();
   return (
     <>
       <Flex justify="space-between">
         <ManageTaskLabels />
         {user?.role === "trainee" ? (
-          <TaskUrgent setViewId={setViewId} toggle={toggleView.toggle} />
+          <TaskUrgent
+            tasks={tasks!}
+            setViewId={setViewId}
+            toggle={toggleView.toggle}
+          />
         ) : (
           <Button color="cyan" size="xs" onClick={toggleAdd.toggle}>
             Add task
@@ -76,7 +82,12 @@ const Tasks = () => {
       {/* Modals */}
       <AddTaskModal add={add} toggle={toggleAdd.toggle} />
       <UpdateTaskModal update={update} toggle={toggleUpdate.toggle} />
-      <ViewTaskModal viewId={viewId} view={view} toggle={toggleView.toggle} />
+      <ViewTaskModal
+        tasks={tasks}
+        viewId={viewId}
+        view={view}
+        toggle={toggleView.toggle}
+      />
     </>
   );
 };

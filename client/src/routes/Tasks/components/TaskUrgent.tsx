@@ -15,14 +15,15 @@ import {
   IconUrgent,
 } from "@tabler/icons-react";
 import { useState } from "react";
-import { tasks } from "../../../data/tasks";
 import { Dispatch, SetStateAction } from "react";
+import { ITask } from "../../../interfaces/task.interface";
 interface Props {
-  setViewId: Dispatch<SetStateAction<string | number | null>>;
+  tasks: ITask[];
+  setViewId: Dispatch<SetStateAction<string | null>>;
   toggle: () => void;
 }
 
-const TaskUrgent = ({ setViewId, toggle }: Props) => {
+const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
   const [activeTab, setActiveTab] = useState<string | null>("first");
   return (
     <Menu shadow="md" position="bottom-end">
@@ -71,7 +72,7 @@ const TaskUrgent = ({ setViewId, toggle }: Props) => {
                       className="hover:bg-slate-50 hover:opacity-80 transition-all rounded-md p-2 cursor-pointer"
                       onClick={() => {
                         toggle();
-                        setViewId(task.id!);
+                        setViewId(task._id!);
                       }}
                     >
                       <IconCircleCheckFilled
@@ -80,7 +81,7 @@ const TaskUrgent = ({ setViewId, toggle }: Props) => {
                       />
                       <div className="text-xs flex flex-col gap-[1px]">
                         <Text className="text-gray-700">
-                          Your ticket no. <b>63243520324</b> is completed!
+                          Your ticket no. <b>{task.ticketno}</b> is completed!
                         </Text>
                         <Group spacing={10}>
                           <Text className="text-gray-600  text-[11px] font-semibold">
@@ -110,7 +111,7 @@ const TaskUrgent = ({ setViewId, toggle }: Props) => {
                       className="hover:bg-slate-50 hover:opacity-80 transition-all rounded-md p-2 cursor-pointer"
                       onClick={() => {
                         toggle();
-                        setViewId(task.id!);
+                        setViewId(task._id!);
                       }}
                     >
                       <IconExclamationCircle

@@ -13,23 +13,29 @@ import avatar from "../../../assets/avatar.png";
 import { useAppSelector } from "../../../app/hooks";
 import {
   useGetAllTraineeQuery,
-  useGetTraineeQuery,
+  useGetTraineeProfileQuery,
 } from "../../../features/api/trainee/traineeApiSlice";
 import { ITrainee } from "../../../interfaces/user.interface";
 import { useLocation } from "react-router-dom";
 
-const InfoCard = () => {
+interface Props {
+  trainee: ITrainee;
+}
+
+const InfoCard = ({ trainee }: Props) => {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
-  const { data: trainee } = useGetTraineeQuery(user?._id!);
+  const { data: profile } = useGetTraineeProfileQuery(user?._id!, {
+    skip: user?.role !== "trainee",
+  });
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
 
   return (
     <Card className="h- rounded-md shadow-md space-y-[6px]">
       <Box component="div">
         <Text fz={12} className="text-gray-800 font-semibold uppercase">
-          {user?.role === "trainee" ? trainee?.name : user?.course}
+          {user?.role === "trainee" ? user?.name : user?.course}
         </Text>
         {user?.role === "trainee" || pathname.includes("profile") ? (
           <>
@@ -39,7 +45,10 @@ const InfoCard = () => {
                   OJT Required hours:
                 </Text>
                 <Text fz={12} c="dimmed">
-                  {trainee?.hours?.ojtHours} hours
+                  {trainee
+                    ? trainee?.hours?.ojtHours
+                    : profile?.hours?.ojtHours}{" "}
+                  hours
                 </Text>
               </Group>
               <Group spacing={10}>

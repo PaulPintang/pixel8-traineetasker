@@ -18,7 +18,7 @@ interface ModalProps {
 }
 
 const AddTaskModal = ({ add, toggle }: ModalProps) => {
-  const [addTask, { isLoading }] = useAddTaskMutation();
+  const [addTask, { isLoading, isSuccess }] = useAddTaskMutation();
   const [toAddTask, setToAddTask] = useState<ITask>({
     taskname: "",
     ticketno: "",

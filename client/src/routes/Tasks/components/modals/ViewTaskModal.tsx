@@ -25,16 +25,21 @@ import {
   IconMessage,
   IconSend,
 } from "@tabler/icons-react";
-import { tasks } from "../../../../data/tasks";
+// import { tasks } from "../../../../data/tasks";
+import { useGetAllTasksQuery } from "../../../../features/api/task/taskApiSlice";
+import { ITask } from "../../../../interfaces/task.interface";
+import { IconUser } from "@tabler/icons-react";
 
 interface ModalProps {
-  viewId: string | number | null;
+  viewId: string | null;
   view: boolean;
+  tasks: ITask[] | undefined;
   toggle: () => void;
 }
 
-const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
-  const task = tasks.find((task) => task.id === viewId);
+const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
+  const task = tasks?.find((task) => task._id === viewId);
+
   return (
     <Modal
       size="sm"
@@ -54,39 +59,54 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
         <Title order={4} c="dark">
           {task?.taskname}
         </Title>
-        <Group spacing={10}>
-          <Tooltip
-            withArrow
+        {task?.status === "new" ? (
+          <Button
+            leftIcon={<IconUser size={16} />}
+            variant="white"
             color="cyan"
-            position="bottom"
-            label={<Text fz="xs">mark as completed</Text>}
+            size="xs"
           >
-            <ActionIcon color="cyan">
-              <IconChecks size={20} />
-            </ActionIcon>
-          </Tooltip>
-          <Tooltip
-            withArrow
-            color="red"
-            position="bottom"
-            label={<Text fz="xs">mark as failed</Text>}
-          >
-            <ActionIcon color="red">
-              <IconExclamationCircle size={20} />
-            </ActionIcon>
-          </Tooltip>
-        </Group>
+            Assign
+          </Button>
+        ) : task?.status === "forqa" ? (
+          <Group spacing={10}>
+            <Tooltip
+              withArrow
+              color="cyan"
+              position="bottom"
+              label={<Text fz="xs">mark as completed</Text>}
+            >
+              <ActionIcon color="cyan">
+                <IconChecks size={20} />
+              </ActionIcon>
+            </Tooltip>
+            <Tooltip
+              withArrow
+              color="red"
+              position="bottom"
+              label={<Text fz="xs">mark as failed</Text>}
+            >
+              <ActionIcon color="red">
+                <IconExclamationCircle size={20} />
+              </ActionIcon>
+            </Tooltip>
+          </Group>
+        ) : (
+          ""
+        )}
       </Group>
       <div className="space-y-2">
-        <Group align="flex-start">
-          <Text className="w-1/4" c="dimmed" fz="sm">
-            Assign
-          </Text>
-          <Group spacing={10}>
-            <Image src={avatar} width={20} />
-            <Text fz="sm">Paul Justine Pintang</Text>
+        {task?.status !== "new" && (
+          <Group align="flex-start">
+            <Text className="w-1/4" c="dimmed" fz="sm">
+              Assign
+            </Text>
+            <Group spacing={10}>
+              <Image src={avatar} width={20} />
+              <Text fz="sm">Paul Justine Pintang</Text>
+            </Group>
           </Group>
-        </Group>
+        )}
         <Group align="flex-start">
           <Text className="w-1/4" c="dimmed" fz="sm">
             Ticket No.
