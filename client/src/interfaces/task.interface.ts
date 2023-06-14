@@ -8,7 +8,13 @@ export interface ITask {
   started?: string;
   assign?: string;
   timeline?: string;
-  comments?: string;
-  spent?: string;
-  todos: string[];
+  comments?: [
+    {
+      by: string;
+      msg: string;
+    }
+  ];
+  spent?: number;
+  todos?: string[];
+  course?: string;
 }

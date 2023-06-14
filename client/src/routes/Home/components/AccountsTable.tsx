@@ -37,7 +37,7 @@ const AccountsTable = () => {
       </td>
       <td className="hidden md:table-cell lg:table-cell">
         <Text className="uppercase font-semibold text-gray-500">
-          {account.role}
+          {account.course}
         </Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell">
@@ -65,11 +65,6 @@ const AccountsTable = () => {
         </Text>
       </td>
 
-      <td className="hidden md:table-cell lg:table-cell">
-        {/* <Text className="font-semibold text-gray-500">
-          {account.completed} tasks
-        </Text> */}
-      </td>
       <td className="hidden md:table-cell lg:table-cell">
         <Button variant="white" color="dark" size="xs">
           Edit
@@ -107,12 +102,6 @@ const AccountsTable = () => {
             <Text>Current Trainee's</Text>
           </th>
 
-          <th
-            scope="col"
-            className="rounded-tr-md md:rounded-none lg:rounded-none py-3 md:pr-3 lg:pr-3 text-left text-[12px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm"
-          >
-            <Text>Completed Task</Text>
-          </th>
           <th
             scope="col"
             className="md:px-3 lg:px-3 pl-3 py-3 text-left text-[12px] font-[600] text-gray-400 border-transparent tracking-wider  bg-gray-100 shadow-sm rounded-tr-md"

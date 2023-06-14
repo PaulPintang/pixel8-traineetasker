@@ -47,7 +47,7 @@ const AddAccountModal = ({ add, toggle }: ModalProps) => {
   const course = [
     { value: "developer", label: "Software Development" },
     { value: "analyst", label: "System Analyst" },
-    { value: "desginer", label: "UI/UX Designer" },
+    { value: "designer", label: "UI/UX Designer" },
   ];
 
   return (

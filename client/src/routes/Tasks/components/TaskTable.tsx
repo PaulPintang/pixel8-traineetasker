@@ -27,7 +27,8 @@ import avatar from "../../../assets/avatar.png";
 import { useDisclosure } from "@mantine/hooks";
 import AssignMemberModal from "./modals/AssignMemberModal";
 import { Dispatch, SetStateAction } from "react";
-import { tasks } from "../../../data/tasks";
+// import { tasks } from "../../../data/tasks";
+import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 
 interface Props {
   setViewId: Dispatch<SetStateAction<string | number | null>>;
@@ -36,6 +37,7 @@ interface Props {
 }
 
 const TaskTable = ({ view, update, setViewId }: Props) => {
+  const { data: tasks } = useGetAllTasksQuery();
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
@@ -245,7 +247,7 @@ const TaskTable = ({ view, update, setViewId }: Props) => {
                   Total:
                 </Text>
                 <Text fz="xs">
-                  {data.length} task{data.length >= 2 && "s"}
+                  {tasks?.length} task{tasks?.length! >= 2 && "s"}
                 </Text>
               </Group>
             </Flex>

@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import { ITask } from "../../../../interfaces/task.interface";
 import { IconLink, IconPlus } from "@tabler/icons-react";
+import { useAddTaskMutation } from "../../../../features/api/task/taskApiSlice";
 
 interface ModalProps {
   add: boolean;
@@ -17,18 +18,21 @@ interface ModalProps {
 }
 
 const AddTaskModal = ({ add, toggle }: ModalProps) => {
+  const [addTask, { isLoading }] = useAddTaskMutation();
   const [toAddTask, setToAddTask] = useState<ITask>({
     taskname: "",
     ticketno: "",
     deliverable: "",
   });
 
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
+    await addTask(toAddTask);
     setToAddTask({
       taskname: "",
       ticketno: "",
       deliverable: "",
     });
+    toggle();
   };
 
   return (
@@ -88,6 +92,7 @@ const AddTaskModal = ({ add, toggle }: ModalProps) => {
           onClick={handleAddTask}
           fullWidth
           disabled={Object.values(toAddTask!).includes("") ? true : false}
+          loading={isLoading}
         >
           Add task
         </Button>

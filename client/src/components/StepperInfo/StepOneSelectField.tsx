@@ -31,7 +31,7 @@ const StepOneSelectField = ({
               color="cyan"
               label="Software Development"
             />
-            <Radio value="System Analyst" color="cyan" label="System Analyst" />
+            <Radio value="analyst" color="cyan" label="System Analyst" />
             <Radio value="designer" color="cyan" label="UI/UX Designer" />
           </Stack>
         </Radio.Group>

@@ -5,9 +5,15 @@ import { ITrainee } from "../../../interfaces/user.interface";
 
 export const traineeApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getAllTrainee: builder.query<ITrainee[], string>({
+      query: (course) => ({
+        url: `/trainee/${course}`,
+        providesTags: ["Trainee"],
+      }),
+    }),
     getTrainee: builder.query<ITrainee, string>({
       query: (id) => ({
-        url: `/trainee/${id}`,
+        url: `/trainee/profile/${id}`,
         providesTags: ["Trainee"],
       }),
     }),
@@ -22,4 +28,8 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useAddTraineeMutation, useGetTraineeQuery } = traineeApiSlice;
+export const {
+  useGetAllTraineeQuery,
+  useAddTraineeMutation,
+  useGetTraineeQuery,
+} = traineeApiSlice;

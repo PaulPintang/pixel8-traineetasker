@@ -10,15 +10,6 @@ export const accountApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Account"],
     }),
 
-    // addAccount: builder.mutation<IAccount, IAccount>({
-    //   query: (data) => ({
-    //     url: "/account/add",
-    //     method: "POST",
-    //     body: data,
-    //   }),
-    //   invalidatesTags: ["Account"],
-    // }),
-
     addAccount: builder.mutation<IAccount, Omit<IAccount, "id">>({
       query: (data) => ({
         url: "/account/add",

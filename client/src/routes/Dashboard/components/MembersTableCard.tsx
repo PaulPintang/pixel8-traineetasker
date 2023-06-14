@@ -27,55 +27,60 @@ import { Link } from "react-router-dom";
 import { IconInfoCircle } from "@tabler/icons-react";
 import AssignTaskModal from "./AssignTaskModal";
 import { useDisclosure } from "@mantine/hooks";
-import { members } from "../../../data/members";
+// import { trainees } from "../../../data/trainees";
+import { useGetAllTraineeQuery } from "../../../features/api/trainee/traineeApiSlice";
+import { useAppSelector } from "../../../app/hooks";
 
-const MembersTableCard = () => {
+const traineesTableCard = () => {
+  const { user } = useAppSelector((state) => state.auth);
+  const { data: trainees } = useGetAllTraineeQuery(user?.course!);
+
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
-  //   const data = members?.filter((member) =>
-  //     filterBy ? member.status === filterBy : member
+  //   const data = trainees?.filter((trainee) =>
+  //     filterBy ? trainee.status === filterBy : trainee
   //   );
 
-  const items = chunk(members, 4);
+  const items = chunk(trainees, 4);
 
-  const rows = items[page - 1]?.map((member) => (
+  const rows = items[page - 1]?.map((trainee) => (
     <tr>
       <td className="hidden md:table-cell lg:table-cell pl-3 pt-3">
         <Group spacing={10}>
-          <Image src={avatar} width={35} />
+          <Image src={trainee.picture} width={35} radius="xl" />
           <div className="-space-y-[2px]">
-            <Text className="font-semibold">{member.name}</Text>
-            <Text c="dimmed">{member.email}</Text>
+            <Text className="font-semibold">{trainee.name}</Text>
+            <Text c="dimmed">{trainee.email}</Text>
           </div>
         </Group>
       </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <Text className="font-semibold"></Text>
-      </td>
+      {/* <td className="hidden md:table-cell lg:table-cell pl-3 ">
+        <Text className="font-semibold">{trainee.school}</Text>
+      </td> */}
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
         <Text className="font-semibold">
-          {member.hours.ojtHours} <span className="font-normal">hours</span>
+          {trainee.hours?.ojtHours} <span className="font-normal">hours</span>
         </Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
         <Text className="font-semibold">
-          {member.hours.pending} <span className="font-normal">hours</span>
+          {trainee.hours?.pending} <span className="font-normal">hours</span>
         </Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
         <Text className="font-semibold">
-          {member.hours.rendered} <span className="font-normal">hours</span>
+          {trainee.hours?.rendered} <span className="font-normal">hours</span>
         </Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
         <Text className="font-semibold">
-          {member.completedTask} <span className="font-normal">tasks</span>
+          {trainee.completedTask} <span className="font-normal">tasks</span>
         </Text>
       </td>
       {/* <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <Link to={`../profile/${member.id}`}>
+        <Link to={`../profile/${trainee.id}`}>
           <ActionIcon variant="light" color="cyan">
             <IconId size={19} />
           </ActionIcon>
@@ -97,7 +102,7 @@ const MembersTableCard = () => {
             <Menu.Label>Manage intern</Menu.Label>
             <Menu.Item p={0} className="bg-white hover:bg-white">
               <Flex direction="column" align="start">
-                <Link to={`../profile/${member.id}`}>
+                <Link to={`../profile/${trainee._id}`}>
                   <Button
                     leftIcon={<IconInfoCircle size={16} />}
                     variant="white"
@@ -137,12 +142,12 @@ const MembersTableCard = () => {
                 >
                   <Text>Intern</Text>
                 </th>
-                <th
+                {/* <th
                   scope="col"
                   className="rounded-tr-md md:rounded-none lg:rounded-none py-3 md:pr-3 lg:pr-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm"
                 >
                   <Text>Gender</Text>
-                </th>
+                </th> */}
                 <th
                   scope="col"
                   className="hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
@@ -192,7 +197,7 @@ const MembersTableCard = () => {
                   Total:
                 </Text>
                 <Text fz="xs">
-                  {members.length} member{members.length >= 2 && "s"}
+                  {trainees?.length} trainee{trainees?.length! >= 2 && "s"}
                 </Text>
               </Group>
             </Flex>
@@ -214,4 +219,4 @@ const MembersTableCard = () => {
   );
 };
 
-export default MembersTableCard;
+export default traineesTableCard;

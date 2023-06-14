@@ -8,6 +8,7 @@ import {
   Button,
   Divider,
   Tabs,
+  Card,
 } from "@mantine/core";
 import TaskCards from "../Dashboard/components/TaskCards";
 import { TasksLabels } from "../../components/ColorLabels";
@@ -28,28 +29,34 @@ const DailyTimeRecord = lazy(
 // import DailyTimeRecord from "../DailyTimeRecord/DailyTimeRecord";
 import { IconReport } from "@tabler/icons-react";
 import { useAppSelector } from "../../app/hooks";
+import {
+  useGetAllTraineeQuery,
+  useGetTraineeQuery,
+} from "../../features/api/trainee/traineeApiSlice";
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
+  const { id } = useParams();
+  const { data: trainee } = useGetTraineeQuery(id!);
   const [remove, { toggle }] = useDisclosure(false);
   const [activeTab, setActiveTab] = useState<string | null>("tasks");
-  const { id } = useParams();
 
-  const member = members.find((member) => member.id === Number(id));
+  console.log(id);
+  // const member = trainee.find((member) => member.id === Number(id));
   return (
     <>
       <Grid>
         <Grid.Col span="content">
           <Flex direction="column" align="center" justify="center" gap="xs">
-            <Image src={avatar} width={100} />
+            <Image src={trainee?.picture} width={100} radius={100} />
             <Flex direction="column" align="center">
               <Text c="dark" fw="bold" fz="sm">
-                {member?.name}
+                {trainee?.name}
               </Text>
               <Text c="dimmed" fz="xs">
-                Bicol University Polangui Campus
+                {trainee?.school}
               </Text>
               <Text c="dimmed" fz="xs">
-                paulpintang@gmail.com
+                {trainee?.email}
               </Text>
 
               <div className="pt-1">
