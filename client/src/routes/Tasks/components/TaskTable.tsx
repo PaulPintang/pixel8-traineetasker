@@ -49,6 +49,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
   const { data: tasks } = useGetAllTasksQuery();
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
+  const [task, setTask] = useState<ITask>({});
   const [filterBy, setFilterBy] = useState<string | null>("");
 
   const data = tasks?.filter((task) =>
@@ -164,7 +165,9 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                       pathname.includes("profile") ? (
                         <Button
                           onClick={() => {
+                            setTask(task);
                             toggle();
+
                             // setOpened(false);
                           }}
                           leftIcon={<IconUser size={16} />}
@@ -307,7 +310,12 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
           />
         </Flex>
       </Card>
-      <AssignMemberModal assign={assign} toggle={toggle} />
+      <AssignMemberModal
+        task={task}
+        // assignId={assignId}
+        assign={assign}
+        toggle={toggle}
+      />
     </>
   );
 };

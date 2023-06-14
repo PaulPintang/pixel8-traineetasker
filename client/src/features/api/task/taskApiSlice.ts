@@ -15,7 +15,19 @@ export const taskApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
     }),
+    assignTask: builder.mutation({
+      query: (data) => ({
+        url: "/task/assign",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Task"],
+    }),
   }),
 });
 
-export const { useGetAllTasksQuery, useAddTaskMutation } = taskApiSlice;
+export const {
+  useGetAllTasksQuery,
+  useAddTaskMutation,
+  useAssignTaskMutation,
+} = taskApiSlice;

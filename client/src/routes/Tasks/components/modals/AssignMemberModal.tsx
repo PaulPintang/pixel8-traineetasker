@@ -3,14 +3,27 @@ import { tasks } from "../../../../data/tasks";
 import { members } from "../../../../data/members";
 import { useGetAllTraineeQuery } from "../../../../features/api/trainee/traineeApiSlice";
 import { useAppSelector } from "../../../../app/hooks";
+import { ITask } from "../../../../interfaces/task.interface";
+import { useAssignTaskMutation } from "../../../../features/api/task/taskApiSlice";
+import { useState } from "react";
 interface ModalProps {
+  task: ITask;
   assign: boolean;
   toggle: () => void;
 }
 
-const AssignMemberModal = ({ assign, toggle }: ModalProps) => {
+const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
+  const [assignTo, setAssignTo] = useState("");
   const { user } = useAppSelector((state) => state.auth);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
+  const [assignTask, { isLoading }] = useAssignTaskMutation();
+
+  const handleAssign = async () => {
+    await assignTask({ _id: task._id, name: assignTo });
+    toggle();
+  };
+
+  console.log(assignTo);
   return (
     <Modal
       size="sm"
@@ -25,18 +38,20 @@ const AssignMemberModal = ({ assign, toggle }: ModalProps) => {
             Task:
           </Text>
           <Text fz="sm" c="dimmed">
-            Header Page
+            {task.taskname}
           </Text>
         </Group>
         <Autocomplete
-          // value={assignedTo}
-          // onChange={setAssignTo}
+          value={assignTo}
+          onChange={setAssignTo}
           data={trainees!.map((member) => member.name!)}
           dropdownPosition="bottom"
           placeholder="Pick one"
         />
 
-        <Button fullWidth>Assign</Button>
+        <Button onClick={handleAssign} loading={isLoading} fullWidth>
+          Assign
+        </Button>
       </div>
     </Modal>
   );
