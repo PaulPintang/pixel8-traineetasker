@@ -34,8 +34,10 @@ import {
 import { ITask } from "../../../../interfaces/task.interface";
 import { IconUser } from "@tabler/icons-react";
 import { useGetAllTraineeQuery } from "../../../../features/api/trainee/traineeApiSlice";
+import Comments from "./ViewTask/components/Comments";
 import { useAppSelector } from "../../../../app/hooks";
 import { useRef } from "react";
+import TimelineComponent from "./ViewTask/components/Timeline";
 
 interface ModalProps {
   viewId: string | null;
@@ -74,6 +76,7 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
 
   const addComment = async () => {
     await comment({ _id: task?._id, msg: msg.current?.value, by: user?.name });
+    msg.current!.value = "";
   };
   return (
     <Modal
@@ -90,290 +93,198 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
         </Breadcrumbs>
       }
     >
-      <Group position="apart" pb={15}>
-        <Title order={4} c="dark">
-          {task?.taskname}
-        </Title>
-        {task?.status === "new" && user?.role === "supervisor" ? (
-          <Button
-            leftIcon={<IconUser size={16} />}
-            variant="white"
-            color={task.assign ? "indigo" : "cyan"}
-            size="xs"
-          >
-            {task.assign ? "Reassign" : "Assign"}
-          </Button>
-        ) : task?.status === "new" && user?.role === "trainee" ? (
-          <Button
-            color="indigo"
-            size="xs"
-            onClick={handleTaskStatus}
-            loading={isLoading}
-          >
-            Start task
-          </Button>
-        ) : task?.status === "forqa" && user?.role === "supervisor" ? (
-          <Group spacing={10}>
-            <Tooltip
-              withArrow
-              color="cyan"
-              position="bottom"
-              label={<Text fz="xs">mark as completed</Text>}
-            >
-              <ActionIcon
-                ref={ref}
-                color="cyan"
-                name="complete"
-                onClick={() => handleCheckTask("completed")}
-                loading={
-                  isLoading && ref.current?.name === "complete" ? true : false
-                }
-              >
-                <IconChecks size={20} />
-              </ActionIcon>
-            </Tooltip>
-            <Tooltip
-              withArrow
-              color="red"
-              position="bottom"
-              label={<Text fz="xs">mark as failed</Text>}
-            >
-              <ActionIcon
-                color="red"
-                ref={ref}
-                name="fail"
-                onClick={() => handleCheckTask("failed")}
-                loading={
-                  isLoading && ref.current?.name === "fail" ? true : false
-                }
-              >
-                <IconExclamationCircle size={20} />
-              </ActionIcon>
-            </Tooltip>
-          </Group>
-        ) : task?.status === "failed" && user?.role === "trainee" ? (
-          <Button
-            color="cyan"
-            size="xs"
-            onClick={handleTaskStatus}
-            loading={isLoading}
-          >
-            Revise
-          </Button>
-        ) : (
-          task?.status === "inprogress" &&
-          task.assign === user?.name && (
+      <div className="px-1">
+        <Group position="apart" pb={15}>
+          <Title order={4} c="dark">
+            {task?.taskname}
+          </Title>
+          {task?.status === "new" && user?.role === "supervisor" ? (
             <Button
-              color="teal"
+              leftIcon={<IconUser size={16} />}
+              variant="white"
+              color={task.assign ? "indigo" : "cyan"}
+              size="xs"
+            >
+              {task.assign ? "Reassign" : "Assign"}
+            </Button>
+          ) : task?.status === "new" && user?.role === "trainee" ? (
+            <Button
+              color="indigo"
               size="xs"
               onClick={handleTaskStatus}
               loading={isLoading}
             >
-              Done task
+              Start task
             </Button>
-          )
-        )}
-      </Group>
-      <div className="space-y-2">
-        {task?.status !== "new" || task.assign ? (
+          ) : task?.status === "forqa" && user?.role === "supervisor" ? (
+            <Group spacing={10}>
+              <Tooltip
+                withArrow
+                color="cyan"
+                position="bottom"
+                label={<Text fz="xs">mark as completed</Text>}
+              >
+                <ActionIcon
+                  ref={ref}
+                  color="cyan"
+                  name="complete"
+                  onClick={() => handleCheckTask("completed")}
+                  loading={
+                    isLoading && ref.current?.name === "complete" ? true : false
+                  }
+                >
+                  <IconChecks size={20} />
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip
+                withArrow
+                color="red"
+                position="bottom"
+                label={<Text fz="xs">mark as failed</Text>}
+              >
+                <ActionIcon
+                  color="red"
+                  ref={ref}
+                  name="fail"
+                  onClick={() => handleCheckTask("failed")}
+                  loading={
+                    isLoading && ref.current?.name === "fail" ? true : false
+                  }
+                >
+                  <IconExclamationCircle size={20} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
+          ) : task?.status === "failed" && user?.role === "trainee" ? (
+            <Button
+              color="cyan"
+              size="xs"
+              onClick={handleTaskStatus}
+              loading={isLoading}
+            >
+              Revise
+            </Button>
+          ) : (
+            task?.status === "inprogress" &&
+            task.assign === user?.name && (
+              <Button
+                color="teal"
+                size="xs"
+                onClick={handleTaskStatus}
+                loading={isLoading}
+              >
+                Done task
+              </Button>
+            )
+          )}
+        </Group>
+        <div className="space-y-2">
+          {task?.status !== "new" || task.assign ? (
+            <Group align="flex-start">
+              <Text className="w-1/4" c="dimmed" fz="sm">
+                Assign
+              </Text>
+              <Group spacing={10}>
+                <Image
+                  src={assign?.picture}
+                  width={20}
+                  radius="xl"
+                  imageProps={{ referrerPolicy: "no-referrer" }}
+                />
+                <Text fz="sm">{task?.assign}</Text>
+              </Group>
+            </Group>
+          ) : (
+            ""
+          )}
           <Group align="flex-start">
             <Text className="w-1/4" c="dimmed" fz="sm">
-              Assign
+              Ticket No.
             </Text>
-            <Group spacing={10}>
+            <Text fz="sm">{task?.ticketno}</Text>
+          </Group>
+          <Group align="flex-start">
+            <Text className="w-1/4" c="dimmed" fz="sm">
+              Status
+            </Text>
+            <Text fz="sm">
+              {task?.status === "inprogress" ? (
+                <Badge variant="filled" color="violet" size="sm">
+                  {task?.status}
+                </Badge>
+              ) : task?.status === "forqa" ? (
+                <Badge variant="filled" color="yellow" size="sm">
+                  {task?.status}
+                </Badge>
+              ) : task?.status === "completed" ? (
+                <Badge variant="filled" color="green" size="sm">
+                  {task?.status}
+                </Badge>
+              ) : task?.status === "failed" ? (
+                <Badge variant="filled" color="red" size="sm">
+                  {task?.status}
+                </Badge>
+              ) : (
+                <Badge variant="filled" color="blue" size="sm">
+                  {task?.status}
+                </Badge>
+              )}
+            </Text>
+          </Group>
+        </div>
+
+        <Tabs defaultValue="second" pt={10} color="cyan">
+          <Tabs.List>
+            <Tabs.Tab className="w-2/4 text-xs" value="first">
+              Comments
+            </Tabs.Tab>
+            <Tabs.Tab className="w-2/4 text-xs" value="second">
+              Timeline
+            </Tabs.Tab>
+          </Tabs.List>
+          <Tabs.Panel value="first" className="space-y-2">
+            <Group spacing={10} pt={10}>
               <Image
-                src={assign?.picture}
+                src={user?.picture}
                 width={20}
                 radius="xl"
                 imageProps={{ referrerPolicy: "no-referrer" }}
               />
-              <Text fz="sm">{task?.assign}</Text>
+              <Text c="dimmed" fw="bold" fz="xs">
+                Your comment
+              </Text>
             </Group>
-          </Group>
-        ) : (
-          ""
-        )}
-        <Group align="flex-start">
-          <Text className="w-1/4" c="dimmed" fz="sm">
-            Ticket No.
-          </Text>
-          <Text fz="sm">{task?.ticketno}</Text>
-        </Group>
-        <Group align="flex-start">
-          <Text className="w-1/4" c="dimmed" fz="sm">
-            Status
-          </Text>
-          <Text fz="sm">
-            {task?.status === "inprogress" ? (
-              <Badge variant="filled" color="violet" size="sm">
-                {task?.status}
-              </Badge>
-            ) : task?.status === "forqa" ? (
-              <Badge variant="filled" color="yellow" size="sm">
-                {task?.status}
-              </Badge>
-            ) : task?.status === "completed" ? (
-              <Badge variant="filled" color="green" size="sm">
-                {task?.status}
-              </Badge>
-            ) : task?.status === "failed" ? (
-              <Badge variant="filled" color="red" size="sm">
-                {task?.status}
-              </Badge>
-            ) : (
-              <Badge variant="filled" color="blue" size="sm">
-                {task?.status}
-              </Badge>
-            )}
-          </Text>
-        </Group>
+            <Flex gap={5}>
+              <Textarea
+                ref={msg!}
+                className="w-full"
+                placeholder="Add your comment"
+                autosize
+                maxRows={2}
+                size="xs"
+                spellCheck="false"
+              />
+              <ActionIcon
+                color="cyan"
+                variant="white"
+                size="lg"
+                onClick={addComment}
+                loading={commentState.isLoading}
+              >
+                <IconSend size={19} />
+              </ActionIcon>
+            </Flex>
+            <Comments task={task!} user={user!} assign={assign?.picture!} />
+          </Tabs.Panel>
+          <Tabs.Panel value="second" className="space-y-2">
+            <TimelineComponent
+              task={task!}
+              user={user!}
+              assign={assign?.picture!}
+            />
+          </Tabs.Panel>
+        </Tabs>
       </div>
-
-      <Tabs defaultValue="first" pt={10} color="cyan">
-        <Tabs.List>
-          <Tabs.Tab className="w-2/4 text-xs" value="first">
-            Comments
-          </Tabs.Tab>
-          <Tabs.Tab className="w-2/4 text-xs" value="second">
-            Timeline
-          </Tabs.Tab>
-        </Tabs.List>
-        <Tabs.Panel value="first" className="space-y-2">
-          <Group spacing={10} pt={10}>
-            <Image
-              src={user?.picture}
-              width={20}
-              radius="xl"
-              imageProps={{ referrerPolicy: "no-referrer" }}
-            />
-            <Text c="dimmed" fw="bold" fz="xs">
-              Your comment
-            </Text>
-          </Group>
-          <Flex gap={5}>
-            <Textarea
-              ref={msg!}
-              className="w-full"
-              placeholder="Add your comment"
-              autosize
-              maxRows={2}
-              size="xs"
-              spellCheck="false"
-            />
-            <ActionIcon
-              color="cyan"
-              variant="white"
-              size="lg"
-              onClick={addComment}
-              loading={commentState.isLoading}
-            >
-              <IconSend size={19} />
-            </ActionIcon>
-          </Flex>
-          <section className="space-y-3">
-            {task?.comments?.map((item) => (
-              <Paper component="div" className="bg-slate-50 space-y-2" p={11}>
-                <Text fz="xs" c="dark">
-                  {item.msg}
-                </Text>
-                <Flex
-                  align="center"
-                  justify="space-between"
-                  direction={item.by === user?.name ? "row-reverse" : "row"}
-                >
-                  <Group spacing={10}>
-                    <Image
-                      src={
-                        item.by === user?.name ? user.picture : assign?.picture
-                      }
-                      width={20}
-                      radius="xl"
-                      imageProps={{ referrerPolicy: "no-referrer" }}
-                    />
-                    <Text fz="xs" fw="bold">
-                      {item.by}
-                    </Text>
-                  </Group>
-                  <Text c="dimmed" fz="xs">
-                    2 min ago
-                  </Text>
-                </Flex>
-              </Paper>
-            ))}
-          </section>
-        </Tabs.Panel>
-        <Tabs.Panel value="second" className="space-y-2">
-          <Timeline
-            active={0}
-            bulletSize={14}
-            lineWidth={3}
-            pt={10}
-            color="cyan"
-          >
-            <Timeline.Item title="Task Completed" className="text-sm">
-              <Text color="dimmed" size="xs">
-                You've mark this task as completed
-              </Text>
-              <Text size="xs" mt={4}>
-                Friday, June 7 2023 at 11:53 AM
-              </Text>
-            </Timeline.Item>
-            <Timeline.Item
-              title="Mark as done"
-              className="text-sm"
-              bullet={
-                <Avatar
-                  src={avatar}
-                  size={20}
-                  radius="xl"
-                  imageProps={{ referrerPolicy: "no-referrer" }}
-                />
-              }
-            >
-              <Text color="dimmed" size="xs">
-                Task for-QA
-              </Text>
-              <Text size="xs" mt={4}>
-                Friday, June 7 2023 at 11:53 AM
-              </Text>
-            </Timeline.Item>
-            <Timeline.Item
-              title="Task in progress"
-              lineVariant="dotted"
-              className="text-sm"
-              bullet={
-                <Avatar
-                  src={avatar}
-                  size={20}
-                  radius="xl"
-                  imageProps={{ referrerPolicy: "no-referrer" }}
-                />
-              }
-            >
-              <Text color="dark" fw="bold" size="xs">
-                Paul Justine Pintang{" "}
-                <span className="text-gray-500 font-normal">
-                  is doing this task
-                </span>
-              </Text>
-              <Text size="xs" mt={4}>
-                Friday, June 7 2023 at 11:53 AM
-              </Text>
-            </Timeline.Item>
-            <Timeline.Item title="Task added" className="text-sm">
-              <Text color="dark" fw="bold" size="xs">
-                You{" "}
-                <span className="text-gray-500 font-normal">
-                  added this task
-                </span>
-              </Text>
-              <Text size="xs" mt={4}>
-                Friday, June 7 2023 at 07:53 AM
-              </Text>
-            </Timeline.Item>
-          </Timeline>
-        </Tabs.Panel>
-      </Tabs>
     </Modal>
   );
 };
