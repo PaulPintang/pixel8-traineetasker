@@ -15,7 +15,6 @@ const RootLayout = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { data: account, isLoading, isSuccess } = useRefetchQuery();
-  localStorage.removeItem("user");
 
   useEffect(() => {
     const refetch = async () => {

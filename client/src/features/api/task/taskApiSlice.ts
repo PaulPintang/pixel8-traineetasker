@@ -31,6 +31,14 @@ export const taskApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
     }),
+    commentOnTask: builder.mutation({
+      query: (data) => ({
+        url: "/task/comment",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Task"],
+    }),
   }),
 });
 
@@ -39,4 +47,5 @@ export const {
   useAddTaskMutation,
   useAssignTaskMutation,
   useTaskStatusMutation,
+  useCommentOnTaskMutation,
 } = taskApiSlice;

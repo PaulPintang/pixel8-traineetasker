@@ -27,6 +27,7 @@ import {
 } from "@tabler/icons-react";
 // import { tasks } from "../../../../data/tasks";
 import {
+  useCommentOnTaskMutation,
   useGetAllTasksQuery,
   useTaskStatusMutation,
 } from "../../../../features/api/task/taskApiSlice";
@@ -45,10 +46,12 @@ interface ModalProps {
 
 const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
   const ref = useRef<HTMLButtonElement>(null);
+  const msg = useRef<HTMLTextAreaElement>(null);
   const { user } = useAppSelector((state) => state.auth);
   const task = tasks?.find((task) => task._id === viewId);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   const [taskStatus, { isLoading }] = useTaskStatusMutation();
+  const [comment, commentState] = useCommentOnTaskMutation();
   const assign = trainees?.find((trainee) => trainee.name === task?.assign);
 
   // ? TRAINEE
@@ -69,6 +72,9 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
     toggle();
   };
 
+  const addComment = async () => {
+    await comment({ _id: task?._id, msg: msg.current?.value, by: user?.name });
+  };
   return (
     <Modal
       size="sm"
@@ -246,6 +252,7 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
           </Group>
           <Flex gap={5}>
             <Textarea
+              ref={msg!}
               className="w-full"
               placeholder="Add your comment"
               autosize
@@ -253,54 +260,46 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
               size="xs"
               spellCheck="false"
             />
-            <ActionIcon color="cyan" variant="white" size="lg">
+            <ActionIcon
+              color="cyan"
+              variant="white"
+              size="lg"
+              onClick={addComment}
+              loading={commentState.isLoading}
+            >
               <IconSend size={19} />
             </ActionIcon>
           </Flex>
           <section className="space-y-3">
-            <Paper component="div" className="bg-slate-50 space-y-2" p={11}>
-              <Text fz="xs" c="dark">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Repellendus cumque unde
-              </Text>
-              <Group position="apart">
-                <Group spacing={10}>
-                  <Image
-                    src={avatar}
-                    width={20}
-                    radius="xl"
-                    imageProps={{ referrerPolicy: "no-referrer" }}
-                  />
-                  <Text fz="xs" fw="bold">
-                    Juan Dela Cruz
-                  </Text>
-                </Group>
-                <Text c="dimmed" fz="xs">
-                  2 min ago
+            {task?.comments?.map((item) => (
+              <Paper component="div" className="bg-slate-50 space-y-2" p={11}>
+                <Text fz="xs" c="dark">
+                  {item.msg}
                 </Text>
-              </Group>
-            </Paper>
-            <Paper component="div" className="bg-slate-50 space-y-2" p={11}>
-              <Text fz="xs" c="dark">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              </Text>
-              <Group position="apart">
-                <Text c="dimmed" fz="xs">
-                  8 min ago
-                </Text>
-                <Group spacing={10}>
-                  <Image
-                    src={avatar}
-                    width={20}
-                    radius="xl"
-                    imageProps={{ referrerPolicy: "no-referrer" }}
-                  />
-                  <Text fz="xs" fw="bold">
-                    You
+                <Flex
+                  align="center"
+                  justify="space-between"
+                  direction={item.by === user?.name ? "row-reverse" : "row"}
+                >
+                  <Group spacing={10}>
+                    <Image
+                      src={
+                        item.by === user?.name ? user.picture : assign?.picture
+                      }
+                      width={20}
+                      radius="xl"
+                      imageProps={{ referrerPolicy: "no-referrer" }}
+                    />
+                    <Text fz="xs" fw="bold">
+                      {item.by}
+                    </Text>
+                  </Group>
+                  <Text c="dimmed" fz="xs">
+                    2 min ago
                   </Text>
-                </Group>
-              </Group>
-            </Paper>
+                </Flex>
+              </Paper>
+            ))}
           </section>
         </Tabs.Panel>
         <Tabs.Panel value="second" className="space-y-2">

@@ -6,9 +6,10 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  user: localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user")!)
-    : null,
+  user: null,
+  // user: localStorage.getItem("user")
+  //   ? JSON.parse(localStorage.getItem("user")!)
+  //   : null,
 };
 
 const authSlice = createSlice({
@@ -17,7 +18,7 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-      localStorage.setItem("user", JSON.stringify(state.user));
+      // localStorage.setItem("user", JSON.stringify(state.user));
       // localStorage.setItem(
       //   "user",
       //   JSON.stringify({
