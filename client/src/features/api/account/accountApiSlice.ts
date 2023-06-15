@@ -19,19 +19,12 @@ export const accountApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Account"],
     }),
 
-    refetch: builder.mutation<IAccount, IAccount>({
-      query: (user) => ({
-        url: "/account",
-        method: "POST",
-        body: user,
-      }),
-      invalidatesTags: ["Account"],
+    refetch: builder.query<IAccount, void>({
+      query: () => "/account",
+      providesTags: ["Account"],
     }),
   }),
 });
 
-export const {
-  useGetAllAccountQuery,
-  useRefetchMutation,
-  useAddAccountMutation,
-} = accountApiSlice;
+export const { useGetAllAccountQuery, useRefetchQuery, useAddAccountMutation } =
+  accountApiSlice;

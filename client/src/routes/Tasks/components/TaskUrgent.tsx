@@ -30,10 +30,10 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
       <Menu.Target>
         <div className="bg-gray-100  px-2 rounded-full  flex items-center gap-1 py-1 cursor-pointer hover:bg-gray-200 focus:bg-gray-200 transition-all">
           <Text className="text-white py-1 px-2 text-xs rounded-full bg-green-400">
-            {tasks.filter((task) => task.status === "completed").length}
+            {tasks?.filter((task) => task.status === "completed").length}
           </Text>
           <Text className="text-white py-1 px-2 text-xs rounded-full bg-red-400">
-            {tasks.filter((task) => task.status === "failed").length}
+            {tasks?.filter((task) => task.status === "failed").length}
           </Text>
           <IconUrgent />
         </div>
@@ -64,7 +64,7 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
           <Tabs.Panel value="first" className="space-y-2 p-2 h-full">
             <ScrollArea.Autosize mah={258} scrollbarSize={7}>
               {tasks
-                .filter((task) => task.status === "completed")
+                ?.filter((task) => task.status === "completed")
                 .map((task) => (
                   <Menu.Item p={0} className="bg-white hover:bg-white">
                     <Flex
@@ -103,7 +103,7 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
           <Tabs.Panel value="second" className="space-y-2 p-2">
             <ScrollArea.Autosize mah={258} scrollbarSize={7}>
               {tasks
-                .filter((task) => task.status === "failed")
+                ?.filter((task) => task.status === "failed")
                 .map((task) => (
                   <Menu.Item p={0} className="bg-white hover:bg-white">
                     <Flex

@@ -1,33 +1,30 @@
 import { EffectCallback, Suspense, useEffect, useRef } from "react";
 import { Container } from "@mantine/core";
 import { Toaster } from "react-hot-toast";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Navigation from "../components/Navigation";
 import LoaderFallback from "../components/LoaderFallback";
 import StepperInfo from "../components/StepperInfo/StepperInfo";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { useRefetchMutation } from "../features/api/account/accountApiSlice";
+import { useRefetchQuery } from "../features/api/account/accountApiSlice";
 import { setUser } from "../features/auth/authSlice";
-import { useGetTraineeQuery } from "../features/api/trainee/traineeApiSlice";
 
 const RootLayout = () => {
-  const mounted = useRef(true);
-  const { user } = useAppSelector((state) => state.auth);
-  const [refetchLogin] = useRefetchMutation();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+  const { data: account, isLoading, isSuccess } = useRefetchQuery();
+  localStorage.removeItem("user");
 
-  // useEffect(() => {
-  //   const refetch = async () => {
-  //     const acc = await refetchLogin({ email: user?.email }).unwrap();
-  //     dispatch(setUser(acc));
-  //   };
-  //   if (!user) {
-  //     console.log("da user");
+  useEffect(() => {
+    const refetch = async () => {
+      dispatch(setUser(account));
+    };
+    refetch().then(() => navigate("dashboard"));
+  }, [account]);
 
-  //     refetch().catch((err) => console.log(err));
-  //   }
-  // }, []);
+  if (isLoading) return <LoaderFallback />;
 
   return (
     <Container size="lg">
@@ -36,12 +33,14 @@ const RootLayout = () => {
       {user?.course === "" && user?.role === "trainee" ? (
         <StepperInfo />
       ) : (
-        <Suspense fallback={<LoaderFallback />}>
+        <>
           {user && user?.role !== "admin" ? <Navigation /> : ""}
-          <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]">
-            <Outlet />
-          </div>
-        </Suspense>
+          <Suspense>
+            <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]">
+              <Outlet />
+            </div>
+          </Suspense>
+        </>
       )}
     </Container>
   );
