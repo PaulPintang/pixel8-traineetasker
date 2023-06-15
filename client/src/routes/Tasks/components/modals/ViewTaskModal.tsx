@@ -26,11 +26,15 @@ import {
   IconSend,
 } from "@tabler/icons-react";
 // import { tasks } from "../../../../data/tasks";
-import { useGetAllTasksQuery } from "../../../../features/api/task/taskApiSlice";
+import {
+  useGetAllTasksQuery,
+  useTaskStatusMutation,
+} from "../../../../features/api/task/taskApiSlice";
 import { ITask } from "../../../../interfaces/task.interface";
 import { IconUser } from "@tabler/icons-react";
 import { useGetAllTraineeQuery } from "../../../../features/api/trainee/traineeApiSlice";
 import { useAppSelector } from "../../../../app/hooks";
+import { useRef } from "react";
 
 interface ModalProps {
   viewId: string | null;
@@ -40,10 +44,31 @@ interface ModalProps {
 }
 
 const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
+  const ref = useRef<HTMLButtonElement>(null);
   const { user } = useAppSelector((state) => state.auth);
   const task = tasks?.find((task) => task._id === viewId);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
+  const [taskStatus, { isLoading }] = useTaskStatusMutation();
   const assign = trainees?.find((trainee) => trainee.name === task?.assign);
+
+  // ? TRAINEE
+  const handleTaskStatus = async () => {
+    const status =
+      task?.status === "new"
+        ? "inprogress"
+        : task?.status === "inprogress"
+        ? "forqa"
+        : task?.status === "failed" && "inprogress";
+    await taskStatus({ _id: task?._id, status });
+    toggle();
+  };
+
+  // ? SUPERVISOR
+  const handleCheckTask = async (status: "completed" | "failed") => {
+    await taskStatus({ _id: task?._id, status });
+    toggle();
+  };
+
   return (
     <Modal
       size="sm"
@@ -63,16 +88,25 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
         <Title order={4} c="dark">
           {task?.taskname}
         </Title>
-        {task?.status === "new" ? (
+        {task?.status === "new" && user?.role === "supervisor" ? (
           <Button
             leftIcon={<IconUser size={16} />}
             variant="white"
-            color="cyan"
+            color={task.assign ? "indigo" : "cyan"}
             size="xs"
           >
-            Assign
+            {task.assign ? "Reassign" : "Assign"}
           </Button>
-        ) : task?.status === "forqa" ? (
+        ) : task?.status === "new" && user?.role === "trainee" ? (
+          <Button
+            color="indigo"
+            size="xs"
+            onClick={handleTaskStatus}
+            loading={isLoading}
+          >
+            Start task
+          </Button>
+        ) : task?.status === "forqa" && user?.role === "supervisor" ? (
           <Group spacing={10}>
             <Tooltip
               withArrow
@@ -80,7 +114,15 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
               position="bottom"
               label={<Text fz="xs">mark as completed</Text>}
             >
-              <ActionIcon color="cyan">
+              <ActionIcon
+                ref={ref}
+                color="cyan"
+                name="complete"
+                onClick={() => handleCheckTask("completed")}
+                loading={
+                  isLoading && ref.current?.name === "complete" ? true : false
+                }
+              >
                 <IconChecks size={20} />
               </ActionIcon>
             </Tooltip>
@@ -90,17 +132,44 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
               position="bottom"
               label={<Text fz="xs">mark as failed</Text>}
             >
-              <ActionIcon color="red">
+              <ActionIcon
+                color="red"
+                ref={ref}
+                name="fail"
+                onClick={() => handleCheckTask("failed")}
+                loading={
+                  isLoading && ref.current?.name === "fail" ? true : false
+                }
+              >
                 <IconExclamationCircle size={20} />
               </ActionIcon>
             </Tooltip>
           </Group>
+        ) : task?.status === "failed" && user?.role === "trainee" ? (
+          <Button
+            color="cyan"
+            size="xs"
+            onClick={handleTaskStatus}
+            loading={isLoading}
+          >
+            Revise
+          </Button>
         ) : (
-          ""
+          task?.status === "inprogress" &&
+          task.assign === user?.name && (
+            <Button
+              color="teal"
+              size="xs"
+              onClick={handleTaskStatus}
+              loading={isLoading}
+            >
+              Done task
+            </Button>
+          )
         )}
       </Group>
       <div className="space-y-2">
-        {task?.status !== "new" && (
+        {task?.status !== "new" || task.assign ? (
           <Group align="flex-start">
             <Text className="w-1/4" c="dimmed" fz="sm">
               Assign
@@ -115,6 +184,8 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
               <Text fz="sm">{task?.assign}</Text>
             </Group>
           </Group>
+        ) : (
+          ""
         )}
         <Group align="flex-start">
           <Text className="w-1/4" c="dimmed" fz="sm">

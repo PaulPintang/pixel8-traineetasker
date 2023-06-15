@@ -23,7 +23,6 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
     toggle();
   };
 
-  console.log(assignTo);
   return (
     <Modal
       size="sm"

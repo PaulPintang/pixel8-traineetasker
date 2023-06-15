@@ -37,14 +37,14 @@ const NewTask = ({ toggle, setViewId }: Props) => {
                 <Text>Added:</Text>
                 <Text>{task.started}</Text>
               </Group>
-              <Group className="text-gray-500" fz="xs" spacing={8}>
+              {/* <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Deliverable:</Text>
                 <Text c="blue" fw="bold">
                   View
                 </Text>
-              </Group>
+              </Group> */}
             </Box>
-            <Button size="xs">Start the task</Button>
+            {/* <Button size="xs">Start the task</Button> */}
           </Box>
         </Card>
       ))}
