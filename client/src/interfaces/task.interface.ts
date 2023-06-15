@@ -4,17 +4,22 @@ export interface ITask {
   ticketno?: string;
   deliverable?: string;
   status?: "inprogress" | "forqa" | "new" | "failed" | "completed";
-  createdAt?: Date;
-  started?: string;
   assign?: string;
-  timeline?: string;
+  course?: string;
   comments?: [
     {
       by: string;
       msg: string;
     }
   ];
+  timeline?: {
+    startedAt?: Date;
+    doneAt?: Date;
+    completedAt?: Date;
+    failedDates: Date[];
+  };
   spent?: number;
   todos?: string[];
-  course?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

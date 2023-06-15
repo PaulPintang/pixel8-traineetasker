@@ -10,9 +10,14 @@ import {
 import { Props } from "./Comments";
 import { IconCheck, IconCircleDashed, IconCircleX } from "@tabler/icons-react";
 import { IconCircleCheck } from "@tabler/icons-react";
+import { formatDateTime } from "../../../../../../utils/formatDateTime";
 
 const TimelineComponent = ({ user, task, assign }: Props) => {
-  const revision = true;
+  const added = formatDateTime(task?.createdAt!);
+  const started = formatDateTime(task?.timeline?.startedAt!);
+  const done = formatDateTime(task?.timeline?.doneAt!);
+  const completed = formatDateTime(task?.timeline?.completedAt!);
+  const revision = task.timeline?.failedDates.length !== 0;
   return (
     <Timeline active={0} bulletSize={20} lineWidth={3} pt={10} color="cyan">
       {task.status === "completed" ? (
@@ -26,7 +31,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
             You've mark this task as completed
           </Text>
           <Text size="xs" mt={4}>
-            Friday, June 7 2023 at 11:53 AM
+            {`${completed.date} at ${completed.time}`}
           </Text>
         </Timeline.Item>
       ) : null}
@@ -47,6 +52,11 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
                 />
               }
             >
+              {task.status !== "completed" && (
+                <Text color="dimmed" size="xs">
+                  Ongoing for revision
+                </Text>
+              )}
               <Group spacing={10}>
                 <Text color="dimmed" size="xs">
                   Revisions
@@ -57,7 +67,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
                   variant="light"
                   className="lowercase"
                 >
-                  x3
+                  x{task.timeline?.failedDates.length}
                 </Badge>
               </Group>
               <List
@@ -71,21 +81,16 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
                   </ThemeIcon>
                 }
               >
-                <List.Item>
-                  <Text size="xs" mt={4}>
-                    Tuesday, June 8 2023 at 8:53 AM
-                  </Text>
-                </List.Item>
-                <List.Item>
-                  <Text size="xs" mt={4}>
-                    Monday, June 7 2023 at 11:53 AM
-                  </Text>
-                </List.Item>
-                <List.Item>
-                  <Text size="xs" mt={4}>
-                    Wednesday, June 7 2023 at 11:53 AM
-                  </Text>
-                </List.Item>
+                {task.timeline?.failedDates.map((date) => {
+                  const dates = formatDateTime(date);
+                  return (
+                    <List.Item>
+                      <Text size="xs" mt={4}>
+                        {`${dates.date} at ${dates.time}`}
+                      </Text>
+                    </List.Item>
+                  );
+                })}
               </List>
             </Timeline.Item>
           )
@@ -110,7 +115,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
             Task for-QA
           </Text>
           <Text size="xs" mt={4}>
-            Friday, June 7 2023 at 11:53 AM
+            {`${done.date} at ${done.time}`}
           </Text>
         </Timeline.Item>
       ) : null}
@@ -133,11 +138,13 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
           }
         >
           <Text color="dark" fw="bold" size="xs">
-            Paul Justine Pintang{"  "}
-            <span className="text-gray-500 font-normal">start this task</span>
+            {task.assign === user.name ? "You" : task.assign}
+            <span className="text-gray-500 font-normal pl-1">
+              start this task
+            </span>
           </Text>
           <Text size="xs" mt={4}>
-            Friday, June 7 2023 at 11:53 AM
+            {`${started.date} at ${started.time}`}
           </Text>
         </Timeline.Item>
       ) : null}
@@ -154,11 +161,13 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
         }
       >
         <Text color="dark" fw="bold" size="xs">
-          {user.role === "supervisor" ? "You" : "Supervisor"}{" "}
-          <span className="text-gray-500 font-normal">added this task</span>
+          {user.role === "supervisor" ? "You" : "Supervisor"}
+          <span className="text-gray-500 font-normal pl-1">
+            added this task
+          </span>
         </Text>
         <Text size="xs" mt={4}>
-          Friday, June 7 2023 at 07:53 AM
+          {`${added.date} at ${added.time}`}
         </Text>
       </Timeline.Item>
     </Timeline>

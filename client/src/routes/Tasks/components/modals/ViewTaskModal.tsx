@@ -72,6 +72,7 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
   const handleCheckTask = async (status: "completed" | "failed") => {
     await taskStatus({ _id: task?._id, status });
     toggle();
+    ref.current!.value = "";
   };
 
   const addComment = async () => {
