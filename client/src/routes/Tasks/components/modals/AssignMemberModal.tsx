@@ -4,8 +4,13 @@ import { members } from "../../../../data/members";
 import { useGetAllTraineeQuery } from "../../../../features/api/trainee/traineeApiSlice";
 import { useAppSelector } from "../../../../app/hooks";
 import { ITask } from "../../../../interfaces/task.interface";
-import { useAssignTaskMutation } from "../../../../features/api/task/taskApiSlice";
+import {
+  useAssignTaskMutation,
+  useGetAllTasksQuery,
+} from "../../../../features/api/task/taskApiSlice";
 import { useState } from "react";
+import { socket } from "../../../../features/api/task/taskApiSlice";
+import { useEffect } from "react";
 interface ModalProps {
   task: ITask;
   assign: boolean;
@@ -16,12 +21,19 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
   const [assignTo, setAssignTo] = useState("");
   const { user } = useAppSelector((state) => state.auth);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
+  const getTaskUpdates = useGetAllTasksQuery();
   const [assignTask, { isLoading }] = useAssignTaskMutation();
 
   const handleAssign = async () => {
     await assignTask({ _id: task._id, name: assignTo });
     toggle();
+    // socket.emit("assign", { ...task, assign: assignTo });
+    getTaskUpdates.refetch();
   };
+
+  // useEffect(() => {
+  //   socket.on("testreceive", (data) => alert(data.msg));
+  // }, [socket]);
 
   return (
     <Modal

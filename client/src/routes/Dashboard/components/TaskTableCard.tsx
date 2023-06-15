@@ -19,7 +19,9 @@ import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 
 const TaskTableCard = () => {
-  const { data: tasks } = useGetAllTasksQuery();
+  const { data: tasks } = useGetAllTasksQuery(undefined, {
+    pollingInterval: 3000,
+  });
   const [view, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [viewId, setViewId] = useState<string | null>(null);

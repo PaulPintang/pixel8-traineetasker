@@ -66,18 +66,18 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
     const format = formatDateTime(task?.createdAt!);
     return (
       <tr>
-        <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
+        <td className=" md:table-cell lg:table-cell pl-3 pt-2">
           <Text className="font-semibold">{`${format.date} at ${format.time}`}</Text>
         </td>
-        <td className="hidden md:table-cell lg:table-cell  pt-2">
+        <td className=" md:table-cell lg:table-cell  pt-2">
           <Text className="font-semibold">{task.taskname}</Text>
         </td>
-        <td className="hidden md:table-cell lg:table-cell  pt-2">
+        <td className=" md:table-cell lg:table-cell  pt-2">
           <Text className="font-semibold">{task.ticketno}</Text>
         </td>
 
         {user?.role === "supervisor" && !pathname.includes("profile") ? (
-          <td className="hidden md:table-cell lg:table-cell  pt-2">
+          <td className=" md:table-cell lg:table-cell  pt-2">
             {task.assign ? (
               <Text className="font-semibold">{task.assign}</Text>
             ) : (
@@ -95,7 +95,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
           ""
         )}
 
-        <td className="hidden md:table-cell lg:table-cell  pt-2">
+        <td className=" md:table-cell lg:table-cell  pt-2">
           <Group className="rounded bg-gray-50 max-w-max px-2 py-1 gap-2">
             <div
               className={`p-1 ${
@@ -129,7 +129,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
           </Group>
         </td>
 
-        <td className="hidden md:table-cell lg:table-cell  pt-2">
+        <td className=" md:table-cell lg:table-cell  pt-2">
           <Menu
             shadow="md"
             transitionProps={{ transition: "rotate-right", duration: 150 }}
@@ -215,7 +215,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
   return (
     <>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-200px)] mt-4">
-        <div className="h-[95%] overflow-hidden">
+        <div className="h-[95%] overflow-">
           <table className="border-collapse border-none w-full">
             <thead>
               <tr>
@@ -233,7 +233,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                 </th>
                 <th
                   scope="col"
-                  className="hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className=" md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
                   <Text>Ticket No.</Text>
                 </th>
@@ -242,7 +242,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                 !pathname.includes("profile") ? (
                   <th
                     scope="col"
-                    className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                    className="  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                   >
                     <Text>Assigned to</Text>
                   </th>
@@ -252,7 +252,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
 
                 <th
                   scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
                   <Text>Status</Text>
                 </th>
@@ -264,7 +264,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                 </th>
                 {/* <th
                   scope="col"
-                  className="rounded-tr-md hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="rounded-tr-md  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 ></th> */}
               </tr>
             </thead>

@@ -11,7 +11,9 @@ import { useState } from "react";
 import { ITask } from "../../../../interfaces/task.interface";
 import { IconLink, IconPlus } from "@tabler/icons-react";
 import { useAddTaskMutation } from "../../../../features/api/task/taskApiSlice";
+import { socket } from "../../../../features/api/task/taskApiSlice";
 
+import { useEffect } from "react";
 interface ModalProps {
   add: boolean;
   toggle: () => void;
@@ -32,6 +34,7 @@ const AddTaskModal = ({ add, toggle }: ModalProps) => {
       ticketno: "",
       deliverable: "",
     });
+    socket.emit("add", toAddTask);
     toggle();
   };
 
