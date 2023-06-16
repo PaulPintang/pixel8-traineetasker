@@ -9,8 +9,8 @@ import {
   useGetAllTasksQuery,
 } from "../../../../features/api/task/taskApiSlice";
 import { useState } from "react";
-import { socket } from "../../../../features/api/task/taskApiSlice";
 import { useEffect } from "react";
+import { socket } from "../../../../utils/socketConnect";
 interface ModalProps {
   task: ITask;
   assign: boolean;
@@ -25,6 +25,7 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
 
   const handleAssign = async () => {
     await assignTask({ _id: task._id, name: assignTo });
+    socket.emit("assign", { _id: task._id, name: assignTo });
     toggle();
   };
 

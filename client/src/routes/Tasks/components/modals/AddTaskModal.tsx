@@ -11,7 +11,7 @@ import { useState } from "react";
 import { ITask } from "../../../../interfaces/task.interface";
 import { IconLink, IconPlus } from "@tabler/icons-react";
 import { useAddTaskMutation } from "../../../../features/api/task/taskApiSlice";
-import { socket } from "../../../../features/api/task/taskApiSlice";
+import { socket } from "../../../../utils/socketConnect";
 
 import { useEffect } from "react";
 interface ModalProps {

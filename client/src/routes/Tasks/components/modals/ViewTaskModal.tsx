@@ -38,6 +38,7 @@ import Comments from "./ViewTask/components/Comments";
 import { useAppSelector } from "../../../../app/hooks";
 import { useRef } from "react";
 import TimelineComponent from "./ViewTask/components/Timeline";
+import { socket } from "../../../../utils/socketConnect";
 
 interface ModalProps {
   viewId: string | null;
@@ -64,19 +65,29 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
         : task?.status === "inprogress"
         ? "forqa"
         : task?.status === "failed" && "inprogress";
-    await taskStatus({ _id: task?._id, status });
+    const data = { _id: task?._id, status };
+    await taskStatus(data);
+    socket.emit("status", data);
     toggle();
   };
 
   // ? SUPERVISOR
   const handleCheckTask = async (status: "completed" | "failed") => {
-    await taskStatus({ _id: task?._id, status });
+    const data = { _id: task?._id, status };
+    await taskStatus(data);
+    socket.emit("status", data);
     toggle();
     ref.current!.value = "";
   };
 
   const addComment = async () => {
-    await comment({ _id: task?._id, msg: msg.current?.value, by: user?.name });
+    const data = {
+      _id: task?._id,
+      msg: msg.current?.value,
+      by: user?.name,
+    };
+    await comment(data);
+    socket.emit("comment", data);
     msg.current!.value = "";
   };
   return (
