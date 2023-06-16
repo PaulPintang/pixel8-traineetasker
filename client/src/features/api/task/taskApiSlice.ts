@@ -20,14 +20,7 @@ export const taskApiSlice = apiSlice.injectEndpoints({
           // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
 
-          // socket.on("addTask", (data: ITask) => {
-          //   updateCachedData((draft) => {
-          //     // draft.push(data);
-          //     console.log(draft);
-          //   });
-          // });
-
-          socket.on("assignTask", (data: ITask) => {
+          socket.on("assignTask", (data: { _id: string; name: string }) => {
             updateCachedData((draft) => {
               const index = draft.findIndex((task) => task._id === data._id);
               if (index !== -1) {
@@ -36,6 +29,15 @@ export const taskApiSlice = apiSlice.injectEndpoints({
                 draft.push(data);
               }
             });
+          });
+          socket.on("taskStatus", (data: ITask) => {
+            updateCachedData((draft) => {
+              console.log("TASKid", data._id);
+              const index = draft.findIndex((task) => task._id === data._id);
+              console.log("INDEX", index);
+              if (index !== -1) draft[index].status = data.status;
+            });
+            console.log(data);
           });
         } catch {}
         await cacheEntryRemoved;
@@ -59,17 +61,16 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ["Task"],
-      // ??? queryfullfilled return server response
-      async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+      // ??? queryfulfilled return server response
+      async onQueryStarted(data, { dispatch, queryFulfilled }) {
         try {
           const { data: updatedTask } = await queryFulfilled;
           socket.emit("assign", updatedTask);
-          const patchResult = dispatch(
-            taskApiSlice.util.updateQueryData("getAllTasks", id, (draft) => {
+          dispatch(
+            taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
               Object.assign(draft, updatedTask);
             })
           );
-          console.log(patchResult);
         } catch {}
       },
     }),
@@ -81,6 +82,18 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ["Task"],
+      // ??? queryfulfilled return server response
+      async onQueryStarted(data, { dispatch, queryFulfilled }) {
+        try {
+          const { data: updatedTask } = await queryFulfilled;
+          socket.emit("status", updatedTask);
+          dispatch(
+            taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
+              Object.assign(draft, updatedTask);
+            })
+          );
+        } catch {}
+      },
     }),
     commentOnTask: builder.mutation({
       query: (data) => ({

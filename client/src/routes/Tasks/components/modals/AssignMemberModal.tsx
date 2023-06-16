@@ -25,8 +25,7 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
 
   const handleAssign = async () => {
     await assignTask({ _id: task._id, name: assignTo });
-    // toggle();
-    // socket.emit("assign", { ...task, assign: assignTo });
+    toggle();
   };
 
   return (
