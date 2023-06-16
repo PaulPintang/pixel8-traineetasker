@@ -17,10 +17,10 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
   const started = formatDateTime(task?.timeline?.startedAt!);
   const done = formatDateTime(task?.timeline?.doneAt!);
   const completed = formatDateTime(task?.timeline?.completedAt!);
-  const revision = task.timeline?.failedDates.length !== 0;
+  const revision = task.timeline?.revisions.length !== 0;
   return (
     <Timeline active={0} bulletSize={20} lineWidth={3} pt={10} color="cyan">
-      {task.status === "completed" ? (
+      {task.timeline?.completedAt ? (
         <Timeline.Item
           title="Task Completed"
           className="text-sm"
@@ -36,69 +36,68 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
         </Timeline.Item>
       ) : null}
 
-      {task.status === "forqa" ||
-      task.status === "failed" ||
-      task.status === "completed"
-        ? revision && (
-            <Timeline.Item
-              title="Task failed - for revision"
-              className="text-sm"
-              bullet={
-                <Avatar
-                  src={user.picture}
-                  size={20}
-                  radius="xl"
-                  imageProps={{ referrerPolicy: "no-referrer" }}
-                />
-              }
-            >
-              {task.status !== "completed" && (
-                <Text color="dimmed" size="xs">
-                  Ongoing for revision
-                </Text>
-              )}
-              <Group spacing={10}>
-                <Text color="dimmed" size="xs">
-                  Revisions
-                </Text>
-                <Badge
-                  size="sm"
-                  color="red"
-                  variant="light"
-                  className="lowercase"
-                >
-                  x{task.timeline?.failedDates.length}
-                </Badge>
-              </Group>
+      {revision ? (
+        <Timeline.Item
+          title="Task failed - for revision"
+          className="text-sm"
+          bullet={
+            <Avatar
+              src={user.picture}
+              size={20}
+              radius="xl"
+              imageProps={{ referrerPolicy: "no-referrer" }}
+            />
+          }
+        >
+          {task.status !== "completed" && (
+            <Text color="dimmed" size="xs">
+              Ongoing for revision
+            </Text>
+          )}
+          <Group spacing={10}>
+            <Text color="dimmed" size="xs">
+              Revisions
+            </Text>
+            <Badge size="sm" color="red" variant="light" className="lowercase">
+              x{task.timeline?.revisions.length}
+            </Badge>
+          </Group>
+          {task.timeline?.revisions.map((item) => {
+            const dates = formatDateTime(item.date);
+            return (
               <List
                 pt={10}
                 spacing="xs"
                 size="sm"
                 center
                 icon={
-                  <ThemeIcon color="red" size="xs" radius="xl">
-                    <IconCircleX size="1rem" />
-                  </ThemeIcon>
+                  item.status === "fail" ? (
+                    <ThemeIcon color="red" size="xs" radius="xl">
+                      <IconCircleX size="1rem" />
+                    </ThemeIcon>
+                  ) : item.status === "ongoing" ? (
+                    <ThemeIcon color="yellow" size="xs" radius="xl">
+                      <IconCircleX size="1rem" />
+                    </ThemeIcon>
+                  ) : (
+                    <ThemeIcon color="completed" size="xs" radius="xl">
+                      <IconCircleX size="1rem" />
+                    </ThemeIcon>
+                  )
                 }
               >
-                {task.timeline?.failedDates.map((date) => {
-                  const dates = formatDateTime(date);
-                  return (
-                    <List.Item>
-                      <Text size="xs" mt={4}>
-                        {`${dates.date} at ${dates.time}`}
-                      </Text>
-                    </List.Item>
-                  );
-                })}
+                <List.Item>
+                  <Text size="xs" mt={4}>
+                    {`${dates.date} at ${dates.time}`}
+                  </Text>
+                </List.Item>
               </List>
-            </Timeline.Item>
-          )
-        : null}
+            );
+          })}
+        </Timeline.Item>
+      ) : null}
 
-      {task.status === "forqa" ||
-      task.status === "completed" ||
-      task.status === "failed" ? (
+      {task.timeline?.doneAt ? (
         <Timeline.Item
           title="Mark as done"
           className="text-sm"
@@ -120,10 +119,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
         </Timeline.Item>
       ) : null}
 
-      {task.status === "inprogress" ||
-      task.status === "forqa" ||
-      task.status === "failed" ||
-      task.status === "completed" ? (
+      {task.timeline?.startedAt ? (
         <Timeline.Item
           title="Task in progress"
           lineVariant="dotted"

@@ -47,9 +47,11 @@ interface ModalProps {
   toggle: () => void;
 }
 
-const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
-  const ref = useRef<HTMLButtonElement>(null);
+const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
+  const fail = useRef<HTMLButtonElement>(null);
+  const complete = useRef<HTMLButtonElement>(null);
   const msg = useRef<HTMLTextAreaElement>(null);
+  const { data: tasks } = useGetAllTasksQuery();
   const { user } = useAppSelector((state) => state.auth);
   const task = tasks?.find((task) => task._id === viewId);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
@@ -66,18 +68,19 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
         ? "forqa"
         : task?.status === "failed" && "inprogress";
     const data = { _id: task?._id, status };
-    await taskStatus(data);
-    socket.emit("status", data);
-    toggle();
+    const response: any = await taskStatus(data);
+    socket.emit("status", response.data);
+    // ref.current!.value = "";
+    // toggle();
   };
 
   // ? SUPERVISOR
   const handleCheckTask = async (status: "completed" | "failed") => {
     const data = { _id: task?._id, status };
-    await taskStatus(data);
-    socket.emit("status", data);
-    toggle();
-    ref.current!.value = "";
+    const response: any = await taskStatus(data);
+    socket.emit("status", response.data);
+    // toggle();
+    // ref.current!.value = "";
   };
 
   const addComment = async () => {
@@ -137,12 +140,14 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
                 label={<Text fz="xs">mark as completed</Text>}
               >
                 <ActionIcon
-                  ref={ref}
+                  ref={complete}
                   color="cyan"
-                  name="complete"
+                  id="complete"
                   onClick={() => handleCheckTask("completed")}
                   loading={
-                    isLoading && ref.current?.name === "complete" ? true : false
+                    isLoading && complete.current!.id !== "complete"
+                      ? true
+                      : false
                   }
                 >
                   <IconChecks size={20} />
@@ -156,11 +161,11 @@ const ViewTaskModal = ({ tasks, view, viewId, toggle }: ModalProps) => {
               >
                 <ActionIcon
                   color="red"
-                  ref={ref}
-                  name="fail"
+                  ref={fail}
+                  id="fail"
                   onClick={() => handleCheckTask("failed")}
                   loading={
-                    isLoading && ref.current?.name === "fail" ? true : false
+                    isLoading && fail.current!.id !== "fail" ? true : false
                   }
                 >
                   <IconExclamationCircle size={20} />
