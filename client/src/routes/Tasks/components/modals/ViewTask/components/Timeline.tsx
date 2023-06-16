@@ -62,8 +62,16 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
               x{task.timeline?.revisions.length}
             </Badge>
           </Group>
-          {task.timeline?.revisions.map((item) => {
-            const dates = formatDateTime(item.date);
+          {task.timeline?.revisions.map((item, index) => {
+            const dates = formatDateTime(item);
+            const color =
+              index === 0 && task.status === "completed"
+                ? "green"
+                : index === 0 && task.status === "inprogress"
+                ? "indigo"
+                : index === 0 && task.status === "forqa"
+                ? "yellow"
+                : "red";
             return (
               <List
                 pt={10}
@@ -71,19 +79,9 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
                 size="sm"
                 center
                 icon={
-                  item.status === "fail" ? (
-                    <ThemeIcon color="red" size="xs" radius="xl">
-                      <IconCircleX size="1rem" />
-                    </ThemeIcon>
-                  ) : item.status === "ongoing" ? (
-                    <ThemeIcon color="yellow" size="xs" radius="xl">
-                      <IconCircleX size="1rem" />
-                    </ThemeIcon>
-                  ) : (
-                    <ThemeIcon color="completed" size="xs" radius="xl">
-                      <IconCircleX size="1rem" />
-                    </ThemeIcon>
-                  )
+                  <ThemeIcon color={color} size="xs" radius="xl">
+                    <IconCircleX size="1rem" />
+                  </ThemeIcon>
                 }
               >
                 <List.Item>

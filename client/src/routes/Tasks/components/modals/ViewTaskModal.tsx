@@ -67,12 +67,21 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
         : task?.status === "inprogress"
         ? "forqa"
         : task?.status === "failed" && "inprogress";
-    const data = { _id: task?._id, status };
+    const data: any = {
+      _id: task?._id,
+      status,
+    };
+    // const revise = { _id: task?._id, status, revise: task?.status === "failed" };
     const response: any = await taskStatus(data);
     socket.emit("status", response.data);
     // ref.current!.value = "";
     // toggle();
   };
+
+  // const handleRevise = async () => {
+  //     const fail = task?.timeline?.revisions.find(task => task.status === "fail")
+
+  // };
 
   // ? SUPERVISOR
   const handleCheckTask = async (status: "completed" | "failed") => {
@@ -144,11 +153,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
                   color="cyan"
                   id="complete"
                   onClick={() => handleCheckTask("completed")}
-                  loading={
-                    isLoading && complete.current!.id !== "complete"
-                      ? true
-                      : false
-                  }
+                  loading={isLoading}
                 >
                   <IconChecks size={20} />
                 </ActionIcon>
@@ -164,9 +169,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
                   ref={fail}
                   id="fail"
                   onClick={() => handleCheckTask("failed")}
-                  loading={
-                    isLoading && fail.current!.id !== "fail" ? true : false
-                  }
+                  loading={isLoading}
                 >
                   <IconExclamationCircle size={20} />
                 </ActionIcon>

@@ -16,15 +16,10 @@ export interface ITask {
     startedAt?: Date;
     doneAt?: Date;
     completedAt?: Date;
-    revisions: Revisions[];
+    revisions: String[];
   };
   spent?: number;
   todos?: string[];
   createdAt?: Date;
   updatedAt?: Date;
-}
-
-interface Revisions {
-  status: "completed" | "ongoing" | "fail";
-  date: Date;
 }
