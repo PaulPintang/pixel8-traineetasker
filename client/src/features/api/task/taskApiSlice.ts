@@ -40,9 +40,9 @@ export const taskApiSlice = apiSlice.injectEndpoints({
             });
           });
           // * problem occur here
-          socket.on("deleteTask", (data: { _id: string }) => {
+          socket.on("deleteTask", (_id: string) => {
             updateCachedData((draft) => {
-              const index = draft.findIndex((task) => task._id === data._id);
+              const index = draft.findIndex((task) => task._id === _id);
               console.log("pota", index);
               if (index !== -1) draft.splice(index, 1);
             });
@@ -136,16 +136,16 @@ export const taskApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
       // ??? queryfulfilled return server response
-      async onQueryStarted(data, { dispatch, queryFulfilled }) {
-        try {
-          const { data: deletedTask } = await queryFulfilled;
-          dispatch(
-            taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
-              Object.assign(draft, deletedTask);
-            })
-          );
-        } catch {}
-      },
+      // async onQueryStarted(data, { dispatch, queryFulfilled }) {
+      //   try {
+      //     const { data: deletedTask } = await queryFulfilled;
+      //     dispatch(
+      //       taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
+      //         Object.assign(draft, deletedTask);
+      //       })
+      //     );
+      //   } catch {}
+      // },
     }),
   }),
 });

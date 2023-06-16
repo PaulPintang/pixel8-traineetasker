@@ -124,6 +124,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
           </Title>
           {task?.status === "new" && user?.role === "supervisor" ? (
             <Button
+              onClick={toggle}
               leftIcon={<IconUser size={16} />}
               variant="white"
               color={task.assign ? "indigo" : "cyan"}
