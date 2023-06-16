@@ -1,4 +1,4 @@
-export const formatDateTime = (added: Date) => {
+export const formatDateTime = (added: string | Date) => {
   const date = new Date(added);
   const format = {
     date: date.toDateString(),

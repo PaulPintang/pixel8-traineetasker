@@ -21,6 +21,7 @@ import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { useAppSelector } from "../../../app/hooks";
 
 const TaskTableCard = () => {
+  const { user } = useAppSelector((state) => state.auth);
   const { data: tasks } = useGetAllTasksQuery();
   const [view, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);

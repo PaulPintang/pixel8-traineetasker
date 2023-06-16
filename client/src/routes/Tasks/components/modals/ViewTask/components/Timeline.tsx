@@ -80,14 +80,19 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
                 center
                 icon={
                   <ThemeIcon color={color} size="xs" radius="xl">
-                    <IconCircleX size="1rem" />
+                    {index === 0 && task.status === "completed" ? (
+                      <IconCheck />
+                    ) : (
+                      <IconCircleX size="1rem" />
+                    )}
                   </ThemeIcon>
                 }
               >
                 <List.Item>
-                  <Text size="xs" mt={4}>
-                    {`${dates.date} at ${dates.time}`}
-                  </Text>
+                  <Text
+                    size="xs"
+                    mb={5}
+                  >{`${dates.date} at ${dates.time}`}</Text>
                 </List.Item>
               </List>
             );

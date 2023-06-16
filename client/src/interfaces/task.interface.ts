@@ -1,5 +1,5 @@
 export interface ITask {
-  _id?: string | null;
+  _id?: string;
   taskname?: string;
   ticketno?: string;
   deliverable?: string;
@@ -16,7 +16,7 @@ export interface ITask {
     startedAt?: Date;
     doneAt?: Date;
     completedAt?: Date;
-    revisions: String[];
+    revisions: string[];
   };
   spent?: number;
   todos?: string[];

@@ -28,12 +28,16 @@ import { useDisclosure } from "@mantine/hooks";
 import AssignMemberModal from "./modals/AssignMemberModal";
 import { Dispatch, SetStateAction } from "react";
 // import { tasks } from "../../../data/tasks";
-import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
+import {
+  useDeleteTaskMutation,
+  useGetAllTasksQuery,
+} from "../../../features/api/task/taskApiSlice";
 import { formatDateTime } from "../../../utils/formatDateTime";
 import { useAppSelector } from "../../../app/hooks";
 import { useLocation } from "react-router-dom";
 import { ITask } from "../../../interfaces/task.interface";
 import { ITrainee } from "../../../interfaces/user.interface";
+import { socket } from "../../../utils/socketConnect";
 
 interface Props {
   trainee: ITrainee;
@@ -47,6 +51,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
   const { data: tasks } = useGetAllTasksQuery();
+  const [deleteTask, { isLoading }] = useDeleteTaskMutation();
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [task, setTask] = useState<ITask>({});
@@ -59,6 +64,11 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
       ? trainee.name === task.assign
       : task
   );
+
+  const handleDelete = async (_id: string) => {
+    await deleteTask(_id);
+    socket.emit("delete", _id);
+  };
 
   const items = chunk(data, 10);
 
@@ -142,7 +152,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
               </ActionIcon>
             </Menu.Target>
 
-            <Menu.Dropdown>
+            <Menu.Dropdown className="flex row-a">
               <Menu.Label>Manage task</Menu.Label>
               <Menu.Item p={0} className="bg-white hover:bg-white">
                 <Flex direction="column" align="start">
@@ -180,31 +190,33 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                       ) : (
                         ""
                       )}
-                      <Button
-                        onClick={() => {
-                          update();
-                          // setOpened(false);
-                        }}
-                        leftIcon={<IconEdit size={16} />}
-                        variant="white"
-                        size="xs"
-                        color="dark"
-                      >
-                        Edit
-                      </Button>
-
-                      <Button
-                        leftIcon={<IconUser size={16} />}
-                        variant="white"
-                        size="xs"
-                        color="red"
-                      >
-                        Delete
-                      </Button>
                     </>
                   )}
                 </Flex>
               </Menu.Item>
+              <Button
+                onClick={() => {
+                  update();
+                  // setOpened(false);
+                }}
+                leftIcon={<IconEdit size={16} />}
+                variant="white"
+                size="xs"
+                color="dark"
+              >
+                Edit
+              </Button>
+
+              <Button
+                leftIcon={<IconUser size={16} />}
+                variant="white"
+                size="xs"
+                color="red"
+                onClick={() => handleDelete(task._id!)}
+                loading={isLoading}
+              >
+                Delete
+              </Button>
             </Menu.Dropdown>
           </Menu>
         </td>
