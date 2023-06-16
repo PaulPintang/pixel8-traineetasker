@@ -14,14 +14,14 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconExternalLink, IconInfoCircle } from "@tabler/icons-react";
 import { chunk } from "lodash";
 import { useState, useEffect, ReactNode } from "react";
+import { ITask } from "../../../interfaces/task.interface";
 import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
 // import { tasks } from "../../../data/tasks";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
+import { useAppSelector } from "../../../app/hooks";
 
 const TaskTableCard = () => {
-  const { data: tasks } = useGetAllTasksQuery(undefined, {
-    pollingInterval: 3000,
-  });
+  const { data: tasks } = useGetAllTasksQuery();
   const [view, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [viewId, setViewId] = useState<string | null>(null);
@@ -35,16 +35,16 @@ const TaskTableCard = () => {
 
   const rows = items[page - 1]?.map((task) => (
     <tr>
-      <td className="hidden md:table-cell lg:table-cell pl-3">
+      <td className=" md:table-cell lg:table-cell pl-3">
         <Text>{task.taskname}</Text>
       </td>
-      <td className="hidden md:table-cell lg:table-cell">
+      <td className=" md:table-cell lg:table-cell">
         <Text>{task.ticketno}</Text>
       </td>
-      <td className="px-5 py-2 hidden md:table-cell lg:table-cell ">
+      <td className="px-5 py-2  md:table-cell lg:table-cell ">
         <Text>{task.spent}</Text>
       </td>
-      <td className=" py-2 hidden md:table-cell lg:table-cell">
+      <td className=" py-2  md:table-cell lg:table-cell">
         <div className="flex bg-gray-100  rounded items-center max-w-max px-2 py-1 gap-2">
           <div
             className={`w-2 h-2 ${
@@ -77,7 +77,7 @@ const TaskTableCard = () => {
           </Text>
         </div>
       </td>
-      <td className="dark:text-gray-400  hidden md:table-cell lg:table-cell">
+      <td className="dark:text-gray-400   md:table-cell lg:table-cell">
         <Button
           onClick={() => {
             toggle();
@@ -115,26 +115,26 @@ const TaskTableCard = () => {
                 </th>
                 <th
                   scope="col"
-                  className="hidden md:table-cell lg:table-cell px-5 py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className=" md:table-cell lg:table-cell px-5 py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
                   <Text>Spent</Text>
                 </th>
 
                 <th
                   scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
                   <Text>Status</Text>
                 </th>
                 <th
                   scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
                   <Text>Action</Text>
                 </th>
                 {/* <th
                   scope="col"
-                  className="rounded-tr-md hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="rounded-tr-md  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 ></th> */}
               </tr>
             </thead>

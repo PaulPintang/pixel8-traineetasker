@@ -18,9 +18,8 @@ export const taskApiSlice = apiSlice.injectEndpoints({
       ) {
         try {
           // wait for the initial query to resolve before proceeding
-          const { data: cache } = await cacheDataLoaded;
+          await cacheDataLoaded;
 
-          console.log("CACHE", cache);
           // socket.on("addTask", (data: ITask) => {
           //   updateCachedData((draft) => {
           //     // draft.push(data);
@@ -28,9 +27,14 @@ export const taskApiSlice = apiSlice.injectEndpoints({
           //   });
           // });
 
-          socket.on("assignTask", (data: IAccount) => {
+          socket.on("assignTask", (data: ITask) => {
             updateCachedData((draft) => {
-              draft.push(data);
+              const index = draft.findIndex((task) => task._id === data._id);
+              if (index !== -1) {
+                draft.splice(index, 1);
+              } else {
+                draft.push(data);
+              }
             });
           });
         } catch {}
@@ -55,17 +59,19 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ["Task"],
-      // async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-      //   try {
-      //     const { data: updatedTask } = await queryFulfilled;
-      //     socket.emit("assign", updatedTask);
-      //     const patchResult = dispatch(
-      //       taskApiSlice.util.updateQueryData("getAllTasks", id, (draft) => {
-      //         Object.assign(draft, updatedPost);
-      //       })
-      //     );
-      //   } catch {}
-      // },
+      // ??? queryfullfilled return server response
+      async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+        try {
+          const { data: updatedTask } = await queryFulfilled;
+          socket.emit("assign", updatedTask);
+          const patchResult = dispatch(
+            taskApiSlice.util.updateQueryData("getAllTasks", id, (draft) => {
+              Object.assign(draft, updatedTask);
+            })
+          );
+          console.log(patchResult);
+        } catch {}
+      },
     }),
 
     taskStatus: builder.mutation({

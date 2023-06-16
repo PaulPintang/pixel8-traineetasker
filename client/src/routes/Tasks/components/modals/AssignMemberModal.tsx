@@ -21,19 +21,13 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
   const [assignTo, setAssignTo] = useState("");
   const { user } = useAppSelector((state) => state.auth);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
-  const getTaskUpdates = useGetAllTasksQuery();
   const [assignTask, { isLoading }] = useAssignTaskMutation();
 
   const handleAssign = async () => {
     await assignTask({ _id: task._id, name: assignTo });
-    toggle();
+    // toggle();
     // socket.emit("assign", { ...task, assign: assignTo });
-    getTaskUpdates.refetch();
   };
-
-  // useEffect(() => {
-  //   socket.on("testreceive", (data) => alert(data.msg));
-  // }, [socket]);
 
   return (
     <Modal
