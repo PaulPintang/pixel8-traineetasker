@@ -91,7 +91,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
                 <List.Item>
                   <Text
                     size="xs"
-                    mb={5}
+                    mb={2}
                   >{`${dates.date} at ${dates.time}`}</Text>
                 </List.Item>
               </List>

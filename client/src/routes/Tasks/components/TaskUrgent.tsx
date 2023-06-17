@@ -24,7 +24,7 @@ interface Props {
 }
 
 const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
-  const [activeTab, setActiveTab] = useState<string | null>("first");
+  const [activeTab, setActiveTab] = useState<string | null>("second");
   return (
     <Menu shadow="md" position="bottom-end">
       <Menu.Target>

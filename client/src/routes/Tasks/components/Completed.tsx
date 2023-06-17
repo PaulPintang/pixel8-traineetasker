@@ -20,10 +20,10 @@ interface Props {
 
 const Completed = ({ toggle, setViewId }: Props) => {
   const { data: tasks } = useGetAllTasksQuery();
-  const completed = tasks!.filter((task) => task.status === "completed");
+  const completed = tasks?.filter((task) => task.status === "completed");
   return (
     <div className="space-y-3">
-      {completed.map((task) => (
+      {completed?.map((task) => (
         <Card
           key={task._id}
           className="cursor-pointer hover:shadow-xl rounded-md shadow-md transition-all"

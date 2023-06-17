@@ -16,9 +16,14 @@ import empty from "../../../assets/emptytodo.png";
 import AddTodoModal from "./AddTodoModal";
 import { useDisclosure } from "@mantine/hooks";
 import { IconX } from "@tabler/icons-react";
+import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 
 const TasksTodoCard = () => {
+  const { data: tasks } = useGetAllTasksQuery();
   const [add, { toggle }] = useDisclosure();
+  const todos = tasks
+    ?.filter((task) => task.status === "inprogress")
+    .map((task) => task.todos);
   return (
     <>
       <Card className="h-full rounded-md shadow-md ">
@@ -50,21 +55,21 @@ const TasksTodoCard = () => {
           </Flex>
           <ScrollArea.Autosize mah={220} scrollbarSize={8}>
             <div className="space-y-3 ">
-              <div className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative">
-                <Text c="dark" fz="xs" className="w-[80%]" py={4}>
-                  I motice a problem in mobile device where dasd Lorem ipsum
-                  dolor sit amet consectetur adipisicing elit. Doloremque,
-                  vitae.
-                </Text>
-                <div className="absolute top-2 right-3">
-                  <Group spacing={6}>
-                    <Checkbox size="xs" color="cyan" />
-                    <ActionIcon color="red" variant="light" radius="xl">
-                      <IconX size={15} />
-                    </ActionIcon>
-                  </Group>
+              {todos?.map((todo) => (
+                <div className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative">
+                  <Text c="dark" fz="xs" className="w-[80%]" py={4}>
+                    {todo}
+                  </Text>
+                  <div className="absolute top-2 right-3">
+                    <Group spacing={6}>
+                      <Checkbox size="xs" color="cyan" />
+                      <ActionIcon color="red" variant="light" radius="xl">
+                        <IconX size={15} />
+                      </ActionIcon>
+                    </Group>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </ScrollArea.Autosize>
         </>

@@ -12,10 +12,10 @@ interface Props {
 
 const NewTask = ({ toggle, setViewId }: Props) => {
   const { data: tasks } = useGetAllTasksQuery();
-  const newTasks: ITask[] = tasks!.filter((task) => task.status === "new");
+  const newTasks = tasks?.filter((task) => task.status === "new");
   return (
     <div className="space-y-3">
-      {newTasks.map((task) => {
+      {newTasks?.map((task) => {
         const format = formatDateTime(task.createdAt!);
         return (
           <Card

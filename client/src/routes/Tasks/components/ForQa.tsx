@@ -19,10 +19,10 @@ interface Props {
 
 const ForQa = ({ toggle, setViewId }: Props) => {
   const { data: tasks } = useGetAllTasksQuery();
-  const forqa = tasks!.filter((task) => task.status === "forqa");
+  const forqa = tasks?.filter((task) => task.status === "forqa");
   return (
     <div className="space-y-3">
-      {forqa.map((task) => (
+      {forqa?.map((task) => (
         <Card
           key={task._id}
           className="cursor-pointer hover:shadow-xl rounded-md shadow-md transition-all"

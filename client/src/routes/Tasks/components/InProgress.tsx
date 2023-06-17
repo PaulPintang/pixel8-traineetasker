@@ -20,13 +20,12 @@ interface Props {
 }
 
 const InProgress = ({ toggle, setViewId }: Props) => {
+  // wahhhhhhhhh
   const { data: tasks } = useGetAllTasksQuery();
-  const inprogress: ITask[] = tasks!.filter(
-    (task) => task.status === "inprogress"
-  );
+  const inprogress = tasks?.filter((task) => task.status === "inprogress");
   return (
     <div className="space-y-3">
-      {inprogress.map((task) => (
+      {inprogress?.map((task) => (
         <Card
           key={task._id}
           className="cursor-pointer hover:shadow-xl rounded-md shadow-md transition-all"
