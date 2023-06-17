@@ -75,3 +75,10 @@ a {
 #__next {
   isolation: isolate;
 }
+
+/* ACCORDION  */
+.mantine-gm39d,
+.mantine-Accordion-label {
+  padding-top: 0;
+  padding-bottom: 0;
+}

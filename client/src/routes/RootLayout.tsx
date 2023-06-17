@@ -2,7 +2,7 @@ import { EffectCallback, Suspense, useEffect, useRef } from "react";
 import { Container } from "@mantine/core";
 import { Toaster } from "react-hot-toast";
 import { Outlet, useNavigate } from "react-router-dom";
-import Header from "../components/Header";
+import Header from "../components/Header/Header";
 import Navigation from "../components/Navigation";
 import LoaderFallback from "../components/LoaderFallback";
 import StepperInfo from "../components/StepperInfo/StepperInfo";
@@ -33,7 +33,7 @@ const RootLayout = () => {
         <StepperInfo />
       ) : (
         <>
-          {user && user?.role !== "admin" ? <Navigation /> : ""}
+          {user && <Navigation />}
           <Suspense>
             <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]">
               <Outlet />

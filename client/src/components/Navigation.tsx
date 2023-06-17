@@ -39,22 +39,24 @@ const Navigation = () => {
           </Button>
         </NavLink>
 
-        <NavLink to="tasks" className="text-gray-700">
-          <Button
-            leftIcon={<IconChecklist size={18} />}
-            size="xs"
-            radius={0}
-            variant="white"
-            color={pathname === "/tasks" ? "dark" : "gray"}
-            className={`${
-              pathname === "/tasks" ? "bg-slate-50 bg-opacity-30" : ""
-            }`}
-          >
-            <Text c={pathname === "/tasks" ? "dark" : "gray"}>
-              {user?.role === "trainee" ? "Your Task" : "ManageTask"}
-            </Text>
-          </Button>
-        </NavLink>
+        {user?.role !== "admin" && (
+          <NavLink to="tasks" className="text-gray-700">
+            <Button
+              leftIcon={<IconChecklist size={18} />}
+              size="xs"
+              radius={0}
+              variant="white"
+              color={pathname === "/tasks" ? "dark" : "gray"}
+              className={`${
+                pathname === "/tasks" ? "bg-slate-50 bg-opacity-30" : ""
+              }`}
+            >
+              <Text c={pathname === "/tasks" ? "dark" : "gray"}>
+                {user?.role === "trainee" ? "Your Task" : "ManageTask"}
+              </Text>
+            </Button>
+          </NavLink>
+        )}
 
         {user?.role === "trainee" && (
           <>

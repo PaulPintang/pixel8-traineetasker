@@ -10,24 +10,35 @@ import {
   Menu,
   Badge,
   Stack,
+  Loader,
 } from "@mantine/core";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import logo from "../assets/Pixel8-Official-Logo.jpg";
-import avatar from "../assets/avatar.png";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import logo from "../../assets/Pixel8-Official-Logo.jpg";
+import avatar from "../../assets/avatar.png";
 import { useGoogleLogin } from "@react-oauth/google";
 import {
   IconArrowRightTail,
   IconCheck,
+  IconClock,
   IconLogout,
   IconSelector,
+  IconSettings,
+  IconUserCircle,
+  IconUsers,
 } from "@tabler/icons-react";
 import axios from "axios";
-import { setUser, logout } from "../features/auth/authSlice";
+import { setUser, logout } from "../../features/auth/authSlice";
 import {
   useLoginMutation,
   useLogoutUserMutation,
-} from "../features/api/auth/authApiSlice";
+} from "../../features/api/auth/authApiSlice";
+import { useState } from "react";
+import { useUpdateCourseViewMutation } from "../../features/api/account/accountApiSlice";
+import { useEffect } from "react";
+import MenuSelectCourse from "./MenuSelectCourse";
+import MenuEditSchedule from "./MenuEditSchedule";
+import MenuManageAccounts from "./MenuManageAccounts";
 
 type Link = {
   isActive: boolean;
@@ -40,9 +51,12 @@ const Header = () => {
   const { pathname } = location;
   const [loginUser, loginState] = useLoginMutation();
   const [logoutUser, logoutState] = useLogoutUserMutation();
+  const [courseView, viewState] = useUpdateCourseViewMutation();
 
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
+  const [course, setCourse] = useState(user?.course);
+  const [menuCouse, setMenuCourse] = useState(false);
 
   const GoogleUseAuth = useGoogleLogin({
     onSuccess: (res) => {
@@ -59,7 +73,7 @@ const Header = () => {
         // ? OAuth return email info, and do a POST request to create account in database
         const user = await loginUser({ name, email, picture }).unwrap();
         dispatch(setUser(user));
-        user.role !== "admin" && navigate("dashboard");
+        navigate("dashboard");
       };
 
       OAuth().catch((err) => console.log(err));
@@ -103,89 +117,11 @@ const Header = () => {
 
         {user?.role === "admin" && (
           <>
-            <Menu shadow="md" position="bottom">
-              <Menu.Target>
-                <Button
-                  rightIcon={<IconSelector size={15} />}
-                  variant="white"
-                  size="xs"
-                  color="dark"
-                >
-                  Software Development
-                </Button>
-              </Menu.Target>
-
-              <Menu.Dropdown className="pr-3">
-                <Stack spacing={3} w={220} p={2}>
-                  <Flex
-                    justify="space-between"
-                    align="center"
-                    className="cursor-pointer"
-                  >
-                    <Button
-                      leftIcon={
-                        <Badge
-                          color="teal"
-                          variant="filled"
-                          radius="sm"
-                          size="xs"
-                          w={21}
-                        >
-                          S
-                        </Badge>
-                      }
-                      variant="white"
-                      size="xs"
-                      color="dark"
-                    >
-                      Software Analyst
-                    </Button>
-                    {/* <IconCheck size={17} /> */}
-                  </Flex>
-                  <Flex justify="space-between" align="center">
-                    <Button
-                      leftIcon={
-                        <Badge
-                          color="grape"
-                          variant="filled"
-                          radius="sm"
-                          size="xs"
-                          w={21}
-                        >
-                          S
-                        </Badge>
-                      }
-                      variant="white"
-                      size="xs"
-                      color="dark"
-                    >
-                      Software Development
-                    </Button>
-                    <IconCheck size={17} />
-                  </Flex>
-                  <Flex justify="space-between" align="center">
-                    <Button
-                      leftIcon={
-                        <Badge
-                          color="orange"
-                          variant="filled"
-                          radius="sm"
-                          size="xs"
-                          w={21}
-                        >
-                          U
-                        </Badge>
-                      }
-                      variant="white"
-                      size="xs"
-                      color="dark"
-                    >
-                      UI/UX Designer
-                    </Button>
-                  </Flex>
-                </Stack>
-              </Menu.Dropdown>
-            </Menu>
+            <MenuSelectCourse />
+            <Group spacing={8}>
+              <MenuEditSchedule />
+              <MenuManageAccounts />
+            </Group>
           </>
         )}
 
