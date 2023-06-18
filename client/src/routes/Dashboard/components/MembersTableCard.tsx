@@ -91,45 +91,53 @@ const traineesTableCard = () => {
           </ActionIcon>
         </Link>
       </td> */}
-      <td className="hidden md:table-cell lg:table-cell pl-3 pt-2">
-        <Menu
-          shadow="md"
-          transitionProps={{ transition: "rotate-right", duration: 150 }}
-          withArrow
-        >
-          <Menu.Target>
-            <ActionIcon variant="white" color="cyan">
-              <IconDots size={19} />
-            </ActionIcon>
-          </Menu.Target>
+      <td className="hidden md:table-cell lg:table-cell pt-2">
+        {user?.role !== "Task manager" ? (
+          <Link to={`../profile/${trainee._id}`}>
+            <Button variant="white" color="cyan" size="xs">
+              View
+            </Button>
+          </Link>
+        ) : (
+          <Menu
+            shadow="md"
+            transitionProps={{ transition: "rotate-right", duration: 150 }}
+            withArrow
+          >
+            <Menu.Target>
+              <ActionIcon variant="white" color="cyan">
+                <IconDots size={19} />
+              </ActionIcon>
+            </Menu.Target>
 
-          <Menu.Dropdown>
-            <Menu.Label>Manage intern</Menu.Label>
-            <Menu.Item p={0} className="bg-white hover:bg-white">
-              <Flex direction="column" align="start">
-                <Link to={`../profile/${trainee._id}`}>
+            <Menu.Dropdown>
+              <Menu.Label>Manage intern</Menu.Label>
+              <Menu.Item p={0} className="bg-white hover:bg-white">
+                <Flex direction="column" align="start">
+                  <Link to={`../profile/${trainee._id}`}>
+                    <Button
+                      leftIcon={<IconInfoCircle size={16} />}
+                      variant="white"
+                      color="dark"
+                      size="xs"
+                    >
+                      View
+                    </Button>
+                  </Link>
                   <Button
-                    leftIcon={<IconInfoCircle size={16} />}
+                    onClick={toggle}
+                    leftIcon={<IconUser size={16} />}
                     variant="white"
-                    color="dark"
+                    color="cyan"
                     size="xs"
                   >
-                    View
+                    Assign
                   </Button>
-                </Link>
-                <Button
-                  onClick={toggle}
-                  leftIcon={<IconUser size={16} />}
-                  variant="white"
-                  color="cyan"
-                  size="xs"
-                >
-                  Assign
-                </Button>
-              </Flex>
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+                </Flex>
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        )}
       </td>
     </tr>
   ));
@@ -180,7 +188,7 @@ const traineesTableCard = () => {
                 </th>
                 <th
                   scope="col"
-                  className="md:px-3 lg:px-3 pl-3 py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm rounded-tr-md"
+                  className="md:px-3 lg:px-3 py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm rounded-tr-md"
                 >
                   <Text>Action</Text>
                 </th>

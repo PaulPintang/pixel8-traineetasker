@@ -39,19 +39,18 @@ const Tasks = ({ trainee }: Props) => {
     <>
       <Flex justify="space-between">
         <ManageTaskLabels />
-        {user?.role === "trainee" ? (
+        {user?.role === "trainee" && (
           <TaskUrgent
             tasks={tasks!}
             setViewId={setViewId}
             toggle={toggleView.toggle}
           />
-        ) : user?.role === "supervisor" && !pathname.includes("profile") ? (
+        )}
+        {user?.role === "Task manager" && (
           <Button color="cyan" size="xs" onClick={toggleAdd.toggle}>
-            Add task
-          </Button>
-        ) : (
-          <Button color="cyan" size="xs" onClick={toggleAdd.toggle}>
-            Assign task
+            {user?.role === "Task manager" && !pathname.includes("profile")
+              ? "Add task"
+              : "Assign task"}
           </Button>
         )}
       </Flex>

@@ -88,14 +88,13 @@ const AccountsDropdown = () => {
                 onClick={collapseView.toggle}
                 variant="white"
                 color="cyan"
-                size="xs"
                 pl={0}
                 compact
               >
                 Invite
               </Button>
             )}
-            <CloseButton />
+            <CloseButton onClick={modalView.close} />
           </Group>
         </Flex>
         <Stack spacing={9} p={8}>
@@ -252,6 +251,7 @@ const AccountsDropdown = () => {
               No accounts found!
             </Text>
           )}
+
           <Flex>
             <Box className="w-full">
               <Collapse in={collapse}>
@@ -321,26 +321,28 @@ const AccountsDropdown = () => {
                     </Menu.Dropdown>
                   </Menu>
                 </Flex>
-                <Flex justify="flex-end" gap={10} pt={14}>
-                  <Button
-                    variant="white"
-                    color="gray"
-                    size="xs"
-                    onClick={() => {
-                      collapseView.toggle();
-                      setEmail("");
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    size="xs"
-                    onClick={handleAddAccount}
-                    loading={isLoading}
-                  >
-                    Invite
-                  </Button>
-                </Flex>
+                {email.length >= 20 && email.includes("@gmail") && (
+                  <Flex justify="flex-end" gap={10} pt={14}>
+                    <Button
+                      variant="white"
+                      color="gray"
+                      size="xs"
+                      onClick={() => {
+                        collapseView.toggle();
+                        setEmail("");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="xs"
+                      onClick={handleAddAccount}
+                      loading={isLoading}
+                    >
+                      Invite
+                    </Button>
+                  </Flex>
+                )}
               </Collapse>
             </Box>
           </Flex>

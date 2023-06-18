@@ -11,13 +11,19 @@ import { Props } from "./Comments";
 import { IconCheck, IconCircleDashed, IconCircleX } from "@tabler/icons-react";
 import { IconCircleCheck } from "@tabler/icons-react";
 import { formatDateTime } from "../../../../../../utils/formatDateTime";
+import { useGetAllAccountQuery } from "../../../../../../features/api/account/accountApiSlice";
 
 const TimelineComponent = ({ user, task, assign }: Props) => {
+  const { data: accounts } = useGetAllAccountQuery();
   const added = formatDateTime(task?.createdAt!);
   const started = formatDateTime(task?.timeline?.startedAt!);
   const done = formatDateTime(task?.timeline?.doneAt!);
   const completed = formatDateTime(task?.timeline?.completedAt!);
   const revision = task.timeline?.revisions.length !== 0;
+
+  const failedby = accounts?.find((acc) => acc.role === "QA Personnel");
+  const startedby = accounts?.find((acc) => acc.role === "Task manager");
+
   return (
     <Timeline active={0} bulletSize={20} lineWidth={3} pt={10} color="cyan">
       {task.timeline?.completedAt ? (
@@ -42,7 +48,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
           className="text-sm"
           bullet={
             <Avatar
-              src={user.picture}
+              src={failedby?.picture}
               size={20}
               radius="xl"
               imageProps={{ referrerPolicy: "no-referrer" }}
@@ -152,7 +158,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
         className="text-sm"
         bullet={
           <Avatar
-            src={user.role === "supervisor" ? user.picture : assign}
+            src={startedby?.picture}
             size={20}
             radius="xl"
             imageProps={{ referrerPolicy: "no-referrer" }}
@@ -160,7 +166,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
         }
       >
         <Text color="dark" fw="bold" size="xs">
-          {user.role === "supervisor" ? "You" : "Supervisor"}
+          {user.role === "Task manager" ? "You" : "Task manager"}
           <span className="text-gray-500 font-normal pl-1">
             added this task
           </span>

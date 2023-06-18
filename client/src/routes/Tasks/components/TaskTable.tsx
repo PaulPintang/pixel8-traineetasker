@@ -86,7 +86,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
           <Text className="font-semibold">{task.ticketno}</Text>
         </td>
 
-        {user?.role === "supervisor" && !pathname.includes("profile") ? (
+        {!pathname.includes("profile") ? (
           <td className=" md:table-cell lg:table-cell  pt-2">
             {task.assign ? (
               <Text className="font-semibold">{task.assign}</Text>
@@ -140,88 +140,105 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
         </td>
 
         <td className=" md:table-cell lg:table-cell  pt-2">
-          <Menu
-            shadow="md"
-            transitionProps={{ transition: "rotate-right", duration: 150 }}
-            closeOnItemClick
-            withArrow
-          >
-            <Menu.Target>
-              <ActionIcon variant="white" color="cyan">
-                <IconDots size={19} />
-              </ActionIcon>
-            </Menu.Target>
+          {user?.role === "supervisor" || user?.role === "admin" ? (
+            <Button
+              onClick={() => {
+                view();
+                setViewId(task._id!);
+                // setOpened(false);
+              }}
+              leftIcon={<IconInfoCircle size={16} />}
+              variant="white"
+              color="cyan"
+              size="xs"
+            >
+              View
+            </Button>
+          ) : (
+            <Menu
+              shadow="md"
+              transitionProps={{ transition: "rotate-right", duration: 150 }}
+              closeOnItemClick
+              withArrow
+            >
+              <Menu.Target>
+                <ActionIcon variant="white" color="cyan">
+                  <IconDots size={19} />
+                </ActionIcon>
+              </Menu.Target>
 
-            <Menu.Dropdown className="flex row-a">
-              <Menu.Label>Manage task</Menu.Label>
+              <Menu.Dropdown className="flex row-a">
+                <Menu.Label>Manage task</Menu.Label>
 
-              <Flex direction="column" align="start">
-                <Menu.Item p={0} className="bg-white hover:bg-white">
-                  <Button
-                    onClick={() => {
-                      view();
-                      setViewId(task._id!);
-                      // setOpened(false);
-                    }}
-                    leftIcon={<IconInfoCircle size={16} />}
-                    variant="white"
-                    color="dark"
-                    size="xs"
-                  >
-                    View
-                  </Button>
-                </Menu.Item>
-                {task.status === "new" && (
+                <Flex direction="column" align="start">
                   <Menu.Item p={0} className="bg-white hover:bg-white">
-                    {user?.role === "supervisor" ||
-                    pathname.includes("profile") ? (
-                      <Button
-                        onClick={() => {
-                          setTask(task);
-                          toggle();
-
-                          // setOpened(false);
-                        }}
-                        leftIcon={<IconUser size={16} />}
-                        variant="white"
-                        color={task.assign ? "indigo" : "cyan"}
-                        size="xs"
-                      >
-                        {task.assign ? "Reassign" : "Assign"}
-                      </Button>
-                    ) : (
-                      ""
-                    )}
+                    <Button
+                      onClick={() => {
+                        view();
+                        setViewId(task._id!);
+                        // setOpened(false);
+                      }}
+                      leftIcon={<IconInfoCircle size={16} />}
+                      variant="white"
+                      color="dark"
+                      size="xs"
+                    >
+                      View
+                    </Button>
                   </Menu.Item>
-                )}
-                <Menu.Item p={0} className="bg-white hover:bg-white">
-                  <Button
-                    onClick={() => {
-                      update();
-                      // setOpened(false);
-                    }}
-                    leftIcon={<IconEdit size={16} />}
-                    variant="white"
-                    size="xs"
-                    color="dark"
-                  >
-                    Edit
-                  </Button>
-                </Menu.Item>
+                  {task.status === "new" && (
+                    <Menu.Item p={0} className="bg-white hover:bg-white">
+                      {user?.role === "Task manager" ||
+                      user?.role === "QA Personnel" ||
+                      pathname.includes("profile") ? (
+                        <Button
+                          onClick={() => {
+                            setTask(task);
+                            toggle();
+                          }}
+                          leftIcon={<IconUser size={16} />}
+                          variant="white"
+                          color={task.assign ? "indigo" : "cyan"}
+                          size="xs"
+                        >
+                          {task.assign ? "Reassign" : "Assign"}
+                        </Button>
+                      ) : (
+                        ""
+                      )}
+                    </Menu.Item>
+                  )}
+                  <Menu.Item p={0} className="bg-white hover:bg-white">
+                    <Button
+                      onClick={() => {
+                        update();
+                        // setOpened(false);
+                      }}
+                      leftIcon={<IconEdit size={16} />}
+                      variant="white"
+                      size="xs"
+                      color="dark"
+                    >
+                      Edit
+                    </Button>
+                  </Menu.Item>
 
-                <Button
-                  leftIcon={<IconUser size={16} />}
-                  variant="white"
-                  size="xs"
-                  color="red"
-                  onClick={() => handleDelete(task._id!)}
-                  loading={isLoading}
-                >
-                  Delete
-                </Button>
-              </Flex>
-            </Menu.Dropdown>
-          </Menu>
+                  {user?.role !== "QA Personnel" && (
+                    <Button
+                      leftIcon={<IconUser size={16} />}
+                      variant="white"
+                      size="xs"
+                      color="red"
+                      onClick={() => handleDelete(task._id!)}
+                      loading={isLoading}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                </Flex>
+              </Menu.Dropdown>
+            </Menu>
+          )}
         </td>
       </tr>
     );
@@ -253,16 +270,13 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                   <Text>Ticket No.</Text>
                 </th>
 
-                {user?.role === "supervisor" &&
-                !pathname.includes("profile") ? (
+                {!pathname.includes("profile") && (
                   <th
                     scope="col"
                     className="  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                   >
                     <Text>Assigned to</Text>
                   </th>
-                ) : (
-                  ""
                 )}
 
                 <th

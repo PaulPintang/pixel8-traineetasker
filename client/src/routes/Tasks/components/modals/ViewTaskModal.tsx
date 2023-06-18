@@ -36,7 +36,7 @@ import { IconUser } from "@tabler/icons-react";
 import { useGetAllTraineeQuery } from "../../../../features/api/trainee/traineeApiSlice";
 import Comments from "./ViewTask/components/Comments";
 import { useAppSelector } from "../../../../app/hooks";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import TimelineComponent from "./ViewTask/components/Timeline";
 import { socket } from "../../../../utils/socketConnect";
 
@@ -51,11 +51,12 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
   const fail = useRef<HTMLButtonElement>(null);
   const complete = useRef<HTMLButtonElement>(null);
   const msg = useRef<HTMLTextAreaElement>(null);
+  const [status, setStatus] = useState("");
   const { data: tasks } = useGetAllTasksQuery();
   const { user } = useAppSelector((state) => state.auth);
   const task = tasks?.find((task) => task._id === viewId);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
-  const [taskStatus, { isLoading }] = useTaskStatusMutation();
+  const [taskStatus, taskState] = useTaskStatusMutation();
   const [comment, commentState] = useCommentOnTaskMutation();
   const assign = trainees?.find((trainee) => trainee.name === task?.assign);
 
@@ -122,7 +123,9 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
           <Title order={4} c="dark">
             {task?.taskname}
           </Title>
-          {task?.status === "new" && user?.role === "supervisor" ? (
+          {task?.status === "new" &&
+          user?.role !== "supervisor" &&
+          user?.role !== "trainee" ? (
             <Button
               onClick={toggle}
               leftIcon={<IconUser size={16} />}
@@ -137,11 +140,11 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
               color="indigo"
               size="xs"
               onClick={handleTaskStatus}
-              loading={isLoading}
+              loading={taskState.isLoading}
             >
               Start task
             </Button>
-          ) : task?.status === "forqa" && user?.role === "supervisor" ? (
+          ) : task?.status === "forqa" && user?.role === "QA Personnel" ? (
             <Group spacing={10}>
               <Tooltip
                 withArrow
@@ -153,8 +156,13 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
                   ref={complete}
                   color="cyan"
                   id="complete"
-                  onClick={() => handleCheckTask("completed")}
-                  loading={isLoading}
+                  onClick={() => {
+                    setStatus("complete");
+                    handleCheckTask("completed");
+                  }}
+                  loading={
+                    taskState.isLoading && status === "complete" ? true : false
+                  }
                 >
                   <IconChecks size={20} />
                 </ActionIcon>
@@ -169,8 +177,13 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
                   color="red"
                   ref={fail}
                   id="fail"
-                  onClick={() => handleCheckTask("failed")}
-                  loading={isLoading}
+                  onClick={() => {
+                    setStatus("failed");
+                    handleCheckTask("failed");
+                  }}
+                  loading={
+                    taskState.isLoading && status === "failed" ? true : false
+                  }
                 >
                   <IconExclamationCircle size={20} />
                 </ActionIcon>
@@ -181,18 +194,19 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
               color="cyan"
               size="xs"
               onClick={handleTaskStatus}
-              loading={isLoading}
+              loading={taskState.isLoading}
             >
               Revise
             </Button>
           ) : (
             task?.status === "inprogress" &&
-            task.assign === user?.name && (
+            task.assign === user?.name &&
+            user?.role === "trainee" && (
               <Button
                 color="teal"
                 size="xs"
                 onClick={handleTaskStatus}
-                loading={isLoading}
+                loading={taskState.isLoading}
               >
                 Done task
               </Button>

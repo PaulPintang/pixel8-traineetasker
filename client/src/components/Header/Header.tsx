@@ -93,13 +93,13 @@ const Header = () => {
     <Flex justify="space-between" align="center">
       <Image src={logo} width={205} className="relative" left={-20} />
       <Group>
-        {user && user.role !== "admin" && pathname !== "/" && (
+        {/* {user && user.role !== "admin" && pathname !== "/" && (
           <NavLink to="/" className="text-white">
             <Button size="xs" color="cyan" variant="white">
               Documentation
             </Button>
           </NavLink>
-        )}
+        )} */}
 
         {user && user?.role !== "admin" && pathname === "/" && (
           <NavLink to="dashboard" className="text-white">
@@ -110,8 +110,11 @@ const Header = () => {
         )}
 
         {user && user?.role !== "admin" && user.course && (
-          <Badge color="teal" variant="dot" className="text-gray-700">
-            {user?.course}
+          <Badge color="teal" variant="dot" className="text-gray-700 ">
+            <Group spacing={4}>
+              <Text className="capitalize">{user.course}</Text>
+              <Text className="capitalize">{user.role}</Text>
+            </Group>
           </Badge>
         )}
 
@@ -120,7 +123,7 @@ const Header = () => {
             {user?.role === "admin" && <MenuSelectCourse />}
             <Group spacing={8}>
               {user?.role === "admin" && <MenuEditSchedule />}
-              <MenuManageAccounts />
+              {user?.role === "supervisor" && <MenuManageAccounts />}
             </Group>
           </>
         )}
