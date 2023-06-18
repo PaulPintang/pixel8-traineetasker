@@ -115,11 +115,11 @@ const Header = () => {
           </Badge>
         )}
 
-        {user?.role === "admin" && (
+        {user?.role !== "trainee" && (
           <>
-            <MenuSelectCourse />
+            {user?.role === "admin" && <MenuSelectCourse />}
             <Group spacing={8}>
-              <MenuEditSchedule />
+              {user?.role === "admin" && <MenuEditSchedule />}
               <MenuManageAccounts />
             </Group>
           </>

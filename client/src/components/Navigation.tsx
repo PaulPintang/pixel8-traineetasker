@@ -13,8 +13,11 @@ import {
 import { NavLink, useLocation } from "react-router-dom";
 import avatar from "../assets/avatar.png";
 import { useAppSelector } from "../app/hooks";
+import { formatDateTime } from "../utils/formatDateTime";
 
 const Navigation = () => {
+  const date = new Date();
+  const format = formatDateTime(date);
   const { user } = useAppSelector((state) => state.auth);
   const location = useLocation();
   const { pathname } = location;
@@ -107,7 +110,7 @@ const Navigation = () => {
             Today:
           </Text>
           <Text fz="xs" c="dimmed">
-            Wednesday, June 07 2023
+            {format.date}
           </Text>
         </Group>
       </Group>
