@@ -11,9 +11,9 @@ import {
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { IconSelector, IconCheck, IconClock } from "@tabler/icons-react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../../app/hooks";
 import { useState } from "react";
-import { useUpdateCourseViewMutation } from "../../features/api/account/accountApiSlice";
+import { useUpdateCourseViewMutation } from "../../../features/api/account/accountApiSlice";
 
 const MenuEditSchedule = () => {
   const [courseView, viewState] = useUpdateCourseViewMutation();

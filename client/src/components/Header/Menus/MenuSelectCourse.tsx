@@ -1,8 +1,8 @@
 import { Flex, Menu, Button, Text, Stack, Badge, Loader } from "@mantine/core";
 import { IconSelector, IconCheck } from "@tabler/icons-react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../../app/hooks";
 import { useState } from "react";
-import { useUpdateCourseViewMutation } from "../../features/api/account/accountApiSlice";
+import { useUpdateCourseViewMutation } from "../../../features/api/account/accountApiSlice";
 
 const MenuSelectCourse = () => {
   const [courseView, viewState] = useUpdateCourseViewMutation();

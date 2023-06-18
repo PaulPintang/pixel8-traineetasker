@@ -36,9 +36,9 @@ import {
 import { useState } from "react";
 import { useUpdateCourseViewMutation } from "../../features/api/account/accountApiSlice";
 import { useEffect } from "react";
-import MenuSelectCourse from "./MenuSelectCourse";
-import MenuEditSchedule from "./MenuEditSchedule";
-import MenuManageAccounts from "./MenuManageAccounts";
+import MenuSelectCourse from "./Menus/MenuSelectCourse";
+import MenuEditSchedule from "./Menus/MenuEditSchedule";
+import MenuManageAccounts from "./Menus/MenuManageAccounts";
 
 type Link = {
   isActive: boolean;

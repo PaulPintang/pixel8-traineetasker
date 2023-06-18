@@ -82,3 +82,9 @@ a {
   padding-top: 0;
   padding-bottom: 0;
 }
+.mantine-Accordion-item,
+.border,
+.-none,
+.mantine-80hvb1 {
+  padding: 0;
+}

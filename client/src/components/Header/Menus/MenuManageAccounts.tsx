@@ -26,18 +26,19 @@ import {
   IconUserCircle,
   IconSettings,
 } from "@tabler/icons-react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../../app/hooks";
 import { useState, lazy } from "react";
 import {
   useGetAllAccountQuery,
   useUpdateCourseViewMutation,
   useUpdateSupervisorMutation,
-} from "../../features/api/account/accountApiSlice";
-import { IAccount } from "../../interfaces/user.interface";
-import { useGetAllTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
+} from "../../../features/api/account/accountApiSlice";
+import { IAccount } from "../../../interfaces/user.interface";
+import { useGetAllTraineeQuery } from "../../../features/api/trainee/traineeApiSlice";
 import { useDisclosure } from "@mantine/hooks";
-import ManageAccountModal from "./ManageAccountsModal";
-const MenuDropdownAccordion = lazy(() => import("./MenuDropdownAccordion"));
+import ManageAccountModal from "./AccountsDropdown";
+import AccountsDropdown from "./AccountsDropdown";
+const AccordionDropdown = lazy(() => import("./AccordionDropdown"));
 
 const MenuManageAccounts = () => {
   const [opened, { toggle, close }] = useDisclosure(false);
@@ -55,8 +56,9 @@ const MenuManageAccounts = () => {
         </ActionIcon>
       </Menu.Target>
 
-      <Menu.Dropdown className="pb-3 px-3">
-        {user?.role !== "admin" ? "pota" : <MenuDropdownAccordion />}
+      <Menu.Dropdown className="px-3 pb-2">
+        {/* <AccordionDropdown /> */}
+        {user?.role !== "admin" ? <AccountsDropdown /> : <AccordionDropdown />}
       </Menu.Dropdown>
       {/* <ManageAccountModal opened={opened} toggle={toggle} /> */}
     </Menu>

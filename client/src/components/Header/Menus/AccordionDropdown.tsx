@@ -14,10 +14,10 @@ import { createStyles } from "@mantine/core";
 import {
   useGetAllAccountQuery,
   useUpdateSupervisorMutation,
-} from "../../features/api/account/accountApiSlice";
+} from "../../../features/api/account/accountApiSlice";
 import { useState } from "react";
 import { IconSettings } from "@tabler/icons-react";
-import { IAccount } from "../../interfaces/user.interface";
+import { IAccount } from "../../../interfaces/user.interface";
 import { useDisclosure } from "@mantine/hooks";
 
 const useStyles = createStyles((theme) => ({
@@ -71,7 +71,7 @@ function AccordionContent({ name, picture, email }: IAccount) {
   );
 }
 
-const MenuDropdownAccordion = () => {
+const AccordionDropdown = () => {
   const { classes } = useStyles();
   const [opened, { toggle, close }] = useDisclosure(false);
 
@@ -98,8 +98,7 @@ const MenuDropdownAccordion = () => {
         value={account._id!}
         key={account.name}
         className="border -none"
-        px={3}
-        pt={4}
+        p={3}
       >
         <Accordion.Control className="p-1" onClick={close}>
           <AccordionContent {...account} />
@@ -180,4 +179,4 @@ const MenuDropdownAccordion = () => {
   );
 };
 
-export default MenuDropdownAccordion;
+export default AccordionDropdown;
