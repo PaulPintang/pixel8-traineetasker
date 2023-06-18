@@ -4,7 +4,7 @@ export interface IAccount {
   email?: string;
   picture?: string;
   course?: string;
-  role?: "admin" | "supervisor" | "trainee";
+  role?: "admin" | "supervisor" | "trainee" | "Task manager" | "QA Personnel";
 }
 
 export interface ITrainee extends IAccount {

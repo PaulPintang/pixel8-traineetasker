@@ -13,7 +13,7 @@ import {
 import { createStyles } from "@mantine/core";
 import {
   useGetAllAccountQuery,
-  useUpdateSupervisorMutation,
+  useUpdateAccountMutation,
 } from "../../../features/api/account/accountApiSlice";
 import { useState } from "react";
 import { IconSettings } from "@tabler/icons-react";
@@ -75,15 +75,13 @@ const AccordionDropdown = () => {
   const { classes } = useStyles();
   const [opened, { toggle, close }] = useDisclosure(false);
 
-  const [updateSupervisor, { isLoading }] = useUpdateSupervisorMutation();
+  const [updateAccount, { isLoading }] = useUpdateAccountMutation();
 
   const { data: accounts } = useGetAllAccountQuery();
   const [email, setEmail] = useState("");
 
-  const updateAccount = async (_id: string) => {
-    console.log(_id);
-
-    await updateSupervisor({ _id, email });
+  const handleUpdateAccount = async (_id: string) => {
+    await updateAccount({ _id, email });
     setEmail("");
     close();
   };
@@ -152,7 +150,7 @@ const AccordionDropdown = () => {
               <Flex justify="flex-end" pt={10}>
                 <Button
                   size="xs"
-                  onClick={() => updateAccount(account._id!)}
+                  onClick={() => handleUpdateAccount(account._id!)}
                   loading={isLoading}
                 >
                   Save

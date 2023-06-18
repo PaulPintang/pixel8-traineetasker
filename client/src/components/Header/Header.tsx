@@ -115,7 +115,7 @@ const Header = () => {
           </Badge>
         )}
 
-        {user?.role !== "trainee" && (
+        {user && user?.role !== "trainee" && (
           <>
             {user?.role === "admin" && <MenuSelectCourse />}
             <Group spacing={8}>

@@ -31,7 +31,7 @@ import { useState, lazy } from "react";
 import {
   useGetAllAccountQuery,
   useUpdateCourseViewMutation,
-  useUpdateSupervisorMutation,
+  useUpdateAccountMutation,
 } from "../../../features/api/account/accountApiSlice";
 import { IAccount } from "../../../interfaces/user.interface";
 import { useGetAllTraineeQuery } from "../../../features/api/trainee/traineeApiSlice";
@@ -49,19 +49,23 @@ const MenuManageAccounts = () => {
   const [courseView, viewState] = useUpdateCourseViewMutation();
 
   return (
-    <Menu shadow="md" position="bottom-end" closeOnItemClick withArrow>
-      <Menu.Target>
-        <ActionIcon variant="light" radius="xl">
-          <IconUsers size={17} />
-        </ActionIcon>
-      </Menu.Target>
+    <>
+      {user?.role === "admin" ? (
+        <Menu shadow="md" position="bottom-end" closeOnItemClick withArrow>
+          <Menu.Target>
+            <ActionIcon variant="light" radius="xl">
+              <IconUsers size={17} />
+            </ActionIcon>
+          </Menu.Target>
 
-      <Menu.Dropdown className="px-3 pb-2">
-        {/* <AccordionDropdown /> */}
-        {user?.role !== "admin" ? <AccountsDropdown /> : <AccordionDropdown />}
-      </Menu.Dropdown>
-      {/* <ManageAccountModal opened={opened} toggle={toggle} /> */}
-    </Menu>
+          <Menu.Dropdown className="px-3 pb-2">
+            <AccordionDropdown />
+          </Menu.Dropdown>
+        </Menu>
+      ) : (
+        <AccountsDropdown />
+      )}
+    </>
   );
 };
 
