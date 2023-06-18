@@ -154,8 +154,9 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
 
             <Menu.Dropdown className="flex row-a">
               <Menu.Label>Manage task</Menu.Label>
-              <Menu.Item p={0} className="bg-white hover:bg-white">
-                <Flex direction="column" align="start">
+
+              <Flex direction="column" align="start">
+                <Menu.Item p={0} className="bg-white hover:bg-white">
                   <Button
                     onClick={() => {
                       view();
@@ -169,54 +170,56 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                   >
                     View
                   </Button>
-                  {task.status === "new" && (
-                    <>
-                      {user?.role === "supervisor" ||
-                      pathname.includes("profile") ? (
-                        <Button
-                          onClick={() => {
-                            setTask(task);
-                            toggle();
+                </Menu.Item>
+                {task.status === "new" && (
+                  <Menu.Item p={0} className="bg-white hover:bg-white">
+                    {user?.role === "supervisor" ||
+                    pathname.includes("profile") ? (
+                      <Button
+                        onClick={() => {
+                          setTask(task);
+                          toggle();
 
-                            // setOpened(false);
-                          }}
-                          leftIcon={<IconUser size={16} />}
-                          variant="white"
-                          color={task.assign ? "indigo" : "cyan"}
-                          size="xs"
-                        >
-                          {task.assign ? "Reassign" : "Assign"}
-                        </Button>
-                      ) : (
-                        ""
-                      )}
-                    </>
-                  )}
-                </Flex>
-              </Menu.Item>
-              <Button
-                onClick={() => {
-                  update();
-                  // setOpened(false);
-                }}
-                leftIcon={<IconEdit size={16} />}
-                variant="white"
-                size="xs"
-                color="dark"
-              >
-                Edit
-              </Button>
+                          // setOpened(false);
+                        }}
+                        leftIcon={<IconUser size={16} />}
+                        variant="white"
+                        color={task.assign ? "indigo" : "cyan"}
+                        size="xs"
+                      >
+                        {task.assign ? "Reassign" : "Assign"}
+                      </Button>
+                    ) : (
+                      ""
+                    )}
+                  </Menu.Item>
+                )}
+                <Menu.Item p={0} className="bg-white hover:bg-white">
+                  <Button
+                    onClick={() => {
+                      update();
+                      // setOpened(false);
+                    }}
+                    leftIcon={<IconEdit size={16} />}
+                    variant="white"
+                    size="xs"
+                    color="dark"
+                  >
+                    Edit
+                  </Button>
+                </Menu.Item>
 
-              <Button
-                leftIcon={<IconUser size={16} />}
-                variant="white"
-                size="xs"
-                color="red"
-                onClick={() => handleDelete(task._id!)}
-                loading={isLoading}
-              >
-                Delete
-              </Button>
+                <Button
+                  leftIcon={<IconUser size={16} />}
+                  variant="white"
+                  size="xs"
+                  color="red"
+                  onClick={() => handleDelete(task._id!)}
+                  loading={isLoading}
+                >
+                  Delete
+                </Button>
+              </Flex>
             </Menu.Dropdown>
           </Menu>
         </td>

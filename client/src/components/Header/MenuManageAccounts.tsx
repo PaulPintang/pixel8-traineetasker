@@ -11,7 +11,10 @@ import {
   Accordion,
   Avatar,
   rem,
+  Box,
+  Collapse,
   Divider,
+  TextInput,
 } from "@mantine/core";
 import { createStyles } from "@mantine/core";
 import {
@@ -19,41 +22,21 @@ import {
   IconCheck,
   IconClock,
   IconUsers,
+  IconUser,
+  IconUserCircle,
+  IconSettings,
 } from "@tabler/icons-react";
 import { useAppSelector } from "../../app/hooks";
 import { useState } from "react";
 import {
   useGetAllAccountQuery,
   useUpdateCourseViewMutation,
+  useUpdateSupervisorMutation,
 } from "../../features/api/account/accountApiSlice";
 import { IAccount } from "../../interfaces/user.interface";
-
-// const charactersList = [
-//   {
-//     id: "bender",
-//     image: "https://img.icons8.com/clouds/256/000000/futurama-bender.png",
-//     name: "Bender Bending Rodríguez",
-//     email: "email@gmail.com",
-//     content: "Bender Bending Rodríguez",
-//   },
-
-//   {
-//     id: "carol",
-//     image: "https://img.icons8.com/clouds/256/000000/futurama-mom.png",
-//     name: "Carol Miller",
-//     email: "email@gmail.com",
-
-//     content: "Carol Miller (born January 30, 2880) ",
-//   },
-//   {
-//     id: "carols",
-//     image: "https://img.icons8.com/clouds/256/000000/futurama-mom.png",
-//     name: "Carol Milledasdasdr",
-//     email: "email@gmail.com",
-
-//     content: "Carol Miller (born January 30, 2880) ",
-//   },
-// ];
+import { useGetAllTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
+import { useDisclosure } from "@mantine/hooks";
+import ManageAccountModal from "./ManageAccountsModal";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -92,7 +75,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-function Accordionname({ name, picture, email }: IAccount) {
+function AccordionContent({ name, picture, email }: IAccount) {
   return (
     <Group spacing={10}>
       <Avatar src={picture} radius="xl" size="sm" />
@@ -107,27 +90,99 @@ function Accordionname({ name, picture, email }: IAccount) {
 }
 
 const MenuManageAccounts = () => {
+  const [opened, { toggle, close }] = useDisclosure(false);
   const { classes } = useStyles();
-  const { data: accounts } = useGetAllAccountQuery();
-  const [courseView, viewState] = useUpdateCourseViewMutation();
   const { user } = useAppSelector((state) => state.auth);
+  const [email, setEmail] = useState("");
+  const { data: accounts } = useGetAllAccountQuery();
+  const { data: trainees } = useGetAllTraineeQuery(user?.course!);
+  const [courseView, viewState] = useUpdateCourseViewMutation();
+  const [updateSupervisor, { isLoading }] = useUpdateSupervisorMutation();
 
-  const items = accounts?.map((item) => (
-    <Accordion.Item
-      value={item._id!}
-      key={item.name}
-      className="border -none"
-      px={3}
-      pt={4}
-    >
-      <Accordion.Control className="p-1">
-        <Accordionname {...item} />
-      </Accordion.Control>
-      <Accordion.Panel>
-        <Text size="xs">{item.course}</Text>
-      </Accordion.Panel>
-    </Accordion.Item>
-  ));
+  const updateAccount = async (_id: string) => {
+    await updateSupervisor({ _id, email });
+    setEmail("");
+    close();
+  };
+
+  // ?? ADMIN CAN REASSIGN ACCOUNT SUPERVISOR
+  const items = accounts?.map((account) => {
+    // const total = trainees?.filter(
+    //   (trainee) => trainee.course === item?.course
+    // );
+    return (
+      <Accordion.Item
+        value={account._id!}
+        key={account.name}
+        className="border -none"
+        px={3}
+        pt={4}
+      >
+        <Accordion.Control className="p-1" onClick={close}>
+          <AccordionContent {...account} />
+        </Accordion.Control>
+        <Accordion.Panel>
+          <Group spacing={10}>
+            <Text fz={12} className="text-gray-500 font-semibold">
+              Total Trainee's:
+            </Text>
+            <Text fz={12} c="dimmed">
+              7
+            </Text>
+          </Group>
+          <Group spacing={10}>
+            <Text fz={12} className="text-gray-500 font-semibold">
+              QA Personel:
+            </Text>
+            <Text fz={12} c="dimmed">
+              Juan Dela Cruz
+            </Text>
+          </Group>
+          <Group spacing={10}>
+            <Text fz={12} className="text-gray-500 font-semibold">
+              Task manager:
+            </Text>
+            <Text fz={12} c="dimmed">
+              Justin Bieber
+            </Text>
+          </Group>
+          {/* <Menu.Item className="bg-white hover:bg-white" p={0}> */}
+          <Box maw={400} mx="auto">
+            <Button
+              onClick={toggle}
+              leftIcon={<IconSettings size={17} />}
+              variant="white"
+              color="cyan"
+              size="xs"
+              pl={0}
+              mt={6}
+              compact
+            >
+              Change account
+            </Button>
+            <Collapse in={opened}>
+              <TextInput
+                size="xs"
+                placeholder="email here"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Flex justify="flex-end" pt={10}>
+                <Button
+                  size="xs"
+                  onClick={() => updateAccount(account._id!)}
+                  loading={isLoading}
+                >
+                  Save
+                </Button>
+              </Flex>
+            </Collapse>
+          </Box>
+          {/* </Menu.Item> */}
+        </Accordion.Panel>
+      </Accordion.Item>
+    );
+  });
 
   return (
     <Menu shadow="md" position="bottom-end" closeOnItemClick withArrow>
@@ -147,10 +202,8 @@ const MenuManageAccounts = () => {
         >
           {items}
         </Accordion>
-        {/* <Button size="xs" fullWidth>
-          Save
-        </Button> */}
       </Menu.Dropdown>
+      {/* <ManageAccountModal opened={opened} toggle={toggle} /> */}
     </Menu>
   );
 };

@@ -20,6 +20,15 @@ export const accountApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Account"],
     }),
 
+    updateSupervisor: builder.mutation<IAccount, Omit<IAccount, "id">>({
+      query: (data) => ({
+        url: `/account/${data._id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Account"],
+    }),
+
     updateCourseView: builder.mutation<IAccount, IAccount>({
       query: (data) => ({
         url: "/account/view",
@@ -41,4 +50,5 @@ export const {
   useRefetchQuery,
   useAddAccountMutation,
   useUpdateCourseViewMutation,
+  useUpdateSupervisorMutation,
 } = accountApiSlice;
