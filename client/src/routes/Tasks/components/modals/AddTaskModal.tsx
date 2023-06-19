@@ -35,7 +35,7 @@ const AddTaskModal = ({ add, toggle }: ModalProps) => {
     const newtask: any = await addTask(toAddTask);
     socket.emit("add", {
       task: newtask.data,
-      rooms: ["Task manager", "QA Personnel"],
+      rooms: ["Task manager", "QA Personnel", "supervisor"],
     });
     setToAddTask({
       taskname: "",

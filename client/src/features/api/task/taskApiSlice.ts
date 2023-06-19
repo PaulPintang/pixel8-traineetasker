@@ -28,17 +28,6 @@ export const taskApiSlice = apiSlice.injectEndpoints({
                 (task) => task._id === response._id
               );
               const found = index !== -1;
-              // const task = draft.find((task) => task._id === data._id);
-              // if (index !== -1) {
-              //   if (draft[index].assign !== data.assign) {
-              //     draft[index].assign = data.assign;
-              //   } else {
-              //     draft.splice(index, 1);
-              //   }
-              // } else {
-              //   draft.push(data);
-              // }
-
               if (found) {
                 if (response.assign !== draft[index].assign) {
                   draft[index].assign = response.assign;

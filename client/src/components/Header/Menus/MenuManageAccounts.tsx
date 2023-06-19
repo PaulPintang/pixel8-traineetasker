@@ -49,7 +49,7 @@ const MenuManageAccounts = () => {
   const [courseView, viewState] = useUpdateCourseViewMutation();
 
   return (
-    <>
+    <div>
       {user?.role === "admin" ? (
         <Menu shadow="md" position="bottom-end" closeOnItemClick withArrow>
           <Menu.Target>
@@ -65,7 +65,7 @@ const MenuManageAccounts = () => {
       ) : (
         <AccountsDropdown />
       )}
-    </>
+    </div>
   );
 };
 
