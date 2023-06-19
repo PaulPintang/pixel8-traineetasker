@@ -9,6 +9,7 @@ import StepperInfo from "../components/StepperInfo/StepperInfo";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useRefetchQuery } from "../features/api/account/accountApiSlice";
 import { setUser } from "../features/auth/authSlice";
+import { socket } from "../utils/socketConnect";
 
 const RootLayout = () => {
   const navigate = useNavigate();
@@ -20,7 +21,10 @@ const RootLayout = () => {
     const refetch = async () => {
       dispatch(setUser(account));
     };
-    refetch().then(() => navigate("dashboard"));
+    refetch().then(() => {
+      socket.emit("courseRoom", account?.course);
+      socket.emit("roleRoom", account?.role);
+    });
   }, [account]);
 
   if (isLoading) return <LoaderFallback />;

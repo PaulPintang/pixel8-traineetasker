@@ -12,7 +12,10 @@ interface Props {
 
 const NewTask = ({ toggle, setViewId }: Props) => {
   const { data: tasks } = useGetAllTasksQuery();
-  const newTasks = tasks?.filter((task) => task.status === "new");
+  const { user } = useAppSelector((state) => state.auth);
+  const newTasks = tasks?.filter(
+    (task) => task.status === "new" && task.assign === user?.name
+  );
   return (
     <div className="space-y-3">
       {newTasks?.map((task) => {

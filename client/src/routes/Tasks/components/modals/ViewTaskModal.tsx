@@ -48,11 +48,11 @@ interface ModalProps {
 }
 
 const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
+  const { data: tasks } = useGetAllTasksQuery();
   const fail = useRef<HTMLButtonElement>(null);
   const complete = useRef<HTMLButtonElement>(null);
   const msg = useRef<HTMLTextAreaElement>(null);
   const [status, setStatus] = useState("");
-  const { data: tasks } = useGetAllTasksQuery();
   const { user } = useAppSelector((state) => state.auth);
   const task = tasks?.find((task) => task._id === viewId);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
@@ -74,7 +74,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
     };
     // const revise = { _id: task?._id, status, revise: task?.status === "failed" };
     const response: any = await taskStatus(data);
-    socket.emit("status", response.data);
+    socket.emit("status", { task: response.data, rooms: [user?.course] });
     // ref.current!.value = "";
     // toggle();
   };
@@ -88,7 +88,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
   const handleCheckTask = async (status: "completed" | "failed") => {
     const data = { _id: task?._id, status };
     const response: any = await taskStatus(data);
-    socket.emit("status", response.data);
+    socket.emit("status", { task: response.data, rooms: [user?.course] });
     // toggle();
     // ref.current!.value = "";
   };
@@ -100,7 +100,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
       by: user?.name,
     };
     await comment(data);
-    socket.emit("comment", data);
+    socket.emit("comment", { data, rooms: [user?.course] });
     msg.current!.value = "";
   };
   return (

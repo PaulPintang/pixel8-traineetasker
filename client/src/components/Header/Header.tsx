@@ -39,6 +39,7 @@ import { useEffect } from "react";
 import MenuSelectCourse from "./Menus/MenuSelectCourse";
 import MenuEditSchedule from "./Menus/MenuEditSchedule";
 import MenuManageAccounts from "./Menus/MenuManageAccounts";
+import { socket } from "../../utils/socketConnect";
 
 type Link = {
   isActive: boolean;

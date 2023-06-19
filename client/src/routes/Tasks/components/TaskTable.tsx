@@ -67,7 +67,10 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
 
   const handleDelete = async (_id: string) => {
     await deleteTask(_id);
-    socket.emit("delete", _id);
+    socket.emit("delete", {
+      _id,
+      rooms: [user?.course],
+    });
   };
 
   const items = chunk(data, 10);

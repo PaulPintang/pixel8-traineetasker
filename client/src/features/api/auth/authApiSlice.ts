@@ -1,6 +1,7 @@
 import { method } from "lodash";
 import { apiSlice } from "../apiSlice";
 import { IAccount } from "../../../interfaces/user.interface";
+import { socket } from "../../../utils/socketConnect";
 // ? endpoint must be in env
 
 export const authApiSlice = apiSlice.injectEndpoints({
@@ -12,6 +13,14 @@ export const authApiSlice = apiSlice.injectEndpoints({
         body: user,
       }),
       invalidatesTags: ["User", "Trainee", "Account", "Task"],
+      async onQueryStarted(data, { dispatch, queryFulfilled }) {
+        console.log("pota ka", data);
+        try {
+          const { data: user } = await queryFulfilled;
+          socket.emit("courseRoom", user.course);
+          socket.emit("roleRoom", user.role);
+        } catch {}
+      },
     }),
     logoutUser: builder.mutation<any, void>({
       query: () => ({

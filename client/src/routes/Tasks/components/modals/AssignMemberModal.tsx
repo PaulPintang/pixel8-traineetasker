@@ -24,9 +24,13 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
   const [assignTask, { isLoading }] = useAssignTaskMutation();
 
   const handleAssign = async () => {
-    const data = { _id: task._id, name: assignTo };
+    // socket.emit("course", user?.course);
+    const data = { _id: task._id, name: assignTo, course: user?.course };
     const res: any = await assignTask(data);
-    socket.emit("assign", res.data);
+    socket.emit("assign", {
+      task: res.data,
+      rooms: [user?.course],
+    });
     toggle();
   };
 
@@ -50,7 +54,7 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
         <Autocomplete
           value={assignTo}
           onChange={setAssignTo}
-          data={trainees!.map((member) => member.name!)}
+          data={trainees?.map((member) => member.name!)}
           dropdownPosition="bottom"
           placeholder="Pick one"
         />

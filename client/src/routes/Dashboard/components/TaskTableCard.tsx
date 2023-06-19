@@ -28,8 +28,16 @@ const TaskTableCard = () => {
   const [viewId, setViewId] = useState<string | null>(null);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
+  // const data = tasks?.filter((task) =>
+  //   filterBy ? task.status === filterBy && task.assign === user?.name : task
+  // );
+
   const data = tasks?.filter((task) =>
-    filterBy ? task.status === filterBy : task
+    filterBy
+      ? task.status === filterBy
+      : user?.role === "trainee"
+      ? user?.name === task.assign
+      : task
   );
 
   const items = chunk(data, 5);

@@ -5,7 +5,7 @@ import { socket } from "../../../utils/socketConnect";
 
 export const taskApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAllTasks: builder.query<ITask[], void>({
+    getAllTasks: builder.query<ITask[], void | ITask>({
       query: () => "task/all",
       // transformResponse: (response: { data: ITask[] }, meta, arg) => {
       //   // Filter the response based on query parameter
@@ -20,26 +20,36 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
         try {
-          // ! problem. the return tasks by the server is base on assign task.
-          // ? the problem is every socket emit, the cachedata is diffirent fron other user role.
-          // ? so updating cache and finding the data that being change will not found on trainee user
-          // wait for the initial query to resolve before proceeding
           await cacheDataLoaded;
 
-          // * problem occur here
-          socket.on("assignTask", (data: { _id: string; name: string }) => {
+          socket.on("assignTask", (response: ITask) => {
             updateCachedData((draft) => {
-              // ? bug here, if you reassign and click assign with nothing chage it will push to cache
-              // ? FIXED: check if the task.assign and value of select is equal, hide button or disable it
-              const index = draft.findIndex((task) => task._id === data._id);
-              if (index !== -1) {
-                draft.splice(index, 1);
+              const index = draft.findIndex(
+                (task) => task._id === response._id
+              );
+              const found = index !== -1;
+              // const task = draft.find((task) => task._id === data._id);
+              // if (index !== -1) {
+              //   if (draft[index].assign !== data.assign) {
+              //     draft[index].assign = data.assign;
+              //   } else {
+              //     draft.splice(index, 1);
+              //   }
+              // } else {
+              //   draft.push(data);
+              // }
+
+              if (found) {
+                if (response.assign !== draft[index].assign) {
+                  draft[index].assign = response.assign;
+                } else {
+                  draft.splice(index, 1);
+                }
               } else {
-                draft.push(data);
+                draft.push(response);
               }
             });
           });
-          // * problem occur here
           socket.on("deleteTask", (_id: string) => {
             updateCachedData((draft) => {
               const index = draft.findIndex((task) => task._id === _id);
@@ -65,13 +75,20 @@ export const taskApiSlice = apiSlice.injectEndpoints({
               console.log(data);
             }
           );
+
+          socket.on("addTask", (task) => {
+            console.log(task);
+            updateCachedData((draft) => {
+              draft.push(task);
+            });
+          });
         } catch {}
         await cacheEntryRemoved;
         socket.close();
       },
     }),
 
-    addTask: builder.mutation<ITask, Omit<ITask, "id">>({
+    addTask: builder.mutation<ITask, ITask>({
       query: (data) => ({
         url: "/task/add",
         method: "POST",
@@ -88,17 +105,17 @@ export const taskApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Task"],
       // ??? queryfulfilled return server response
-      async onQueryStarted(data, { dispatch, queryFulfilled }) {
-        try {
-          const { data: assignedTask } = await queryFulfilled;
-          dispatch(
-            taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
-              console.log("potang maray", data);
-              Object.assign(draft, assignedTask);
-            })
-          );
-        } catch {}
-      },
+      // async onQueryStarted(data, { dispatch, queryFulfilled }) {
+      //   try {
+      //     const { data: assignedTask } = await queryFulfilled;
+      //     // socket.emit("course", assignedTask.course);
+      //     dispatch(
+      //       taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
+      //         Object.assign(draft, assignedTask);
+      //       })
+      //     );
+      //   } catch {}
+      // },
     }),
 
     taskStatus: builder.mutation({
@@ -108,16 +125,16 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ["Task"],
-      async onQueryStarted(data, { dispatch, queryFulfilled }) {
-        try {
-          const { data: updatedTask } = await queryFulfilled;
-          dispatch(
-            taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
-              Object.assign(draft, updatedTask);
-            })
-          );
-        } catch {}
-      },
+      // async onQueryStarted(data, { dispatch, queryFulfilled }) {
+      //   try {
+      //     const { data: updatedTask } = await queryFulfilled;
+      //     dispatch(
+      //       taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
+      //         Object.assign(draft, updatedTask);
+      //       })
+      //     );
+      //   } catch {}
+      // },
     }),
 
     commentOnTask: builder.mutation({

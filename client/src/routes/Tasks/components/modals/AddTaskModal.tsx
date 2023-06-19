@@ -14,12 +14,14 @@ import { useAddTaskMutation } from "../../../../features/api/task/taskApiSlice";
 import { socket } from "../../../../utils/socketConnect";
 
 import { useEffect } from "react";
+import { useAppSelector } from "../../../../app/hooks";
 interface ModalProps {
   add: boolean;
   toggle: () => void;
 }
 
 const AddTaskModal = ({ add, toggle }: ModalProps) => {
+  const { user } = useAppSelector((state) => state.auth);
   const [addTask, { isLoading, isSuccess }] = useAddTaskMutation();
   const [toAddTask, setToAddTask] = useState<ITask>({
     taskname: "",
@@ -28,13 +30,18 @@ const AddTaskModal = ({ add, toggle }: ModalProps) => {
   });
 
   const handleAddTask = async () => {
-    await addTask(toAddTask);
+    // await addTask(toAddTask);
+    // socket.emit("course", user?.course);
+    const newtask: any = await addTask(toAddTask);
+    socket.emit("add", {
+      task: newtask.data,
+      rooms: ["Task manager", "QA Personnel"],
+    });
     setToAddTask({
       taskname: "",
       ticketno: "",
       deliverable: "",
     });
-    socket.emit("add", toAddTask);
     toggle();
   };
 
