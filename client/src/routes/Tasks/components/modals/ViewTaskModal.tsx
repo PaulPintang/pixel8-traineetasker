@@ -83,13 +83,12 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
   };
 
   const addComment = async () => {
-    const data = {
+    const message = {
       _id: task?._id,
       msg: msg.current?.value,
       by: user?.name,
     };
-    await comment(data);
-    socket.emit("comment", { data, rooms: [user?.course] });
+    await comment({ msg: message, rooms: [user?.course] });
     msg.current!.value = "";
   };
   return (

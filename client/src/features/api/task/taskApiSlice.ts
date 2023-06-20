@@ -46,17 +46,13 @@ export const taskApiSlice = apiSlice.injectEndpoints({
             });
             console.log(data);
           });
-          socket.on(
-            "taskComment",
-            (data: { msg: string; by: string; _id: string }) => {
-              updateCachedData((draft) => {
-                const index = draft.findIndex((task) => task._id === data._id);
-                if (index !== -1)
-                  draft[index].comments?.push({ msg: data.msg, by: data.by });
-              });
-              console.log(data);
-            }
-          );
+          socket.on("taskComment", ({ _id, msg, by }) => {
+            console.log(msg);
+            updateCachedData((draft) => {
+              const index = draft.findIndex((task) => task._id === _id);
+              if (index !== -1) draft[index].comments?.push({ msg, by });
+            });
+          });
           socket.on("addTask", (task) => {
             console.log(task);
             updateCachedData((draft) => {
@@ -127,9 +123,14 @@ export const taskApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: "/task/comment",
         method: "PUT",
-        body: data,
+        body: data.msg,
       }),
       invalidatesTags: ["Task"],
+      async onQueryStarted({ msg, rooms }, { dispatch, queryFulfilled }) {
+        try {
+          socket.emit("comment", { msg, rooms });
+        } catch {}
+      },
     }),
 
     deleteTask: builder.mutation({
