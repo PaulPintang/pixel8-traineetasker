@@ -10,7 +10,7 @@ import {
 } from "../../../../features/api/task/taskApiSlice";
 import { useState } from "react";
 import { useEffect } from "react";
-import { socket } from "../../../../utils/socketConnect";
+import { JoinRoom, socket } from "../../../../utils/socketConnect";
 interface ModalProps {
   task: ITask;
   assign: boolean;
@@ -24,13 +24,8 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
   const [assignTask, { isLoading }] = useAssignTaskMutation();
 
   const handleAssign = async () => {
-    // socket.emit("course", user?.course);
     const data = { _id: task._id, name: assignTo, course: user?.course };
-    const res: any = await assignTask(data);
-    socket.emit("assign", {
-      task: res.data,
-      rooms: [user?.course],
-    });
+    await assignTask({ task: data, rooms: [user?.course] });
     toggle();
   };
 

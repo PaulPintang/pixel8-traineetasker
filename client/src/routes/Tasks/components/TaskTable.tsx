@@ -37,7 +37,7 @@ import { useAppSelector } from "../../../app/hooks";
 import { useLocation } from "react-router-dom";
 import { ITask } from "../../../interfaces/task.interface";
 import { ITrainee } from "../../../interfaces/user.interface";
-import { socket } from "../../../utils/socketConnect";
+import { JoinRoom, socket } from "../../../utils/socketConnect";
 
 interface Props {
   trainee: ITrainee;
@@ -66,11 +66,12 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
   );
 
   const handleDelete = async (_id: string) => {
-    await deleteTask(_id);
-    socket.emit("delete", {
-      _id,
-      rooms: [user?.course],
-    });
+    await deleteTask({ _id, rooms: [user?.course] });
+    // await JoinRoom(user?.course, user?.role);
+    // socket.emit("delete", {
+    //   _id,
+    //   rooms: [user?.course],
+    // });
   };
 
   const items = chunk(data, 10);

@@ -39,6 +39,7 @@ import { useAppSelector } from "../../../../app/hooks";
 import { useRef, useState } from "react";
 import TimelineComponent from "./ViewTask/components/Timeline";
 import { socket } from "../../../../utils/socketConnect";
+import { JoinRoom } from "../../../../utils/socketConnect";
 
 interface ModalProps {
   viewId: string | null;
@@ -72,25 +73,13 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
       _id: task?._id,
       status,
     };
-    // const revise = { _id: task?._id, status, revise: task?.status === "failed" };
-    const response: any = await taskStatus(data);
-    socket.emit("status", { task: response.data, rooms: [user?.course] });
-    // ref.current!.value = "";
-    // toggle();
+    await taskStatus({ task: data, rooms: [user?.course] });
   };
-
-  // const handleRevise = async () => {
-  //     const fail = task?.timeline?.revisions.find(task => task.status === "fail")
-
-  // };
 
   // ? SUPERVISOR
   const handleCheckTask = async (status: "completed" | "failed") => {
     const data = { _id: task?._id, status };
-    const response: any = await taskStatus(data);
-    socket.emit("status", { task: response.data, rooms: [user?.course] });
-    // toggle();
-    // ref.current!.value = "";
+    await taskStatus({ task: data, rooms: [user?.course] });
   };
 
   const addComment = async () => {
@@ -125,6 +114,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
           </Title>
           {task?.status === "new" &&
           user?.role !== "supervisor" &&
+          user?.role !== "admin" &&
           user?.role !== "trainee" ? (
             <Button
               onClick={toggle}

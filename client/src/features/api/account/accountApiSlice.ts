@@ -2,6 +2,7 @@ import { method } from "lodash";
 import { apiSlice } from "../apiSlice";
 import { IAccount } from "../../../interfaces/user.interface";
 import { ITask } from "../../../interfaces/task.interface";
+import { JoinRoom } from "../../../utils/socketConnect";
 // ? endpoint must be in env
 
 export const accountApiSlice = apiSlice.injectEndpoints({
@@ -50,6 +51,13 @@ export const accountApiSlice = apiSlice.injectEndpoints({
     refetch: builder.query<IAccount, void>({
       query: () => "/account",
       providesTags: ["Account"],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data: account } = await queryFulfilled;
+          // this execute after login and page refresh
+          JoinRoom(account.course!, account.role!);
+        } catch {}
+      },
     }),
   }),
 });

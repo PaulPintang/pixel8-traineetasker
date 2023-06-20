@@ -7,13 +7,6 @@ export const taskApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllTasks: builder.query<ITask[], void | ITask>({
       query: () => "task/all",
-      // transformResponse: (response: { data: ITask[] }, meta, arg) => {
-      //   // Filter the response based on query parameter
-      //   const filteredData = response.data.filter(
-      //     (task) => task.assign === arg.name
-      //   );
-      //   return { data: filteredData };
-      // },
       providesTags: ["Task"],
       async onCacheEntryAdded(
         user,
@@ -64,7 +57,6 @@ export const taskApiSlice = apiSlice.injectEndpoints({
               console.log(data);
             }
           );
-
           socket.on("addTask", (task) => {
             console.log(task);
             updateCachedData((draft) => {
@@ -84,46 +76,51 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
       invalidatesTags: ["Task"],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data: newtask } = await queryFulfilled;
+          socket.emit("add", {
+            task: newtask,
+            rooms: ["Task manager", "QA Personnel", "supervisor"],
+          });
+        } catch {}
+      },
     }),
 
     assignTask: builder.mutation({
-      query: (data) => ({
+      query: ({ task }) => ({
         url: "/task/assign",
         method: "PUT",
-        body: data,
+        body: task,
       }),
       invalidatesTags: ["Task"],
-      // ??? queryfulfilled return server response
-      // async onQueryStarted(data, { dispatch, queryFulfilled }) {
-      //   try {
-      //     const { data: assignedTask } = await queryFulfilled;
-      //     // socket.emit("course", assignedTask.course);
-      //     dispatch(
-      //       taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
-      //         Object.assign(draft, assignedTask);
-      //       })
-      //     );
-      //   } catch {}
-      // },
+      async onQueryStarted({ rooms }, { dispatch, queryFulfilled }) {
+        try {
+          const { data: task } = await queryFulfilled;
+          socket.emit("assign", {
+            task,
+            rooms,
+          });
+        } catch {}
+      },
     }),
 
     taskStatus: builder.mutation({
-      query: (data) => ({
+      query: ({ task }) => ({
         url: "/task/status",
         method: "PUT",
-        body: data,
+        body: task,
       }),
       invalidatesTags: ["Task"],
-      // async onQueryStarted(data, { dispatch, queryFulfilled }) {
-      //   try {
-      //     const { data: updatedTask } = await queryFulfilled;
-      //     dispatch(
-      //       taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
-      //         Object.assign(draft, updatedTask);
-      //       })
-      //     );
-      //   } catch {}
-      // },
+      async onQueryStarted({ rooms }, { dispatch, queryFulfilled }) {
+        try {
+          const { data: task } = await queryFulfilled;
+          socket.emit("status", {
+            task,
+            rooms,
+          });
+        } catch {}
+      },
     }),
 
     commentOnTask: builder.mutation({
@@ -136,22 +133,19 @@ export const taskApiSlice = apiSlice.injectEndpoints({
     }),
 
     deleteTask: builder.mutation({
-      query: (id) => ({
-        url: `/task/${id}`,
+      query: ({ _id }) => ({
+        url: `/task/${_id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Task"],
-      // ??? queryfulfilled return server response
-      // async onQueryStarted(data, { dispatch, queryFulfilled }) {
-      //   try {
-      //     const { data: deletedTask } = await queryFulfilled;
-      //     dispatch(
-      //       taskApiSlice.util.updateQueryData("getAllTasks", data, (draft) => {
-      //         Object.assign(draft, deletedTask);
-      //       })
-      //     );
-      //   } catch {}
-      // },
+      async onQueryStarted({ _id, rooms }, { dispatch, queryFulfilled }) {
+        try {
+          socket.emit("delete", {
+            _id,
+            rooms,
+          });
+        } catch {}
+      },
     }),
   }),
 });

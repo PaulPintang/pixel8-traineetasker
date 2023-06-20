@@ -3,8 +3,11 @@ import { IconSelector, IconCheck } from "@tabler/icons-react";
 import { useAppSelector } from "../../../app/hooks";
 import { useState } from "react";
 import { useUpdateCourseViewMutation } from "../../../features/api/account/accountApiSlice";
+import LoaderFallback from "../../LoaderFallback";
+import { useNavigate } from "react-router-dom";
 
 const MenuSelectCourse = () => {
+  const navigate = useNavigate();
   const [courseView, viewState] = useUpdateCourseViewMutation();
   const { user } = useAppSelector((state) => state.auth);
   const [course, setCourse] = useState(user?.course);
@@ -12,7 +15,11 @@ const MenuSelectCourse = () => {
   const handleCourseView = async (course: string) => {
     setCourse(course);
     await courseView({ course });
+    navigate("dashboard");
   };
+
+  if (viewState.isLoading)
+    return <LoaderFallback text="Preparing dashboard..." />;
 
   return (
     <Menu shadow="md" position="bottom" closeOnItemClick>

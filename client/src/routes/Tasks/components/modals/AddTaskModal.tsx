@@ -11,7 +11,7 @@ import { useState } from "react";
 import { ITask } from "../../../../interfaces/task.interface";
 import { IconLink, IconPlus } from "@tabler/icons-react";
 import { useAddTaskMutation } from "../../../../features/api/task/taskApiSlice";
-import { socket } from "../../../../utils/socketConnect";
+import { JoinRoom, socket } from "../../../../utils/socketConnect";
 
 import { useEffect } from "react";
 import { useAppSelector } from "../../../../app/hooks";
@@ -30,13 +30,14 @@ const AddTaskModal = ({ add, toggle }: ModalProps) => {
   });
 
   const handleAddTask = async () => {
-    // await addTask(toAddTask);
+    await addTask(toAddTask);
     // socket.emit("course", user?.course);
-    const newtask: any = await addTask(toAddTask);
-    socket.emit("add", {
-      task: newtask.data,
-      rooms: ["Task manager", "QA Personnel", "supervisor"],
-    });
+    // const newtask: any = await addTask(toAddTask);
+    // await JoinRoom(user?.course!, user?.role!);
+    // socket.emit("add", {
+    //   task: newtask.data,
+    //   rooms: ["Task manager", "QA Personnel", "supervisor"],
+    // });
     setToAddTask({
       taskname: "",
       ticketno: "",

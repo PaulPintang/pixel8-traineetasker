@@ -112,7 +112,7 @@ const AccordionDropdown = () => {
           </Group>
           <Group spacing={10}>
             <Text fz={12} className="text-gray-500 font-semibold">
-              QA Personel:
+              QA Personnel:
             </Text>
             <Text fz={12} c="dimmed">
               Juan Dela Cruz
