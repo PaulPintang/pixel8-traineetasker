@@ -1,15 +1,15 @@
 export interface ISheets {
-  member: string;
-  date: string;
-  task: string;
-  ticket: string;
-  status: "recorded" | "recording";
-  spent: string;
-  morning: {
+  trainee?: string;
+  date?: string;
+  task?: string;
+  ticket?: string;
+  status?: "recorded" | "recording";
+  spent?: string;
+  morning?: {
     start: string;
     end: string;
   };
-  afternoon: {
+  afternoon?: {
     start: string;
     end: string;
   };

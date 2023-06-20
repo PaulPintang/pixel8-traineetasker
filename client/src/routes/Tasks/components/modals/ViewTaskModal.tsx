@@ -33,13 +33,17 @@ import {
 } from "../../../../features/api/task/taskApiSlice";
 import { ITask } from "../../../../interfaces/task.interface";
 import { IconUser } from "@tabler/icons-react";
-import { useGetAllTraineeQuery } from "../../../../features/api/trainee/traineeApiSlice";
+import {
+  useAddTaskTimesheetMutation,
+  useGetAllTraineeQuery,
+} from "../../../../features/api/trainee/traineeApiSlice";
 import Comments from "./ViewTask/components/Comments";
 import { useAppSelector } from "../../../../app/hooks";
 import { useRef, useState } from "react";
 import TimelineComponent from "./ViewTask/components/Timeline";
 import { socket } from "../../../../utils/socketConnect";
 import { JoinRoom } from "../../../../utils/socketConnect";
+import { ISheets } from "../../../../interfaces/sheet.interface";
 
 interface ModalProps {
   viewId: string | null;
@@ -59,6 +63,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   const [taskStatus, taskState] = useTaskStatusMutation();
   const [comment, commentState] = useCommentOnTaskMutation();
+  const [timesheet, sheetState] = useAddTaskTimesheetMutation();
   const assign = trainees?.find((trainee) => trainee.name === task?.assign);
 
   // ? TRAINEE
@@ -74,6 +79,15 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
       status,
     };
     await taskStatus({ task: data, rooms: [user?.course] });
+    if (task?.status === "new") {
+      const sheet: ISheets = {
+        task: task.taskname!,
+        ticket: task.ticketno!,
+        status: "recording",
+        spent: "",
+      };
+      await timesheet({ sheet, rooms: [user?.course!] });
+    }
   };
 
   // ? SUPERVISOR
