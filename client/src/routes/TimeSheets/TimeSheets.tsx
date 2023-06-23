@@ -18,9 +18,11 @@ import { TimeSheetsLabels } from "../../components/ColorLabels";
 import { IconClock, IconDots } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { sheets } from "../../data/sheets";
-import { Sheets } from "../../interfaces/sheet.interface";
+// import { Sheets } from "../../interfaces/sheet.interface";
 import { tasks } from "../../data/tasks";
 import { ITask } from "../../interfaces/task.interface";
+import { useGetTraineeProfileQuery } from "../../features/api/trainee/traineeApiSlice";
+import { formatDateTime } from "../../utils/formatDateTime";
 
 // ? if trainee time out in dtr, task hour will automatically stop if time is the trainee out time.
 // ? (ex. 12:00 PM and 5:00 PM, dtr time out and stop the timesheet)
@@ -31,86 +33,93 @@ const TimeSheets = () => {
   const [opened, { close, open }] = useDisclosure(false);
 
   // ? test, filter should be in backend
-  const [mysheet, setMysheet] = useState<Sheets[]>([]);
+  // const [mysheet, setMysheet] = useState<Sheets[]>([]);
   const [mytask, setMyTask] = useState<ITask[]>([]);
 
   useEffect(() => {
-    setMysheet(sheets?.filter((sheet) => sheet.member === "Paul"));
+    // setMysheet(sheets?.filter((sheet) => sheet.member === "Paul"));
     setMyTask(tasks.filter((task) => task.status === "inprogress"));
   }, []);
 
-  const items = chunk(mysheet, 10);
+  const { data: trainee } = useGetTraineeProfileQuery();
 
-  const rows = items[page - 1]?.map((sheet) => (
-    <tr>
-      <td className="hidden md:table-cell lg:table-cell pl-3">
-        <Text>{sheet.date}</Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell">
-        <Text>{sheet.task}</Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell">
-        <Text>{sheet.ticket}</Text>
-      </td>
-      <td className="py-2 hidden md:table-cell lg:table-cell ">
-        <Text>{sheet.spent}</Text>
-      </td>
-      <td className="py-2 hidden md:table-cell lg:table-cell ">
-        <Text fw="bold" fz="xs">
-          {sheet.status}
-        </Text>
-      </td>
-      <td className="dark:text-gray-400  hidden md:table-cell lg:table-cell">
-        <Menu
-          shadow="md"
-          transitionProps={{ transition: "rotate-right", duration: 150 }}
-          withArrow
-        >
-          <Menu.Target>
-            <ActionIcon variant="white" color="cyan">
-              <IconDots size={19} />
-            </ActionIcon>
-          </Menu.Target>
+  const items = chunk(trainee?.timesheet, 10);
 
-          <Menu.Dropdown>
-            <Menu.Label>Morning</Menu.Label>
-            <Menu.Item p={0} className="bg-white hover:bg-white">
-              {/* <Text>Time</Text> */}
-              <Stack px={10} pb={5}>
-                <Group spacing={8}>
-                  <IconClock size={16} className="text-yellow-300" />
-                  {/* <span>01:00 PM</span> - <span>05:00 PM</span> */}
-                  <Text c="dark" fz="xs">
-                    <span>{sheet.morning.start}</span> -{" "}
-                    <span className="text-gray-500">recording</span>
-                  </Text>
-                </Group>
-              </Stack>
-            </Menu.Item>
-            <Menu.Divider />
-            <Menu.Label>Afternoon</Menu.Label>
-            <Menu.Item p={0} className="bg-white hover:bg-white">
-              {/* <Text>Time</Text> */}
-              <Stack px={10} pb={5}>
-                <Group spacing={8}>
-                  <IconClock size={16} className="text-violet-400" />
-                  {/* <span>01:00 PM</span> - <span>05:00 PM</span> */}
-                  <Text c="dark" fz="xs">
+  const rows = items[page - 1]?.map((sheet) => {
+    const format = formatDateTime(sheet.date!);
+    return (
+      <tr>
+        <td className="hidden md:table-cell lg:table-cell pl-3">
+          <Text>
+            {format.date} at {format.time}
+          </Text>
+        </td>
+        <td className="hidden md:table-cell lg:table-cell">
+          <Text>{sheet.task}</Text>
+        </td>
+        <td className="hidden md:table-cell lg:table-cell">
+          <Text>{sheet.ticket}</Text>
+        </td>
+        <td className="py-2 hidden md:table-cell lg:table-cell ">
+          <Text>{sheet.spent}</Text>
+        </td>
+        <td className="py-2 hidden md:table-cell lg:table-cell ">
+          <Text fw="bold" fz="xs">
+            {sheet.status}
+          </Text>
+        </td>
+        <td className="dark:text-gray-400  hidden md:table-cell lg:table-cell">
+          <Menu
+            shadow="md"
+            transitionProps={{ transition: "rotate-right", duration: 150 }}
+            withArrow
+          >
+            <Menu.Target>
+              <ActionIcon variant="white" color="cyan">
+                <IconDots size={19} />
+              </ActionIcon>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Label>Morning</Menu.Label>
+              <Menu.Item p={0} className="bg-white hover:bg-white">
+                {/* <Text>Time</Text> */}
+                <Stack px={10} pb={5}>
+                  <Group spacing={8}>
+                    <IconClock size={16} className="text-yellow-300" />
+                    {/* <span>01:00 PM</span> - <span>05:00 PM</span> */}
+                    <Text c="dark" fz="xs">
+                      {/* <span>{sheet.morning.start}</span> -{" "} */}
+                      <span className="text-gray-500">recording</span>
+                    </Text>
+                  </Group>
+                </Stack>
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Label>Afternoon</Menu.Label>
+              <Menu.Item p={0} className="bg-white hover:bg-white">
+                {/* <Text>Time</Text> */}
+                <Stack px={10} pb={5}>
+                  <Group spacing={8}>
+                    <IconClock size={16} className="text-violet-400" />
+                    {/* <span>01:00 PM</span> - <span>05:00 PM</span> */}
+                    {/* <Text c="dark" fz="xs">
                     <span>{sheet.afternoon.start}</span> -{" "}
                     <span>{sheet.afternoon.end}</span>
-                  </Text>
-                </Group>
-              </Stack>
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-      </td>
-    </tr>
-  ));
+                  </Text> */}
+                  </Group>
+                </Stack>
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </td>
+      </tr>
+    );
+  });
 
-  const handleTask = () => {
-    setMysheet([...mysheet, ...mysheet]);
-  };
+  // const handleTask = () => {
+  //   setMysheet([...mysheet, ...mysheet]);
+  // };
 
   return (
     <>
@@ -166,9 +175,9 @@ const TimeSheets = () => {
           </Group>
 
           {/* hide if no seletected task, and show if inporgress task is only one  */}
-          <Button size="xs" onClick={handleTask}>
+          {/* <Button size="xs" onClick={handleTask}>
             Start
-          </Button>
+          </Button> */}
         </Group>
       </Flex>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)]">

@@ -14,3 +14,16 @@ export interface ISheets {
     end: string;
   };
 }
+
+export interface IDtr {
+  date?: string;
+  morning?: {
+    in: string;
+    out: string;
+  };
+  afternoon?: {
+    in: string;
+    out: string;
+  };
+  status?: "recorded" | "recording";
+}

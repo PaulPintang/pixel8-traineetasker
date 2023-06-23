@@ -1,3 +1,5 @@
+import { IDtr, ISheets } from "./records.interface";
+
 export interface IAccount {
   _id?: string;
   name?: string;
@@ -15,6 +17,8 @@ export interface ITrainee extends IAccount {
     pending: number;
   };
   completedTask?: number;
+  timesheet: ISheets[];
+  dtr: IDtr[];
 }
 
 export interface IPixel8Acc extends IAccount {

@@ -1,4 +1,4 @@
-import { Sheets } from "../interfaces/sheet.interface";
+import { Sheets } from "../interfaces/records.interface";
 export const sheets: Sheets[] = [
   {
     member: "Paul",

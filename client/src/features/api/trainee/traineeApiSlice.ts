@@ -1,7 +1,7 @@
 import { method } from "lodash";
 import { apiSlice } from "../apiSlice";
 import { ITrainee } from "../../../interfaces/user.interface";
-import { ISheets } from "../../../interfaces/sheet.interface";
+import { ISheets } from "../../../interfaces/records.interface";
 import { JoinRoom } from "../../../utils/socketConnect";
 // ? endpoint must be in env
 
@@ -44,6 +44,20 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Trainee"],
     }),
+    addDtr: builder.mutation<ITrainee, void>({
+      query: () => ({
+        url: "/trainee/dtr",
+        method: "PUT",
+      }),
+      invalidatesTags: ["Trainee"],
+    }),
+    updateDtr: builder.mutation<ITrainee, void>({
+      query: () => ({
+        url: "/trainee/dtr/inout",
+        method: "PUT",
+      }),
+      invalidatesTags: ["Trainee"],
+    }),
   }),
 });
 
@@ -52,4 +66,6 @@ export const {
   useAddTraineeMutation,
   useGetTraineeProfileQuery,
   useAddTaskTimesheetMutation,
+  useAddDtrMutation,
+  useUpdateDtrMutation,
 } = traineeApiSlice;

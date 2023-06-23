@@ -43,7 +43,7 @@ import { useRef, useState } from "react";
 import TimelineComponent from "./ViewTask/components/Timeline";
 import { socket } from "../../../../utils/socketConnect";
 import { JoinRoom } from "../../../../utils/socketConnect";
-import { ISheets } from "../../../../interfaces/sheet.interface";
+import { ISheets } from "../../../../interfaces/records.interface";
 
 interface ModalProps {
   viewId: string | null;

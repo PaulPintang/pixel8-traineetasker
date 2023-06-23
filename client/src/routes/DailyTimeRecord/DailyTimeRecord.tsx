@@ -3,6 +3,14 @@ import { chunk } from "lodash";
 import { useEffect, useState } from "react";
 import { TimeSheetsLabels } from "../../components/ColorLabels";
 import { IconClock } from "@tabler/icons-react";
+import { checkTime } from "../../utils/checkTime";
+import {
+  useAddDtrMutation,
+  useGetTraineeProfileQuery,
+  useUpdateDtrMutation,
+} from "../../features/api/trainee/traineeApiSlice";
+import { IDtr } from "../../interfaces/records.interface";
+import { formatDateTime } from "../../utils/formatDateTime";
 
 const sheets = [
   {
@@ -53,9 +61,26 @@ interface Records {
 }
 
 const DailyTimeRecord = () => {
+  const [addDtr, dtrstate] = useAddDtrMutation();
+  const [recordDtr, { isLoading }] = useUpdateDtrMutation();
+  const { data: trainee, refetch } = useGetTraineeProfileQuery();
+  const date = new Date();
+  const currentHour = date.getHours();
+  const time = checkTime();
+  // ?? SCHEDULE IS BASED ON ADMIN GIVEN SCHEDULE TIME
+  const schedule = {
+    morning: {
+      in: 8,
+      out: 12,
+    },
+    afternoon: {
+      in: 1,
+      out: 5,
+    },
+  };
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
-  const [dtr, setDtr] = useState<Records>({
+  const [dtr, setDtr] = useState<IDtr>({
     date: "",
     status: "recording",
     morning: {
@@ -69,32 +94,36 @@ const DailyTimeRecord = () => {
   });
   const [records, setRecords] = useState<Records[]>([]);
 
-  const handleTimeIn = () => {
-    setRecords([
-      ...records,
-      {
-        ...dtr,
-        morning: {
-          ...dtr.morning,
-          in: "in",
-        },
-      },
-    ]);
+  // const handleTimeIn = async () => {
+  //   await addDtr();
+  //   refetch();
+  // };
+  const handleTimeInOut = async () => {
+    await recordDtr();
+    refetch();
   };
 
-  const items = chunk(records, 10);
+  const items = chunk(trainee?.dtr, 10);
 
-  const rows = items[page - 1]?.map((record) => (
+  const today = trainee?.dtr.find(
+    (record) => record.date === formatDateTime(date.toISOString()).date
+  );
+
+  const todaydtr = trainee?.dtr.some(
+    (record) => record.date === formatDateTime(date.toISOString()).date
+  );
+
+  const rows = items[page - 1]?.map((record: IDtr) => (
     <tr className="border-none ">
       <td className="hidden md:table-cell lg:table-cell pl-3">
-        <Text>{record.date}</Text>
+        <Text>{formatDateTime(record.date!).date}</Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell">
         <Flex>
           <Group spacing={8}>
             <IconClock size={16} className="text-yellow-400" />
-            {/* <span>08:00 AM</span> - <span>12:00 PM</span> */}
-            <span>{record.morning.in}</span> - <span>{record.morning.out}</span>
+            <span>{record.morning?.in}</span> -{" "}
+            <span>{record.morning?.out}</span>
           </Group>
         </Flex>
       </td>
@@ -102,9 +131,8 @@ const DailyTimeRecord = () => {
         <Flex>
           <Group spacing={8}>
             <IconClock size={16} className="text-violet-400" />
-            {/* <span>01:00 PM</span> - <span>05:00 PM</span> */}
-            <span>{record.afternoon.in}</span> -{" "}
-            <span>{record.morning.out}</span>
+            <span>{record.afternoon?.in}</span> -{" "}
+            <span>{record.afternoon?.out}</span>
           </Group>
         </Flex>
       </td>
@@ -116,14 +144,52 @@ const DailyTimeRecord = () => {
     </tr>
   ));
 
+  const isTimeIn =
+    schedule.morning.in === 8 ||
+    schedule.afternoon.in === 0 ||
+    today?.morning?.in === "" ||
+    today?.afternoon?.in === "";
+  const isTimeOut =
+    schedule.morning.out === 0 ||
+    schedule.afternoon.out === 0 ||
+    today?.morning?.out === "" ||
+    today?.afternoon?.out === "";
+
   return (
     <>
       <Flex justify="space-between" align="center" pb={6}>
         <TimeSheetsLabels />
+        {!today || today?.status === "recording" ? (
+          <>
+            {isTimeIn ? (
+              <Button
+                color="yellow"
+                size="xs"
+                onClick={handleTimeInOut}
+                loading={isLoading}
+              >
+                Time in
+              </Button>
+            ) : (
+              ""
+            )}
 
-        <Button color="yellow" size="xs" onClick={handleTimeIn}>
-          Time In
-        </Button>
+            {isTimeOut ? (
+              <Button
+                color="indigo"
+                size="xs"
+                onClick={handleTimeInOut}
+                loading={isLoading}
+              >
+                Time out
+              </Button>
+            ) : (
+              ""
+            )}
+          </>
+        ) : (
+          ""
+        )}
       </Flex>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)]">
         <div className="h-[96%]">
