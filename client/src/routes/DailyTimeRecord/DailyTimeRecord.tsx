@@ -116,7 +116,11 @@ const DailyTimeRecord = () => {
   const rows = items[page - 1]?.map((record: IDtr) => (
     <tr className="border-none ">
       <td className="hidden md:table-cell lg:table-cell pl-3">
-        <Text>{formatDateTime(record.date!).date}</Text>
+        <Text>
+          {formatDateTime(record.date!).date === date.toDateString()
+            ? "Today"
+            : formatDateTime(record.date!).date}
+        </Text>
       </td>
       <td className="hidden md:table-cell lg:table-cell">
         <Flex>
@@ -144,22 +148,26 @@ const DailyTimeRecord = () => {
     </tr>
   ));
 
+  const [hour, setHOur] = useState(5);
+
   const isTimeIn =
-    schedule.morning.in === 8 ||
-    schedule.afternoon.in === 0 ||
-    today?.morning?.in === "" ||
-    today?.afternoon?.in === "";
+    !today && schedule.morning.in === hour
+      ? true
+      : today?.afternoon?.in === "" && schedule.afternoon.in === hour
+      ? true
+      : false;
   const isTimeOut =
-    schedule.morning.out === 0 ||
-    schedule.afternoon.out === 0 ||
-    today?.morning?.out === "" ||
-    today?.afternoon?.out === "";
+    today?.morning?.out === "" && schedule.morning.out === hour
+      ? true
+      : today?.afternoon?.out === "" && schedule.afternoon.out === hour
+      ? true
+      : false;
 
   return (
     <>
       <Flex justify="space-between" align="center" pb={6}>
         <TimeSheetsLabels />
-        {!today || today?.status === "recording" ? (
+        {!today || today?.status !== "recorded" ? (
           <>
             {isTimeIn ? (
               <Button
