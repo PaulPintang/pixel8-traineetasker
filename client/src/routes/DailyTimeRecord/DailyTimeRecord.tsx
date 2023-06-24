@@ -94,10 +94,6 @@ const DailyTimeRecord = () => {
   });
   const [records, setRecords] = useState<Records[]>([]);
 
-  // const handleTimeIn = async () => {
-  //   await addDtr();
-  //   refetch();
-  // };
   const handleTimeInOut = async () => {
     await recordDtr();
     refetch();
@@ -148,18 +144,18 @@ const DailyTimeRecord = () => {
     </tr>
   ));
 
-  const [hour, setHOur] = useState(5);
+  const [hour, setHOur] = useState(8);
 
   const isTimeIn =
-    !today && schedule.morning.in === hour
+    !today && schedule.morning.in === currentHour
       ? true
-      : today?.afternoon?.in === "" && schedule.afternoon.in === hour
+      : today?.afternoon?.in === "" && schedule.afternoon.in === currentHour
       ? true
       : false;
   const isTimeOut =
-    today?.morning?.out === "" && schedule.morning.out === hour
+    today?.morning?.out === "" && schedule.morning.out === currentHour
       ? true
-      : today?.afternoon?.out === "" && schedule.afternoon.out === hour
+      : today?.afternoon?.out === "" && schedule.afternoon.out === currentHour
       ? true
       : false;
 
