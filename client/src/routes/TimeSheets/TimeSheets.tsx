@@ -77,53 +77,57 @@ const TimeSheets = () => {
 
             <Menu.Dropdown>
               {/* {Object.values(sheet.morning!).every((value) => value === "") ? ( */}
-              <>
-                <Menu.Label>Morning</Menu.Label>
-                <Menu.Item p={0} className="bg-white hover:bg-white">
-                  <Stack px={10} pb={5}>
-                    <Group spacing={8}>
-                      <IconClock size={16} className="text-yellow-300" />
-                      <Text c="dark" fz="xs">
-                        <span>{sheet.morning?.start}</span> -{" "}
-                        <span
-                          className={
-                            sheet.morning?.end === "" ? "text-gray-500" : ""
-                          }
-                        >
-                          {sheet.morning?.end === ""
-                            ? "recording"
-                            : sheet.morning?.end}
-                        </span>
-                      </Text>
-                    </Group>
-                  </Stack>
-                </Menu.Item>
-                <Menu.Divider />
-              </>
+              {sheet.morning?.start !== "" && (
+                <>
+                  <Menu.Label>Morning</Menu.Label>
+                  <Menu.Item p={0} className="bg-white hover:bg-white">
+                    <Stack px={10} pb={5}>
+                      <Group spacing={8}>
+                        <IconClock size={16} className="text-yellow-300" />
+                        <Text c="dark" fz="xs">
+                          <span>{sheet.morning?.start}</span> -{" "}
+                          <span
+                            className={
+                              sheet.morning?.end === "" ? "text-gray-500" : ""
+                            }
+                          >
+                            {sheet.morning?.end === ""
+                              ? "recording"
+                              : sheet.morning?.end}
+                          </span>
+                        </Text>
+                      </Group>
+                    </Stack>
+                  </Menu.Item>
+                  <Menu.Divider />
+                </>
+              )}
               {/* ) : ( */}
-              <>
-                <Menu.Label>Afternoon</Menu.Label>
-                <Menu.Item p={0} className="bg-white hover:bg-white">
-                  <Stack px={10} pb={5}>
-                    <Group spacing={8}>
-                      <IconClock size={16} className="text-violet-400" />
-                      <Text c="dark" fz="xs">
-                        <span>{sheet.afternoon?.start}</span> -{" "}
-                        <span
-                          className={
-                            sheet.afternoon?.end === "" ? "text-gray-500" : ""
-                          }
-                        >
-                          {sheet.afternoon?.end === ""
-                            ? "recording"
-                            : sheet.afternoon?.end}
-                        </span>
-                      </Text>
-                    </Group>
-                  </Stack>
-                </Menu.Item>
-              </>
-              {/* )} */}
+
+              {sheet.afternoon?.start !== "" && (
+                <>
+                  <Menu.Label>Afternoon</Menu.Label>
+                  <Menu.Item p={0} className="bg-white hover:bg-white">
+                    <Stack px={10} pb={5}>
+                      <Group spacing={8}>
+                        <IconClock size={16} className="text-violet-400" />
+                        <Text c="dark" fz="xs">
+                          <span>{sheet.afternoon?.start}</span> -{" "}
+                          <span
+                            className={
+                              sheet.afternoon?.end === "" ? "text-gray-500" : ""
+                            }
+                          >
+                            {sheet.afternoon?.end === ""
+                              ? "recording"
+                              : sheet.afternoon?.end}
+                          </span>
+                        </Text>
+                      </Group>
+                    </Stack>
+                  </Menu.Item>
+                </>
+              )}
             </Menu.Dropdown>
           </Menu>
         </td>

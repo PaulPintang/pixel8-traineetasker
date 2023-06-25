@@ -177,7 +177,7 @@ const DailyTimeRecord = () => {
   const isTimeOut =
     today?.morning?.out === "" && schedule.morning.out === currentHour
       ? true
-      : today?.afternoon?.out === "" && schedule.afternoon.out === 17
+      : today?.afternoon?.out === "" && schedule.afternoon.out === currentHour
       ? true
       : false;
 

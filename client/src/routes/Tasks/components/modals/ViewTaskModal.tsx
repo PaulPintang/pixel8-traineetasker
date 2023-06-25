@@ -36,6 +36,7 @@ import { IconUser } from "@tabler/icons-react";
 import {
   useAddTaskTimesheetMutation,
   useGetAllTraineeQuery,
+  useGetTraineeProfileQuery,
 } from "../../../../features/api/trainee/traineeApiSlice";
 import Comments from "./ViewTask/components/Comments";
 import { useAppSelector } from "../../../../app/hooks";
@@ -61,6 +62,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
   const { user } = useAppSelector((state) => state.auth);
   const task = tasks?.find((task) => task._id === viewId);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
+  const { data: trainee, refetch } = useGetTraineeProfileQuery();
   const [taskStatus, taskState] = useTaskStatusMutation();
   const [comment, commentState] = useCommentOnTaskMutation();
   const [timesheet, sheetState] = useAddTaskTimesheetMutation();
@@ -87,6 +89,10 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
         spent: "",
       };
       await timesheet({ sheet, rooms: [user?.course!] });
+      refetch();
+    }
+    if (task?.status === "inprogress") {
+      refetch();
     }
   };
 
