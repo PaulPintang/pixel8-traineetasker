@@ -107,8 +107,10 @@ const DailyTimeRecord = () => {
     const todaytask = trainee?.timesheet.some(
       (record) => record.date === formatDateTime(date.toISOString()).date
     );
-
-    if (!todaytask) {
+    const isThereInProgress = tasks?.some(
+      (task) => task.status === "inprogress"
+    );
+    if (!todaytask && isThereInProgress) {
       // ! what if inprogress task is more than one
       const inprogress = tasks?.filter((task) => task.status === "inprogress");
       const sheet: ISheets = {
