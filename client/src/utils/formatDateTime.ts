@@ -3,7 +3,7 @@ export const formatDateTime = (added: string | Date) => {
   const format = {
     date: date.toDateString(),
     time: date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
+      hour: "numeric",
       minute: "2-digit",
       hour12: true,
     }),

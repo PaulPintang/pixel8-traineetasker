@@ -6,11 +6,14 @@ import { IconClock } from "@tabler/icons-react";
 import { checkTime } from "../../utils/checkTime";
 import {
   useAddDtrMutation,
+  useAddTaskTimesheetMutation,
   useGetTraineeProfileQuery,
   useUpdateDtrMutation,
 } from "../../features/api/trainee/traineeApiSlice";
-import { IDtr } from "../../interfaces/records.interface";
+import { IDtr, ISheets } from "../../interfaces/records.interface";
 import { formatDateTime } from "../../utils/formatDateTime";
+import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
+import { useAppSelector } from "../../app/hooks";
 
 const sheets = [
   {
@@ -61,21 +64,27 @@ interface Records {
 }
 
 const DailyTimeRecord = () => {
+  const { user } = useAppSelector((state) => state.auth);
   const [addDtr, dtrstate] = useAddDtrMutation();
   const [recordDtr, { isLoading }] = useUpdateDtrMutation();
   const { data: trainee, refetch } = useGetTraineeProfileQuery();
+  const [timesheet, sheetState] = useAddTaskTimesheetMutation();
+
+  const { data: tasks } = useGetAllTasksQuery();
   const date = new Date();
   const currentHour = date.getHours();
+
   const time = checkTime();
   // ?? SCHEDULE IS BASED ON ADMIN GIVEN SCHEDULE TIME
+  // * hour is not set to 12, need to fix this
   const schedule = {
     morning: {
       in: 8,
       out: 12,
     },
     afternoon: {
-      in: 1,
-      out: 5,
+      in: 13,
+      out: 17,
     },
   };
   const [page, setPage] = useState(1);
@@ -92,10 +101,25 @@ const DailyTimeRecord = () => {
       out: "",
     },
   });
-  const [records, setRecords] = useState<Records[]>([]);
 
   const handleTimeInOut = async () => {
     await recordDtr();
+    const todaytask = trainee?.timesheet.some(
+      (record) => record.date === formatDateTime(date.toISOString()).date
+    );
+
+    if (!todaytask) {
+      // ! what if inprogress task is more than one
+      const inprogress = tasks?.filter((task) => task.status === "inprogress");
+      const sheet: ISheets = {
+        task: inprogress?.[0].taskname,
+        ticket: inprogress?.[0].ticketno,
+        status: "recording",
+        spent: "",
+      };
+      await timesheet({ sheet, rooms: [user?.course!] });
+    }
+
     refetch();
   };
 
@@ -144,8 +168,6 @@ const DailyTimeRecord = () => {
     </tr>
   ));
 
-  const [hour, setHOur] = useState(8);
-
   const isTimeIn =
     !today && schedule.morning.in === currentHour
       ? true
@@ -155,9 +177,11 @@ const DailyTimeRecord = () => {
   const isTimeOut =
     today?.morning?.out === "" && schedule.morning.out === currentHour
       ? true
-      : today?.afternoon?.out === "" && schedule.afternoon.out === currentHour
+      : today?.afternoon?.out === "" && schedule.afternoon.out === 17
       ? true
       : false;
+
+  console.log(currentHour);
 
   return (
     <>

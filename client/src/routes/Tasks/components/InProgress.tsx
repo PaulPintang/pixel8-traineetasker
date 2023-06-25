@@ -14,6 +14,7 @@ import { Dispatch, SetStateAction } from "react";
 import { tasks } from "../../../data/tasks";
 import { ITask } from "../../../interfaces/task.interface";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
+import { formatDateTime } from "../../../utils/formatDateTime";
 interface Props {
   setViewId: Dispatch<SetStateAction<string | null>>;
   toggle: () => void;
@@ -49,11 +50,11 @@ const InProgress = ({ toggle, setViewId }: Props) => {
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Added:</Text>
-                <Text>Wednesday, June 07 2023</Text>
+                <Text>{formatDateTime(task.createdAt!).date}</Text>
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Started:</Text>
-                <Text>Wednesday, June 07 2023</Text>
+                <Text>{formatDateTime(task.timeline?.startedAt!).date}</Text>
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Assigned to:</Text>

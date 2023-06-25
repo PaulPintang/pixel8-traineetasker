@@ -23,6 +23,7 @@ import { tasks } from "../../data/tasks";
 import { ITask } from "../../interfaces/task.interface";
 import { useGetTraineeProfileQuery } from "../../features/api/trainee/traineeApiSlice";
 import { formatDateTime } from "../../utils/formatDateTime";
+import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 
 // ? if trainee time out in dtr, task hour will automatically stop if time is the trainee out time.
 // ? (ex. 12:00 PM and 5:00 PM, dtr time out and stop the timesheet)
@@ -31,15 +32,9 @@ import { formatDateTime } from "../../utils/formatDateTime";
 const TimeSheets = () => {
   const [page, setPage] = useState(1);
   const [opened, { close, open }] = useDisclosure(false);
-
+  const { data: tasks } = useGetAllTasksQuery();
+  const date = new Date();
   // ? test, filter should be in backend
-  // const [mysheet, setMysheet] = useState<Sheets[]>([]);
-  const [mytask, setMyTask] = useState<ITask[]>([]);
-
-  useEffect(() => {
-    // setMysheet(sheets?.filter((sheet) => sheet.member === "Paul"));
-    setMyTask(tasks.filter((task) => task.status === "inprogress"));
-  }, []);
 
   const { data: trainee } = useGetTraineeProfileQuery();
 
@@ -51,7 +46,7 @@ const TimeSheets = () => {
       <tr>
         <td className="hidden md:table-cell lg:table-cell pl-3">
           <Text>
-            {format.date} at {format.time}
+            {format.date === date.toDateString() ? "Today" : format.date}
           </Text>
         </td>
         <td className="hidden md:table-cell lg:table-cell">
@@ -81,35 +76,54 @@ const TimeSheets = () => {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Label>Morning</Menu.Label>
-              <Menu.Item p={0} className="bg-white hover:bg-white">
-                {/* <Text>Time</Text> */}
-                <Stack px={10} pb={5}>
-                  <Group spacing={8}>
-                    <IconClock size={16} className="text-yellow-300" />
-                    {/* <span>01:00 PM</span> - <span>05:00 PM</span> */}
-                    <Text c="dark" fz="xs">
-                      {/* <span>{sheet.morning.start}</span> -{" "} */}
-                      <span className="text-gray-500">recording</span>
-                    </Text>
-                  </Group>
-                </Stack>
-              </Menu.Item>
-              <Menu.Divider />
-              <Menu.Label>Afternoon</Menu.Label>
-              <Menu.Item p={0} className="bg-white hover:bg-white">
-                {/* <Text>Time</Text> */}
-                <Stack px={10} pb={5}>
-                  <Group spacing={8}>
-                    <IconClock size={16} className="text-violet-400" />
-                    {/* <span>01:00 PM</span> - <span>05:00 PM</span> */}
-                    {/* <Text c="dark" fz="xs">
-                    <span>{sheet.afternoon.start}</span> -{" "}
-                    <span>{sheet.afternoon.end}</span>
-                  </Text> */}
-                  </Group>
-                </Stack>
-              </Menu.Item>
+              {/* {Object.values(sheet.morning!).every((value) => value === "") ? ( */}
+              <>
+                <Menu.Label>Morning</Menu.Label>
+                <Menu.Item p={0} className="bg-white hover:bg-white">
+                  <Stack px={10} pb={5}>
+                    <Group spacing={8}>
+                      <IconClock size={16} className="text-yellow-300" />
+                      <Text c="dark" fz="xs">
+                        <span>{sheet.morning?.start}</span> -{" "}
+                        <span
+                          className={
+                            sheet.morning?.end === "" ? "text-gray-500" : ""
+                          }
+                        >
+                          {sheet.morning?.end === ""
+                            ? "recording"
+                            : sheet.morning?.end}
+                        </span>
+                      </Text>
+                    </Group>
+                  </Stack>
+                </Menu.Item>
+                <Menu.Divider />
+              </>
+              {/* ) : ( */}
+              <>
+                <Menu.Label>Afternoon</Menu.Label>
+                <Menu.Item p={0} className="bg-white hover:bg-white">
+                  <Stack px={10} pb={5}>
+                    <Group spacing={8}>
+                      <IconClock size={16} className="text-violet-400" />
+                      <Text c="dark" fz="xs">
+                        <span>{sheet.afternoon?.start}</span> -{" "}
+                        <span
+                          className={
+                            sheet.afternoon?.end === "" ? "text-gray-500" : ""
+                          }
+                        >
+                          {sheet.afternoon?.end === ""
+                            ? "recording"
+                            : sheet.afternoon?.end}
+                        </span>
+                      </Text>
+                    </Group>
+                  </Stack>
+                </Menu.Item>
+              </>
+              {/* )} */}
             </Menu.Dropdown>
           </Menu>
         </td>
@@ -117,9 +131,13 @@ const TimeSheets = () => {
     );
   });
 
-  // const handleTask = () => {
-  //   setMysheet([...mysheet, ...mysheet]);
-  // };
+  const inprogress = tasks?.filter((task) => task.status === "inprogress");
+  const oldtask = inprogress?.reduce((oldest, current) => {
+    if (current.timeline?.startedAt! < oldest?.timeline?.startedAt!) {
+      return current;
+    }
+    return oldest;
+  }, inprogress?.[0]);
 
   return (
     <>
@@ -127,20 +145,17 @@ const TimeSheets = () => {
         <TimeSheetsLabels />
         <Group className="" fz={12}>
           <Group spacing={8} c="dark">
-            <>
-              {/* ? hide if inprogress task if only one and timesheet started  */}
-              <Text fw="bold">Select:</Text>
-              <Select
-                size="xs"
-                placeholder="Pick one"
-                data={[
-                  { value: "react", label: "Header Page" },
-                  { value: "ng", label: "Dashboard UI" },
-                  { value: "svelte", label: "Menu" },
-                  { value: "vue", label: "Mobile Responsive" },
-                ]}
-              />
-            </>
+            {inprogress?.length! > 1 && (
+              <>
+                {/* ? hide if inprogress task if only one and timesheet started  */}
+                <Text fw="bold">Select:</Text>
+                <Select
+                  size="xs"
+                  placeholder="Pick one"
+                  data={inprogress?.map((task) => task.taskname)}
+                />
+              </>
+            )}
             <>
               {/* hide if sheet not started and inprogress task is more than one */}
               <Text fw="bold">Task:</Text>
@@ -152,21 +167,23 @@ const TimeSheets = () => {
                     onMouseEnter={open}
                     onMouseLeave={close}
                   >
-                    {mytask[0]?.ticketno}
+                    {oldtask?.ticketno}
                   </Text>
                 </Popover.Target>
                 <Popover.Dropdown sx={{ pointerEvents: "none" }}>
                   <Box component="div">
                     <Text fw="bold" c="dark" fz="sm" pb={5}>
-                      Header page
+                      {oldtask?.taskname}
                     </Text>
                     <Group className="text-gray-500" fz="xs" spacing={8}>
                       <Text>Added:</Text>
-                      <Text>Monday, June 07 2023</Text>
+                      <Text>{formatDateTime(oldtask?.createdAt!).date}</Text>
                     </Group>
                     <Group className="text-gray-500" fz="xs" spacing={8}>
                       <Text>Started:</Text>
-                      <Text>Wednesday, June 07 2023</Text>
+                      <Text>
+                        {formatDateTime(oldtask?.timeline?.startedAt!).date}
+                      </Text>
                     </Group>
                   </Box>
                 </Popover.Dropdown>
@@ -174,7 +191,7 @@ const TimeSheets = () => {
             </>
           </Group>
 
-          {/* hide if no seletected task, and show if inporgress task is only one  */}
+          {/* show if inporgress task is more than one */}
           {/* <Button size="xs" onClick={handleTask}>
             Start
           </Button> */}
