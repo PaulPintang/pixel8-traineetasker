@@ -3,7 +3,8 @@ export interface ISheets {
   date?: string;
   task?: string;
   ticket?: string;
-  status?: "recorded" | "recording";
+  status: "recorded" | "recording";
+  // status: "inprogress" | "failed" | "done" | "completed" | "revision";
   spent?: string;
   morning?: {
     start: string;

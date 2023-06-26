@@ -81,12 +81,10 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
       status,
     };
     await taskStatus({ task: data, rooms: [user?.course] });
-    if (task?.status === "new") {
+    if (task?.status === "new" || task?.status === "failed") {
       const sheet: ISheets = {
         task: task.taskname!,
         ticket: task.ticketno!,
-        status: "recording",
-        spent: "",
       };
       await timesheet({ sheet, rooms: [user?.course!] });
       refetch();

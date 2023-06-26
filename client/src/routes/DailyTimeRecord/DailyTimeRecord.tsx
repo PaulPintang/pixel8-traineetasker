@@ -88,19 +88,6 @@ const DailyTimeRecord = () => {
     },
   };
   const [page, setPage] = useState(1);
-  const [filterBy, setFilterBy] = useState<string | null>("");
-  const [dtr, setDtr] = useState<IDtr>({
-    date: "",
-    status: "recording",
-    morning: {
-      in: "",
-      out: "",
-    },
-    afternoon: {
-      in: "",
-      out: "",
-    },
-  });
 
   const handleTimeInOut = async () => {
     await recordDtr();
@@ -116,8 +103,6 @@ const DailyTimeRecord = () => {
       const sheet: ISheets = {
         task: inprogress?.[0].taskname,
         ticket: inprogress?.[0].ticketno,
-        status: "recording",
-        spent: "",
       };
       await timesheet({ sheet, rooms: [user?.course!] });
     }

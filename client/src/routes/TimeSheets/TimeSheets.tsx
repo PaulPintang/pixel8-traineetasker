@@ -11,11 +11,21 @@ import {
   Popover,
   Box,
   Select,
+  ThemeIcon,
+  List,
 } from "@mantine/core";
 import { chunk } from "lodash";
 import { useState, useEffect } from "react";
-import { TimeSheetsLabels } from "../../components/ColorLabels";
-import { IconClock, IconDots } from "@tabler/icons-react";
+import {
+  ManageTaskLabels,
+  TimeSheetsLabels,
+} from "../../components/ColorLabels";
+import {
+  IconCheck,
+  IconCircleX,
+  IconClock,
+  IconDots,
+} from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import { sheets } from "../../data/sheets";
 // import { Sheets } from "../../interfaces/sheet.interface";
@@ -24,6 +34,7 @@ import { ITask } from "../../interfaces/task.interface";
 import { useGetTraineeProfileQuery } from "../../features/api/trainee/traineeApiSlice";
 import { formatDateTime } from "../../utils/formatDateTime";
 import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
+import { calculateSpentTime } from "../../utils/calculateSpentTime";
 
 // ? if trainee time out in dtr, task hour will automatically stop if time is the trainee out time.
 // ? (ex. 12:00 PM and 5:00 PM, dtr time out and stop the timesheet)
@@ -40,8 +51,15 @@ const TimeSheets = () => {
 
   const items = chunk(trainee?.timesheet, 10);
 
-  const rows = items[page - 1]?.map((sheet) => {
+  const rows = items[page - 1]?.map((sheet, index) => {
     const format = formatDateTime(sheet.date!);
+
+    const time = {
+      morning: sheet.morning,
+      afternoon: sheet.afternoon,
+    };
+    const spent = calculateSpentTime(time);
+
     return (
       <tr>
         <td className="hidden md:table-cell lg:table-cell pl-3">
@@ -56,7 +74,7 @@ const TimeSheets = () => {
           <Text>{sheet.ticket}</Text>
         </td>
         <td className="py-2 hidden md:table-cell lg:table-cell ">
-          <Text>{sheet.spent}</Text>
+          <Text>{spent.afternoon.spent.minutes}</Text>
         </td>
         <td className="py-2 hidden md:table-cell lg:table-cell ">
           <Text fw="bold" fz="xs">
@@ -97,6 +115,17 @@ const TimeSheets = () => {
                           </span>
                         </Text>
                       </Group>
+                      <Text c="dark" fz="xs">
+                        Spent:{" "}
+                        {spent.morning.spent.hours !== 0 &&
+                          `${spent.morning.spent.hours} hr${
+                            spent.morning.spent.hours !== 1 ? "s" : ""
+                          }`}
+                        {spent.morning.spent.minutes !== 0 &&
+                          `${spent.morning.spent.minutes} min${
+                            spent.morning.spent.minutes !== 1 ? "s" : ""
+                          }`}
+                      </Text>
                     </Stack>
                   </Menu.Item>
                   <Menu.Divider />
@@ -108,7 +137,7 @@ const TimeSheets = () => {
                 <>
                   <Menu.Label>Afternoon</Menu.Label>
                   <Menu.Item p={0} className="bg-white hover:bg-white">
-                    <Stack px={10} pb={5}>
+                    <Stack px={10} pb={5} spacing={1}>
                       <Group spacing={8}>
                         <IconClock size={16} className="text-violet-400" />
                         <Text c="dark" fz="xs">
@@ -124,6 +153,17 @@ const TimeSheets = () => {
                           </span>
                         </Text>
                       </Group>
+                      <Text c="dark" fz="xs">
+                        Spent:{" "}
+                        {spent.afternoon.spent.hours !== 0 &&
+                          `${spent.afternoon.spent.hours} hr${
+                            spent.afternoon.spent.hours !== 1 ? "s" : ""
+                          }`}
+                        {spent.afternoon.spent.minutes !== 0 &&
+                          `${spent.afternoon.spent.minutes} min${
+                            spent.afternoon.spent.minutes !== 1 ? "s" : ""
+                          }`}
+                      </Text>
                     </Stack>
                   </Menu.Item>
                 </>
@@ -146,7 +186,8 @@ const TimeSheets = () => {
   return (
     <>
       <Flex justify="space-between" pb={6} align="center">
-        <TimeSheetsLabels />
+        {/* <TimeSheetsLabels /> */}
+        <ManageTaskLabels />
         <Group className="" fz={12}>
           <Group spacing={8} c="dark">
             {inprogress?.length! > 1 && (

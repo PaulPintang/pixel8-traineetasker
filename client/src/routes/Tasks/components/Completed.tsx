@@ -40,6 +40,19 @@ const Completed = ({ toggle, setViewId }: Props) => {
             <Badge variant="filled" color="green" size="sm">
               Completed
             </Badge>
+            {task.timeline?.revisions.length !== 0 && (
+              <Group className="text-gray-500" spacing={10}>
+                <Text size="xs">Revisions</Text>
+                <Badge
+                  size="sm"
+                  color="red"
+                  variant="light"
+                  className="lowercase"
+                >
+                  x{task.timeline?.revisions.length}
+                </Badge>
+              </Group>
+            )}
             <Box>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Ticket:</Text>
