@@ -55,6 +55,7 @@ const TimeSheets = () => {
     const format = formatDateTime(sheet.date!);
 
     const time = {
+      status: sheet.status,
       morning: sheet.morning,
       afternoon: sheet.afternoon,
     };
@@ -75,7 +76,12 @@ const TimeSheets = () => {
         </td>
         <td className="py-2 hidden md:table-cell lg:table-cell ">
           <Text>
-            {spent.totalSpent.hours}hrs{spent.totalSpent.minutes}mins
+            {sheet.status === "recorded" && (
+              <span>
+                {`${spent.totalSpent.hours}hrs`}{" "}
+                {`${spent.totalSpent.minutes}mins`}
+              </span>
+            )}
           </Text>
         </td>
         <td className="py-2 hidden md:table-cell lg:table-cell ">

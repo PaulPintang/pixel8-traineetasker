@@ -1,6 +1,7 @@
 import { formatDateTime } from "./formatDateTime";
 
 type TimeSpent = {
+  status: "recording" | "recorded";
   morning?: {
     start: string | undefined;
     end: string | undefined;
@@ -70,8 +71,14 @@ export const calculateSpentTime = (time: TimeSpent) => {
 
   const spent = {
     totalSpent: {
-      hours: morning.spent.hours + afternoon.spent.hours,
-      minutes: morning.spent.minutes + afternoon.spent.minutes,
+      hours:
+        time.status === "recorded"
+          ? morning.spent.hours + afternoon.spent.hours
+          : "",
+      minutes:
+        time.status === "recorded"
+          ? morning.spent.minutes + afternoon.spent.minutes
+          : "",
     },
     morning,
     afternoon,

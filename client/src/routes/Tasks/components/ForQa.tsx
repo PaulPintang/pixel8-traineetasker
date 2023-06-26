@@ -67,7 +67,7 @@ const ForQa = ({ toggle, setViewId }: Props) => {
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Spent:</Text>
-                <Text>8hrs30min</Text>
+                <Text>{task.spent}</Text>
               </Group>
             </Box>
           </Box>

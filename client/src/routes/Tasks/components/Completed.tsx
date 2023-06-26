@@ -72,11 +72,7 @@ const Completed = ({ toggle, setViewId }: Props) => {
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Spent:</Text>
-                <Text>8hrs20min</Text>
-              </Group>
-              <Group className="text-gray-500" fz="xs" spacing={8}>
-                <Text>Comment:</Text>
-                <Text>Good job!</Text>
+                <Text>{task.spent}</Text>
               </Group>
             </Box>
           </Box>
