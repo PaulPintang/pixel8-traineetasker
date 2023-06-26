@@ -19,14 +19,22 @@ export const calculateSpentTime = (time: TimeSpent) => {
     spent: {
       hours: Math.floor(
         Math.abs(
-          new Date(`2000/01/01 ${time.morning?.start?.replace("APM", "")}`) -
-            new Date(`2000/01/01 ${time.morning?.end?.replace("APM", "")}`)
+          new Date(
+            `2000/01/01 ${time.morning?.start?.replace("APM", "")}`
+          ).getTime() -
+            new Date(
+              `2000/01/01 ${time.morning?.end?.replace("APM", "")}`
+            ).getTime()
         ) / 3600000
       ),
       minutes: Math.floor(
         (Math.abs(
-          new Date(`2000/01/01 ${time.morning?.start?.replace("APM", "")}`) -
-            new Date(`2000/01/01 ${time.morning?.end?.replace("APM", "")}`)
+          new Date(
+            `2000/01/01 ${time.morning?.start?.replace("APM", "")}`
+          ).getTime() -
+            new Date(
+              `2000/01/01 ${time.morning?.end?.replace("APM", "")}`
+            ).getTime()
         ) %
           3600000) /
           60000
@@ -37,14 +45,22 @@ export const calculateSpentTime = (time: TimeSpent) => {
     spent: {
       hours: Math.floor(
         Math.abs(
-          new Date(`2000/01/01 ${time.afternoon?.start?.replace("APM", "")}`) -
-            new Date(`2000/01/01 ${time.afternoon?.end?.replace("APM", "")}`)
+          new Date(
+            `2000/01/01 ${time.afternoon?.start?.replace("APM", "")}`
+          ).getTime() -
+            new Date(
+              `2000/01/01 ${time.afternoon?.end?.replace("APM", "")}`
+            ).getTime()
         ) / 3600000
       ),
       minutes: Math.floor(
         (Math.abs(
-          new Date(`2000/01/01 ${time.afternoon?.start?.replace("APM", "")}`) -
-            new Date(`2000/01/01 ${time.afternoon?.end?.replace("APM", "")}`)
+          new Date(
+            `2000/01/01 ${time.afternoon?.start?.replace("APM", "")}`
+          ).getTime() -
+            new Date(
+              `2000/01/01 ${time.afternoon?.end?.replace("APM", "")}`
+            ).getTime()
         ) %
           3600000) /
           60000
@@ -53,6 +69,10 @@ export const calculateSpentTime = (time: TimeSpent) => {
   };
 
   const spent = {
+    totalSpent: {
+      hours: morning.spent.hours + afternoon.spent.hours,
+      minutes: morning.spent.minutes + afternoon.spent.minutes,
+    },
     morning,
     afternoon,
   };

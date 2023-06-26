@@ -74,7 +74,9 @@ const TimeSheets = () => {
           <Text>{sheet.ticket}</Text>
         </td>
         <td className="py-2 hidden md:table-cell lg:table-cell ">
-          <Text>{spent.afternoon.spent.minutes}</Text>
+          <Text>
+            {spent.totalSpent.hours}hrs{spent.totalSpent.minutes}mins
+          </Text>
         </td>
         <td className="py-2 hidden md:table-cell lg:table-cell ">
           <Text fw="bold" fz="xs">
@@ -99,7 +101,7 @@ const TimeSheets = () => {
                 <>
                   <Menu.Label>Morning</Menu.Label>
                   <Menu.Item p={0} className="bg-white hover:bg-white">
-                    <Stack px={10} pb={5}>
+                    <Stack px={10} pb={5} spacing={1}>
                       <Group spacing={8}>
                         <IconClock size={16} className="text-yellow-300" />
                         <Text c="dark" fz="xs">
@@ -118,11 +120,11 @@ const TimeSheets = () => {
                       <Text c="dark" fz="xs">
                         Spent:{" "}
                         {spent.morning.spent.hours !== 0 &&
-                          `${spent.morning.spent.hours} hr${
+                          `${spent.morning.spent.hours}hr${
                             spent.morning.spent.hours !== 1 ? "s" : ""
                           }`}
                         {spent.morning.spent.minutes !== 0 &&
-                          `${spent.morning.spent.minutes} min${
+                          `${spent.morning.spent.minutes}min${
                             spent.morning.spent.minutes !== 1 ? "s" : ""
                           }`}
                       </Text>
@@ -156,11 +158,11 @@ const TimeSheets = () => {
                       <Text c="dark" fz="xs">
                         Spent:{" "}
                         {spent.afternoon.spent.hours !== 0 &&
-                          `${spent.afternoon.spent.hours} hr${
+                          `${spent.afternoon.spent.hours}hr${
                             spent.afternoon.spent.hours !== 1 ? "s" : ""
                           }`}
                         {spent.afternoon.spent.minutes !== 0 &&
-                          `${spent.afternoon.spent.minutes} min${
+                          `${spent.afternoon.spent.minutes}min${
                             spent.afternoon.spent.minutes !== 1 ? "s" : ""
                           }`}
                       </Text>
