@@ -45,6 +45,22 @@ const TasksTodoCard = () => {
     setTodos(res.data);
   };
 
+  const isTodoDone = async (index: number) => {
+    const updatedTodos = todos.map((todo, i) => {
+      if (i === index) {
+        return { ...todo, isDone: !todo.isDone }; // Toggle the isDone property
+      }
+      return todo;
+    });
+
+    const res: any = await taskTodo({
+      _id: currentTask?._id,
+      todos: updatedTodos,
+    });
+
+    setTodos(res.data);
+  };
+
   return (
     <>
       <Card className="h-full rounded-md shadow-md ">
@@ -71,11 +87,20 @@ const TasksTodoCard = () => {
                 {todos?.map((todo, index) => (
                   <div className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative">
                     <Text c="dark" fz="xs" className="w-[80%]" py={4}>
-                      {todo.todo}
+                      <span
+                        className={todo.isDone ? "line-through italic" : ""}
+                      >
+                        {todo.todo}
+                      </span>
                     </Text>
                     <div className="absolute top-2 right-3">
                       <Group spacing={6}>
-                        <Checkbox size="xs" color="cyan" />
+                        <Checkbox
+                          checked={todo.isDone}
+                          size="xs"
+                          color="cyan"
+                          onChange={() => isTodoDone(index)}
+                        />
                         <ActionIcon
                           color="red"
                           variant="light"

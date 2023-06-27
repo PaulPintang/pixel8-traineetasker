@@ -24,10 +24,10 @@ interface ModalProps {
   toggle: () => void;
 }
 
-interface ModalProps {
-  add: boolean;
-  toggle: () => void;
-}
+// interface ModalProps {
+//   add: boolean;
+//   toggle: () => void;
+// }
 
 type Todo = {
   isDone: boolean;
