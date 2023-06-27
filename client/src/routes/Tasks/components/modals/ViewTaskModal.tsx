@@ -71,7 +71,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
   // ? TRAINEE
   const handleTaskStatus = async () => {
     const status =
-      task?.status === "new"
+      task?.status === "new" || task?.status === "pending"
         ? "inprogress"
         : task?.status === "inprogress"
         ? "forqa"
@@ -82,7 +82,11 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
     };
     await taskStatus({ task: data, rooms: [user?.course] });
 
-    if (task?.status === "new" || task?.status === "failed") {
+    if (
+      task?.status === "new" ||
+      task?.status === "failed" ||
+      task?.status === "pending"
+    ) {
       const sheet: ISheets = {
         task: task.taskname!,
         ticket: task.ticketno!,
@@ -143,9 +147,10 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
             >
               {task.assign ? "Reassign" : "Assign"}
             </Button>
-          ) : task?.status === "new" && user?.role === "trainee" ? (
+          ) : task?.status === "new" ||
+            (task?.status === "pending" && user?.role === "trainee") ? (
             <Button
-              color="indigo"
+              color={task.status === "new" ? "indigo" : "yellow"}
               size="xs"
               onClick={handleTaskStatus}
               loading={taskState.isLoading}
@@ -255,7 +260,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
                 <Badge variant="filled" color="violet" size="sm">
                   {task?.status}
                 </Badge>
-              ) : task?.status === "forqa" ? (
+              ) : task?.status === "forqa" || task?.status === "pending" ? (
                 <Badge variant="filled" color="yellow" size="sm">
                   {task?.status}
                 </Badge>

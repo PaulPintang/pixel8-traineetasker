@@ -3,7 +3,7 @@ export interface ITask {
   taskname?: string;
   ticketno?: string;
   deliverable?: string;
-  status?: "inprogress" | "forqa" | "new" | "failed" | "completed";
+  status?: "inprogress" | "forqa" | "new" | "failed" | "completed" | "pending";
   assign?: string;
   course?: string;
   comments?: [
