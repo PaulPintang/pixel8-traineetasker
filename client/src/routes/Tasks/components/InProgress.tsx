@@ -15,15 +15,28 @@ import { tasks } from "../../../data/tasks";
 import { ITask } from "../../../interfaces/task.interface";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { formatDateTime } from "../../../utils/formatDateTime";
+import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
+import { calculateSpentTime } from "../../../utils/calculateSpentTime";
 interface Props {
   setViewId: Dispatch<SetStateAction<string | null>>;
   toggle: () => void;
 }
 
 const InProgress = ({ toggle, setViewId }: Props) => {
+  const date = new Date();
   // wahhhhhhhhh
   const { data: tasks } = useGetAllTasksQuery();
   const inprogress = tasks?.filter((task) => task.status === "inprogress");
+  const { data: trainee } = useGetTraineeProfileQuery();
+
+  const sheet = trainee?.timesheet.find((task) => task.status === "recording");
+  const time = {
+    status: sheet?.status!,
+    morning: sheet?.morning,
+    afternoon: sheet?.afternoon,
+  };
+  const spent = calculateSpentTime(time);
+  const format = formatDateTime(date.toISOString());
   return (
     <div className="space-y-3">
       {inprogress?.map((task) => (
@@ -70,9 +83,26 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                 <Text>{formatDateTime(task.timeline?.startedAt!).date}</Text>
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
-                <Text>Spent:</Text>
-                <Text>{task.spent! === "" ? "pending..." : task.spent}</Text>
+                <Text>On timesheet: </Text>
+                <Text fw="bold">
+                  {spent.totalSpent.hours === 1
+                    ? spent.totalSpent.hours + "hr"
+                    : spent.totalSpent.hours > 1
+                    ? spent.totalSpent.hours + "hrs"
+                    : spent.totalSpent.hours === 0 && ""}
+                  {spent.totalSpent.minutes === 1
+                    ? spent.totalSpent.minutes + "min"
+                    : spent.totalSpent.minutes > 1
+                    ? spent.totalSpent.minutes + "mins"
+                    : spent.totalSpent.minutes === 0 && ""}
+                </Text>
               </Group>
+              {task.spent !== "" && (
+                <Group className="text-gray-500" fz="xs" spacing={8}>
+                  <Text>Total spent: </Text>
+                  <Text fw="bold">{task.spent}</Text>
+                </Group>
+              )}
             </Box>
           </Box>
         </Card>

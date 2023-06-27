@@ -76,7 +76,7 @@ const TimeSheets = () => {
         </td>
         <td className="py-2 hidden md:table-cell lg:table-cell ">
           <Text>
-            {sheet.status === "recorded" ? (
+            {/* {sheet.status === "recorded" ? (
               <span>
                 {spent.totalSpent.hours !== 0 && `${spent.totalSpent.hours}hr`}
                 {spent.totalSpent.minutes !== 0 && (
@@ -92,27 +92,50 @@ const TimeSheets = () => {
               <Text fw="bold" fz="xs" fs="italic">
                 pending...
               </Text>
-            )}
-            {/* {sheet.status === "recorded" && (
-              <span>
-                {`${spent.totalSpent.hours}hrs`}{" "}
-                {`${spent.totalSpent.minutes}mins`}
-              </span>
-            )}
+            )} */}
+            {/* {sheet.status === "recorded" && ( */}
+            {/* <span>
+              {`${
+                spent.totalSpent.hours > 1 ? spent.totalSpent.hours + "hrs" : ""
+              }`}{" "}
+              {`${
+                spent.totalSpent.minutes > 1
+                  ? spent.totalSpent.minutes + "mins"
+                  : ""
+              }`}
+            </span> */}
+            {spent.totalSpent.hours === 1
+              ? spent.totalSpent.hours + "hr"
+              : spent.totalSpent.hours > 1
+              ? spent.totalSpent.hours + "hrs"
+              : spent.totalSpent.hours === 0 && ""}
+            {spent.totalSpent.minutes === 1
+              ? spent.totalSpent.minutes + "min"
+              : spent.totalSpent.minutes > 1
+              ? spent.totalSpent.minutes + "mins"
+              : spent.totalSpent.minutes === 0 && ""}
 
+            {/* )} */}
+            {/* 
             {sheet.morning?.start !== "" &&
               sheet.status === "recording" &&
-              spent.morning.spent.hours +
-                "hrs" +
-                spent.morning.spent.minutes +
-                "mins"}
+              `${
+                spent.morning.spent.hours !== 0
+                  ? spent.morning.spent.hours + "hr"
+                  : ""
+              } ${spent.morning.spent.minutes}${
+                spent.morning.spent.minutes !== 1 ? "mins" : "min"
+              }`}
 
             {sheet.afternoon?.start !== "" &&
               sheet.status === "recording" &&
-              spent.afternoon.spent.hours +
-                "hrs" +
-                spent.afternoon.spent.minutes +
-                "mins"} */}
+              `${
+                spent.afternoon.spent.hours !== 0
+                  ? spent.afternoon.spent.hours + "hr"
+                  : ""
+              } ${spent.afternoon.spent.minutes}${
+                spent.afternoon.spent.minutes !== 1 ? "mins" : "min"
+              }`} */}
           </Text>
         </td>
         <td className="py-2 hidden md:table-cell lg:table-cell ">

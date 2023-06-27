@@ -148,6 +148,15 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         } catch {}
       },
     }),
+
+    todoTask: builder.mutation({
+      query: ({ _id, todos }) => ({
+        url: `/task/todo/${_id}`,
+        method: "PUT",
+        body: todos,
+      }),
+      invalidatesTags: ["Task"],
+    }),
   }),
 });
 
@@ -158,4 +167,5 @@ export const {
   useTaskStatusMutation,
   useCommentOnTaskMutation,
   useDeleteTaskMutation,
+  useTodoTaskMutation,
 } = taskApiSlice;

@@ -19,7 +19,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
   const started = formatDateTime(task?.timeline?.startedAt!);
   const done = formatDateTime(task?.timeline?.doneAt!);
   const completed = formatDateTime(task?.timeline?.completedAt!);
-  const revision = task.timeline?.revisions.length !== 0;
+  const revision = task?.timeline?.revisions.length !== 0;
 
   const failedby = accounts?.find((acc) => acc.role === "QA Personnel");
   const startedby = accounts?.find((acc) => acc.role === "Task manager");

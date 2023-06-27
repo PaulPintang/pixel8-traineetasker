@@ -11,8 +11,15 @@ import {
 } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 import { useState } from "react";
+import { ITask } from "../../../interfaces/task.interface";
+import {
+  useGetAllTasksQuery,
+  useTodoTaskMutation,
+} from "../../../features/api/task/taskApiSlice";
 
 interface ModalProps {
+  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+  currentTask: ITask;
   add: boolean;
   toggle: () => void;
 }
@@ -22,13 +29,32 @@ interface ModalProps {
   toggle: () => void;
 }
 
-const AddTodoModal = ({ add, toggle }: ModalProps) => {
-  const [todo, setTodo] = useState<string>("");
-  const [todos, setTodos] = useState<string[]>([]);
+type Todo = {
+  isDone: boolean;
+  todo: string;
+};
+
+const AddTodoModal = ({ add, toggle, currentTask, setTodos }: ModalProps) => {
+  // const { refetch } = useGetAllTasksQuery();
+  const [todo, setTodo] = useState<Todo>({
+    isDone: false,
+    todo: "",
+  });
+  const [addedTodos, setAddedTodos] = useState<Todo[]>([]);
+  const [addTodo, { isLoading }] = useTodoTaskMutation();
 
   const handleAddTodo = () => {
-    setTodos([...todos, todo]);
-    setTodo("");
+    setAddedTodos([...addedTodos, todo]);
+    setTodo({ ...todo, todo: "" });
+  };
+
+  const handleSaveTodo = async () => {
+    const todos = [...currentTask.todos!, ...addedTodos];
+    const res: any = await addTodo({ _id: currentTask._id, todos });
+    toggle();
+    setTodo({ ...todo, todo: "" });
+    setAddedTodos([]);
+    setTodos(res.data);
   };
 
   return (
@@ -37,8 +63,8 @@ const AddTodoModal = ({ add, toggle }: ModalProps) => {
       opened={add}
       onClose={() => {
         toggle();
-        setTodo("");
-        setTodos([]);
+        setTodo({ ...todo, todo: "" });
+        setAddedTodos([]);
       }}
       title={
         <Text c="dark" fz="sm">
@@ -52,7 +78,7 @@ const AddTodoModal = ({ add, toggle }: ModalProps) => {
             Current Task:
           </Text>
           <Text fz={12} c="dimmed">
-            Dashboard Page
+            {currentTask?.taskname}
           </Text>
         </Group>
 
@@ -61,14 +87,14 @@ const AddTodoModal = ({ add, toggle }: ModalProps) => {
             autoComplete="off"
             placeholder="add todo"
             name="taskname"
-            value={todo}
-            onChange={(e) => setTodo(e.target.value)}
+            value={todo.todo}
+            onChange={(e) => setTodo({ ...todo, todo: e.target.value })}
             className="w-full"
           />
           <Button
             onClick={handleAddTodo}
             size="sm"
-            disabled={todo === "" ? true : false}
+            disabled={todo.todo === "" ? true : false}
           >
             Add
           </Button>
@@ -76,11 +102,11 @@ const AddTodoModal = ({ add, toggle }: ModalProps) => {
       </div>
 
       <div className="space-y-2 py-3">
-        {todos.map((todo, index) => (
+        {addedTodos.map((todo, index) => (
           <div>
             <div className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative">
               <Text c="dark" fz="sm" className="w-[80%]" py={4}>
-                {todo}
+                {todo.todo}
               </Text>
               <div className="absolute top-2 right-3">
                 <ActionIcon
@@ -88,7 +114,9 @@ const AddTodoModal = ({ add, toggle }: ModalProps) => {
                   variant="light"
                   radius="xl"
                   onClick={() =>
-                    setTodos((prev) => prev.filter((link, i) => i !== index))
+                    setAddedTodos((prev) =>
+                      prev.filter((link, i) => i !== index)
+                    )
                   }
                 >
                   <IconX size={16} />
@@ -116,13 +144,17 @@ const AddTodoModal = ({ add, toggle }: ModalProps) => {
         ))}
       </div>
 
-      {todos.length !== 0 && (
+      {addedTodos.length !== 0 && (
         <Flex>
           <Button
             variant="white"
             color="gray"
             mt="md"
-            onClick={toggle}
+            onClick={() => {
+              toggle();
+              setTodo({ ...todo, todo: "" });
+              setAddedTodos([]);
+            }}
             fullWidth
           >
             Cancel
@@ -130,10 +162,11 @@ const AddTodoModal = ({ add, toggle }: ModalProps) => {
 
           <Button
             mt="md"
-            // onClick={handleAddTask}
+            onClick={handleSaveTodo}
             fullWidth
             color="cyan"
             //   disabled={todo === "" ? true : false}
+            loading={isLoading}
           >
             Save
           </Button>

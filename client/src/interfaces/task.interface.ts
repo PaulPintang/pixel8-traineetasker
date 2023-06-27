@@ -18,8 +18,13 @@ export interface ITask {
     completedAt?: Date;
     revisions: string[];
   };
-  spent?: number;
-  todos?: string[];
+  spent?: string;
+  todos?: [
+    {
+      isDone: boolean;
+      todo: string;
+    }
+  ];
   createdAt?: Date;
   updatedAt?: Date;
 }
