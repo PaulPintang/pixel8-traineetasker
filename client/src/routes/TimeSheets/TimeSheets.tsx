@@ -76,18 +76,61 @@ const TimeSheets = () => {
         </td>
         <td className="py-2 hidden md:table-cell lg:table-cell ">
           <Text>
-            {sheet.status === "recorded" && (
+            {sheet.status === "recorded" ? (
+              <span>
+                {spent.totalSpent.hours !== 0 && `${spent.totalSpent.hours}hr`}
+                {spent.totalSpent.minutes !== 0 && (
+                  <>
+                    {spent.totalSpent.hours !== 0 && " "}
+                    {`${spent.totalSpent.minutes}min${
+                      spent.totalSpent.minutes !== 1 ? "s" : ""
+                    }`}
+                  </>
+                )}
+              </span>
+            ) : (
+              <Text fw="bold" fz="xs" fs="italic">
+                pending...
+              </Text>
+            )}
+            {/* {sheet.status === "recorded" && (
               <span>
                 {`${spent.totalSpent.hours}hrs`}{" "}
                 {`${spent.totalSpent.minutes}mins`}
               </span>
             )}
+
+            {sheet.morning?.start !== "" &&
+              sheet.status === "recording" &&
+              spent.morning.spent.hours +
+                "hrs" +
+                spent.morning.spent.minutes +
+                "mins"}
+
+            {sheet.afternoon?.start !== "" &&
+              sheet.status === "recording" &&
+              spent.afternoon.spent.hours +
+                "hrs" +
+                spent.afternoon.spent.minutes +
+                "mins"} */}
           </Text>
         </td>
         <td className="py-2 hidden md:table-cell lg:table-cell ">
-          <Text fw="bold" fz="xs">
-            {sheet.status}
-          </Text>
+          {sheet.status === "recorded" ? (
+            <Flex align="center" gap={8}>
+              <div className="bg-green-300 p-1"></div>
+              <Text
+                fz="sm"
+                className="text-gray-400  text-[10px] uppercase font-semibold "
+              >
+                recorded
+              </Text>
+            </Flex>
+          ) : (
+            <Text fz="xs" fw="bold">
+              {sheet.status}
+            </Text>
+          )}
         </td>
         <td className="dark:text-gray-400  hidden md:table-cell lg:table-cell">
           <Menu
@@ -194,8 +237,8 @@ const TimeSheets = () => {
   return (
     <>
       <Flex justify="space-between" pb={6} align="center">
-        {/* <TimeSheetsLabels /> */}
-        <ManageTaskLabels />
+        <TimeSheetsLabels />
+        {/* <ManageTaskLabels /> */}
         <Group className="" fz={12}>
           <Group spacing={8} c="dark">
             {inprogress?.length! > 1 && (
@@ -278,7 +321,7 @@ const TimeSheets = () => {
                   scope="col"
                   className=" hidden md:table-cell lg:table-cell py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
-                  <Text>Spent</Text>
+                  <Text>Total Spent</Text>
                 </th>
                 <th
                   scope="col"

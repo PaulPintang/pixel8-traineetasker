@@ -59,7 +59,7 @@ const InProgress = ({ toggle, setViewId }: Props) => {
             <Box>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Ticket:</Text>
-                <Text>143423423234</Text>
+                <Text>{task.ticketno}</Text>
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Added:</Text>
@@ -70,8 +70,8 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                 <Text>{formatDateTime(task.timeline?.startedAt!).date}</Text>
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
-                <Text>Assigned to:</Text>
-                <Text className="font-semibold">Paul Justine Pintang</Text>
+                <Text>Spent:</Text>
+                <Text>{task.spent! === "" ? "pending..." : task.spent}</Text>
               </Group>
             </Box>
           </Box>
