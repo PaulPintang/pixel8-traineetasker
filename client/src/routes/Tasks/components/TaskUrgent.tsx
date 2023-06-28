@@ -18,6 +18,7 @@ import {
 import { useState } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { ITask } from "../../../interfaces/task.interface";
+import { formatDateTime } from "../../../utils/formatDateTime";
 interface Props {
   tasks: ITask[];
   setViewId: Dispatch<SetStateAction<string | null>>;
@@ -105,39 +106,49 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
             <ScrollArea.Autosize mah={258} scrollbarSize={7}>
               {tasks
                 ?.filter((task) => task.status === "failed")
-                .map((task) => (
-                  <Menu.Item p={0} className="bg-white hover:bg-white">
-                    <Flex
-                      gap={5}
-                      className="hover:bg-slate-50 hover:opacity-80 transition-all rounded-md p-2 cursor-pointer"
-                      onClick={() => {
-                        toggle();
-                        setViewId(task._id!);
-                      }}
-                    >
-                      <IconExclamationCircle
-                        className="text-red-300 mt-[2px]"
-                        size={18}
-                      />
-                      <div className="text-xs flex flex-col gap-[1px]">
-                        <Text className="text-gray-700">
-                          Your ticket no. <b>{task.ticketno}</b> is failed!
-                        </Text>
-                        <Group spacing={10}>
-                          <Text className="text-gray-600  text-[11px] font-semibold">
-                            Task name:
+                .map((task) => {
+                  const dates = task.timeline?.revisions.map(
+                    (dateStr) => new Date(dateStr)
+                  );
+
+                  // Find the maximum date object using Math.max() and the spread operator
+                  const latest = new Date(Math.max(...dates));
+                  return (
+                    <Menu.Item p={0} className="bg-white hover:bg-white">
+                      <Flex
+                        gap={5}
+                        className="hover:bg-slate-50 hover:opacity-80 transition-all rounded-md p-2 cursor-pointer"
+                        onClick={() => {
+                          toggle();
+                          setViewId(task._id!);
+                        }}
+                      >
+                        <IconExclamationCircle
+                          className="text-red-300 mt-[2px]"
+                          size={18}
+                        />
+                        <div className="text-xs flex flex-col gap-[1px]">
+                          <Text className="text-gray-700">
+                            Your ticket no. <b>{task.ticketno}</b> is failed!
                           </Text>
-                          <Text className="text-gray-600  text-[11px]">
-                            {task.taskname}
+                          <Group spacing={10}>
+                            <Text className="text-gray-600  text-[11px] font-semibold">
+                              Task name:
+                            </Text>
+                            <Text className="text-gray-600  text-[11px]">
+                              {task.taskname}
+                            </Text>
+                          </Group>
+                          <Text className="text-gray-500  text-[11px]">
+                            {formatDateTime(latest).date +
+                              " at " +
+                              formatDateTime(latest).time}
                           </Text>
-                        </Group>
-                        <Text className="text-gray-500  text-[11px]">
-                          December 12, 2022 at 09:05 AM
-                        </Text>
-                      </div>
-                    </Flex>
-                  </Menu.Item>
-                ))}
+                        </div>
+                      </Flex>
+                    </Menu.Item>
+                  );
+                })}
             </ScrollArea.Autosize>
           </Tabs.Panel>
         </Tabs>

@@ -153,10 +153,18 @@ export const updateTaskStatus = asyncHandler(
         return total + afternoonHours * 60 + afternoonMinutes;
       }, 0);
 
+      // Extract existing hours and minutes from the existing spent time in the database
+      const hoursMatch = taskonsheet.spent.match(/(\d+)hr/);
+      const minutesMatch = taskonsheet.spent.match(/(\d+)mins?/);
+
+      const existingHours = hoursMatch ? hoursMatch[1] : "0";
+      const existingMinutes = minutesMatch ? minutesMatch[1] : "0";
+
       let spent = "";
-      let totalHours = 0;
-      let totalMinutes = 0;
-      totalMinutes = totalMorningSpentTime + totalAfternoonSpentTime;
+      let totalHours = parseInt(existingHours);
+      let totalMinutes = parseInt(existingMinutes);
+
+      totalMinutes += totalMorningSpentTime + totalAfternoonSpentTime;
 
       // Handle carry-over from minutes to hours
       if (totalMinutes >= 60) {

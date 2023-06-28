@@ -162,13 +162,11 @@ const DailyTimeRecord = () => {
       ? true
       : false;
   const isTimeOut =
-    today?.morning?.out === "" && schedule.morning.out === 12
+    today?.morning?.out === "" && schedule.morning.out === currentHour
       ? true
       : today?.afternoon?.out === "" && schedule.afternoon.out === currentHour
       ? true
       : false;
-
-  console.log(currentHour);
 
   return (
     <>

@@ -94,7 +94,9 @@ const Header = () => {
     <Flex justify="space-between" align="center">
       <Image src={logo} width={205} className="relative" left={-20} />
       <Group
-        spacing={user?.role === "admin" || user?.role === "supervisor" ? 15 : 7}
+        spacing={
+          user?.role === "admin" || user?.role === "supervisor" ? 15 : 15
+        }
       >
         {user && user?.role !== "admin" && pathname === "/" && (
           <NavLink to="dashboard" className="text-white">

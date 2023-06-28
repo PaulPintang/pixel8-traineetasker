@@ -101,8 +101,10 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   Completed
                 </Text>
-                {tasks?.filter((task) => task.status === "completed").length}
-                <Text></Text>
+
+                <Text>
+                  {tasks?.filter((task) => task.status === "completed").length}
+                </Text>
               </>
             ) : (
               <>

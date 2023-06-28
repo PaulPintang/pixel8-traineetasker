@@ -66,7 +66,7 @@ const ForQa = ({ toggle, setViewId }: Props) => {
                 <Text>Wednesday, June 07 2023</Text>
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
-                <Text>Spent:</Text>
+                <Text>Total spent:</Text>
                 <Text fw="bold">{task.spent}</Text>
               </Group>
             </Box>
