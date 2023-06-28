@@ -95,7 +95,8 @@ export const updateDtr = asyncHandler(
       );
       if (index !== -1) {
         if (records[index].morning.out === "") {
-          records[index].morning.out = format.time;
+          records[index].morning.out = "12:00 PM";
+          // records[index].morning.out = format.time;
           const startHour = records[index].morning.in.split(":")[0];
           const endHour = records[index].morning.out.split(":")[0];
 
@@ -111,14 +112,16 @@ export const updateDtr = asyncHandler(
           const hoursSpent = Math.floor(timeDiff / (1000 * 60 * 60)); // Convert milliseconds to hours
           const hours = {
             rendered: trainee.hours.rendered + hoursSpent,
-            pending:
-              trainee.hours.ojtHours - trainee.hours.rendered + hoursSpent,
+            pending: trainee.hours.ojtHours - hoursSpent,
           };
 
           await Trainee.findByIdAndUpdate(
             trainee._id,
             {
-              hours,
+              hours: {
+                ...trainee.hours,
+                ...hours,
+              },
             },
             {
               new: true,
@@ -150,14 +153,16 @@ export const updateDtr = asyncHandler(
           const hoursSpent = Math.floor(timeDiff / (1000 * 60 * 60)); // Convert milliseconds to hours
           const hours = {
             rendered: trainee.hours.rendered + hoursSpent,
-            pending:
-              trainee.hours.ojtHours - trainee.hours.rendered + hoursSpent,
+            pending: trainee.hours.ojtHours - hoursSpent,
           };
 
           await Trainee.findByIdAndUpdate(
             trainee._id,
             {
-              hours,
+              hours: {
+                ...trainee.hours,
+                ...hours,
+              },
             },
             {
               new: true,
