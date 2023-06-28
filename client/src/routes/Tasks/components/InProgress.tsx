@@ -82,27 +82,29 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                 <Text>Started:</Text>
                 <Text>{formatDateTime(task.timeline?.startedAt!).date}</Text>
               </Group>
-              <Group className="text-gray-500" fz="xs" spacing={8}>
-                {task.timeline?.revisions.length !== 0 ? (
-                  <Text>Revision time: </Text>
-                ) : (
-                  <Text>On timesheet: </Text>
-                )}
-                <Text fw="bold">
-                  {" "}
-                  +{" "}
-                  {spent.totalSpent.hours === 1
-                    ? spent.totalSpent.hours + "hr"
-                    : spent.totalSpent.hours > 1
-                    ? spent.totalSpent.hours + "hrs"
-                    : spent.totalSpent.hours === 0 && ""}
-                  {spent.totalSpent.minutes === 1
-                    ? spent.totalSpent.minutes + "min"
-                    : spent.totalSpent.minutes > 1
-                    ? spent.totalSpent.minutes + "mins"
-                    : spent.totalSpent.minutes === 0 && ""}
-                </Text>
-              </Group>
+              {sheet?.status === "recording" && (
+                <Group className="text-gray-500" fz="xs" spacing={8}>
+                  {task.timeline?.revisions.length !== 0 ? (
+                    <Text>Revision time: </Text>
+                  ) : (
+                    <Text>On timesheet: </Text>
+                  )}
+                  <Text fw="bold">
+                    {" "}
+                    +{" "}
+                    {spent.totalSpent.hours === 1
+                      ? spent.totalSpent.hours + "hr"
+                      : spent.totalSpent.hours > 1
+                      ? spent.totalSpent.hours + "hrs"
+                      : spent.totalSpent.hours === 0 && ""}
+                    {spent.totalSpent.minutes === 1
+                      ? spent.totalSpent.minutes + "min"
+                      : spent.totalSpent.minutes > 1
+                      ? spent.totalSpent.minutes + "mins"
+                      : spent.totalSpent.minutes === 0 && ""}
+                  </Text>
+                </Group>
+              )}
               {task.spent !== "" && (
                 <Group className="text-gray-500" fz="xs" spacing={8}>
                   <Text>Recorded spent: </Text>

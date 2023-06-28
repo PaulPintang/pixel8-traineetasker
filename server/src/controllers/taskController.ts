@@ -161,8 +161,9 @@ export const updateTaskStatus = asyncHandler(
       const existingMinutes = minutesMatch ? minutesMatch[1] : "0";
 
       let spent = "";
-      let totalHours = parseInt(existingHours);
-      let totalMinutes = parseInt(existingMinutes);
+      let totalHours = taskonsheet.spent === "" ? 0 : parseInt(existingHours);
+      let totalMinutes =
+        taskonsheet.spent === "" ? 0 : parseInt(existingMinutes);
 
       totalMinutes += totalMorningSpentTime + totalAfternoonSpentTime;
 

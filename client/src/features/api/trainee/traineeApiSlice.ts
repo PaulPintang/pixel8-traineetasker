@@ -56,7 +56,7 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
         url: "/trainee/dtr/inout",
         method: "PUT",
       }),
-      invalidatesTags: ["Trainee"],
+      invalidatesTags: ["Trainee", "Task"],
     }),
   }),
 });
