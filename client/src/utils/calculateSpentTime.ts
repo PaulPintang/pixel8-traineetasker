@@ -68,6 +68,13 @@ export const calculateSpentTime = (time: TimeSpent) => {
   } else if (time.afternoon?.start === "" && time.afternoon.end === "") {
     totalSpentHours = morningHours;
     totalSpentMinutes = morningMinutes;
+  } else if (
+    time.afternoon?.start !== "" &&
+    time.morning?.end !== "" &&
+    time.afternoon?.end === ""
+  ) {
+    totalSpentHours = morningHours + afternoonHours;
+    totalSpentMinutes = morningMinutes + afternoonMinutes;
   }
 
   if (totalSpentMinutes >= 60) {
