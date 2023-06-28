@@ -18,7 +18,6 @@ import {
 } from "../../../features/api/task/taskApiSlice";
 
 interface ModalProps {
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
   currentTask: ITask;
   add: boolean;
   toggle: () => void;
@@ -34,7 +33,7 @@ type Todo = {
   todo: string;
 };
 
-const AddTodoModal = ({ add, toggle, currentTask, setTodos }: ModalProps) => {
+const AddTodoModal = ({ add, toggle, currentTask }: ModalProps) => {
   // const { refetch } = useGetAllTasksQuery();
   const [todo, setTodo] = useState<Todo>({
     isDone: false,
@@ -50,11 +49,10 @@ const AddTodoModal = ({ add, toggle, currentTask, setTodos }: ModalProps) => {
 
   const handleSaveTodo = async () => {
     const todos = [...currentTask.todos!, ...addedTodos];
-    const res: any = await addTodo({ _id: currentTask._id, todos });
+    await addTodo({ _id: currentTask._id, todos });
     toggle();
     setTodo({ ...todo, todo: "" });
     setAddedTodos([]);
-    setTodos(res.data);
   };
 
   return (

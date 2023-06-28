@@ -279,12 +279,14 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
               )}
             </Text>
           </Group>
-          <Group align="flex-start">
-            <Text className="w-1/4" c="dimmed" fz="sm">
-              Spent
-            </Text>
-            <Text fz="sm">{task?.spent}</Text>
-          </Group>
+          {task?.spent !== "" && (
+            <Group align="flex-start">
+              <Text className="w-1/4" c="dimmed" fz="sm">
+                Spent
+              </Text>
+              <Text fz="sm">{task?.spent}</Text>
+            </Group>
+          )}
         </div>
 
         <Tabs defaultValue="second" pt={10} color="cyan">

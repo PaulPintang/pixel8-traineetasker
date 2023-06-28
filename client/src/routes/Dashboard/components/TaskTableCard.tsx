@@ -19,6 +19,8 @@ import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
 // import { tasks } from "../../../data/tasks";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { useAppSelector } from "../../../app/hooks";
+import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
+import { calculateSpentTime } from "../../../utils/calculateSpentTime";
 
 const TaskTableCard = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -31,6 +33,15 @@ const TaskTableCard = () => {
   // const data = tasks?.filter((task) =>
   //   filterBy ? task.status === filterBy && task.assign === user?.name : task
   // );
+  const { data: trainee } = useGetTraineeProfileQuery();
+
+  const sheet = trainee?.timesheet.find((task) => task.status === "recording");
+  const time = {
+    status: sheet?.status!,
+    morning: sheet?.morning,
+    afternoon: sheet?.afternoon,
+  };
+  const spent = calculateSpentTime(time);
 
   const data = tasks?.filter((task) =>
     filterBy
@@ -42,66 +53,92 @@ const TaskTableCard = () => {
 
   const items = chunk(data, 5);
 
-  const rows = items[page - 1]?.map((task) => (
-    <tr>
-      <td className=" md:table-cell lg:table-cell pl-3">
-        <Text>{task.taskname}</Text>
-      </td>
-      <td className=" md:table-cell lg:table-cell">
-        <Text>{task.ticketno}</Text>
-      </td>
-      <td className="px-5 py-2  md:table-cell lg:table-cell ">
-        <Text>{task.spent}</Text>
-      </td>
-      <td className=" py-2  md:table-cell lg:table-cell">
-        <div className="flex bg-gray-100  rounded items-center max-w-max px-2 py-1 gap-2">
-          <div
-            className={`w-2 h-2 ${
-              task.status === "new"
-                ? "bg-indigo-300"
-                : task.status === "inprogress"
-                ? "bg-violet-400"
-                : task.status === "completed"
-                ? "bg-green-300"
-                : task.status === "forqa"
-                ? "bg-yellow-300"
-                : "bg-red-300"
-            }`}
-          ></div>
-          <Text
-            fw="bold"
-            className={`text-[10px] ${
-              task.status === "new"
-                ? "text-indigo-300"
-                : task.status === "inprogress"
-                ? "text-violet-400"
-                : task.status === "completed"
-                ? "text-green-300"
-                : task.status === "forqa"
-                ? "text-yellow-300"
-                : "text-red-300"
-            }`}
-          >
-            {task.status}
+  const rows = items[page - 1]?.map((task) => {
+    // Extract hours and minutes
+    // const hours = task.spent !== "" ? parseInt(task.spent!.split("hrs")[0]) : 0;
+    // const minutes =
+    //   task.spent !== ""
+    //     ? parseInt(task.spent!.split("hrs")[1].replace("mins", ""))
+    //     : 0;
+
+    return (
+      <tr>
+        <td className=" md:table-cell lg:table-cell pl-3">
+          <Text>{task.taskname}</Text>
+        </td>
+        <td className=" md:table-cell lg:table-cell">
+          <Text>{task.ticketno}</Text>
+        </td>
+        <td className="px-5 py-2  md:table-cell lg:table-cell ">
+          <Text>
+            {task.spent !== "" ? (
+              task.spent
+            ) : (
+              <span>
+                {spent.totalSpent.hours === 1
+                  ? spent.totalSpent.hours + "hr"
+                  : spent.totalSpent.hours > 1
+                  ? spent.totalSpent.hours + "hrs"
+                  : spent.totalSpent.hours === 0 && ""}
+                {spent.totalSpent.minutes === 1
+                  ? spent.totalSpent.minutes + "min"
+                  : spent.totalSpent.minutes > 1
+                  ? spent.totalSpent.minutes + "mins"
+                  : spent.totalSpent.minutes === 0 && ""}
+              </span>
+            )}
           </Text>
-        </div>
-      </td>
-      <td className="dark:text-gray-400   md:table-cell lg:table-cell">
-        <Button
-          onClick={() => {
-            toggle();
-            setViewId(task._id!);
-          }}
-          leftIcon={<IconInfoCircle size={16} />}
-          variant="white"
-          color="cyan"
-          size="xs"
-        >
-          View
-        </Button>
-      </td>
-    </tr>
-  ));
+        </td>
+        <td className=" py-2  md:table-cell lg:table-cell">
+          <div className="flex bg-gray-100  rounded items-center max-w-max px-2 py-1 gap-2">
+            <div
+              className={`w-2 h-2 ${
+                task.status === "new"
+                  ? "bg-indigo-300"
+                  : task.status === "inprogress"
+                  ? "bg-violet-400"
+                  : task.status === "completed"
+                  ? "bg-green-300"
+                  : task.status === "forqa"
+                  ? "bg-yellow-300"
+                  : "bg-red-300"
+              }`}
+            ></div>
+            <Text
+              fw="bold"
+              className={`text-[10px] ${
+                task.status === "new"
+                  ? "text-indigo-300"
+                  : task.status === "inprogress"
+                  ? "text-violet-400"
+                  : task.status === "completed"
+                  ? "text-green-300"
+                  : task.status === "forqa"
+                  ? "text-yellow-300"
+                  : "text-red-300"
+              }`}
+            >
+              {task.status}
+            </Text>
+          </div>
+        </td>
+        <td className="dark:text-gray-400   md:table-cell lg:table-cell">
+          <Button
+            onClick={() => {
+              toggle();
+              setViewId(task._id!);
+            }}
+            leftIcon={<IconInfoCircle size={16} />}
+            variant="white"
+            color="cyan"
+            size="xs"
+          >
+            View
+          </Button>
+        </td>
+      </tr>
+    );
+  });
 
   return (
     <>

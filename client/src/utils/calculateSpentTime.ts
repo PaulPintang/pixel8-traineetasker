@@ -37,6 +37,9 @@ export const calculateSpentTime = (time: TimeSpent) => {
     }`
   );
 
+  // const morningTimeDiff = Math.abs(
+  //   time.morning?.end !== "" ? morningEnd.getTime() - morningStart.getTime() :
+  // );
   const morningTimeDiff = Math.abs(
     morningEnd.getTime() - morningStart.getTime()
   );
@@ -54,15 +57,15 @@ export const calculateSpentTime = (time: TimeSpent) => {
 
   if (
     time.status === "recorded" &&
-    time.morning?.end &&
+    time.morning?.end !== "" &&
     time.afternoon?.end !== ""
   ) {
     totalSpentHours = morningHours + afternoonHours;
     totalSpentMinutes = morningMinutes + afternoonMinutes;
-  } else if (time.morning?.end === "") {
+  } else if (time.morning?.end === "" && time.morning.start === "") {
     totalSpentHours = afternoonHours;
     totalSpentMinutes = afternoonMinutes;
-  } else if (time.afternoon?.start === "") {
+  } else if (time.afternoon?.start === "" && time.afternoon.end === "") {
     totalSpentHours = morningHours;
     totalSpentMinutes = morningMinutes;
   }

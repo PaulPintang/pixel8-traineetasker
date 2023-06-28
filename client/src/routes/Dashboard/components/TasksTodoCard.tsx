@@ -21,7 +21,7 @@ import {
   useTodoTaskMutation,
 } from "../../../features/api/task/taskApiSlice";
 import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 type Todo = {
   isDone: boolean;
@@ -35,36 +35,35 @@ const TasksTodoCard = () => {
 
   const [add, { toggle }] = useDisclosure();
   const currentTask = tasks?.find((task) => task.status === "inprogress");
-  const [todos, setTodos] = useState<Todo[]>(currentTask?.todos!);
 
   const removeTodo = async (index: number) => {
-    const res: any = await taskTodo({
+    await taskTodo({
       _id: currentTask?._id,
-      todos: todos.filter((link, i) => i !== index),
+      todos: currentTask?.todos?.filter((link, i) => i !== index),
     });
-    setTodos(res.data);
+    // setTodos(res.data);
   };
 
   const isTodoDone = async (index: number) => {
-    const updatedTodos = todos.map((todo, i) => {
+    const updatedTodos = currentTask?.todos?.map((todo, i) => {
       if (i === index) {
         return { ...todo, isDone: !todo.isDone }; // Toggle the isDone property
       }
       return todo;
     });
 
-    const res: any = await taskTodo({
+    await taskTodo({
       _id: currentTask?._id,
       todos: updatedTodos,
     });
 
-    setTodos(res.data);
+    // setTodos(res.data);
   };
 
   return (
     <>
       <Card className="h-full rounded-md shadow-md ">
-        {todos.length !== 0 ? (
+        {currentTask?.todos?.length !== 0 ? (
           <>
             <Group spacing={10} pb={5}>
               <Text fz="sm" className="text-gray-500 font-semibold">
@@ -84,7 +83,7 @@ const TasksTodoCard = () => {
             </Flex>
             <ScrollArea.Autosize mah={220} scrollbarSize={8}>
               <div className="space-y-3 ">
-                {todos?.map((todo, index) => (
+                {currentTask?.todos?.map((todo, index) => (
                   <div className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative">
                     <Text c="dark" fz="xs" className="w-[80%]" py={4}>
                       <span
@@ -128,12 +127,7 @@ const TasksTodoCard = () => {
           </Flex>
         )}
       </Card>
-      <AddTodoModal
-        add={add}
-        toggle={toggle}
-        currentTask={currentTask!}
-        setTodos={setTodos}
-      />
+      <AddTodoModal add={add} toggle={toggle} currentTask={currentTask!} />
     </>
   );
 };
