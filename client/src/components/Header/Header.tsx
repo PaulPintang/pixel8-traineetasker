@@ -104,7 +104,7 @@ const Header = () => {
           </NavLink>
         )}
 
-        {user && user?.role !== "admin" && user.course && (
+        {user && user?.role !== "admin" && user.course && pathname !== "/" && (
           <Badge color="teal" variant="dot" className="text-gray-700">
             <Group spacing={4}>
               <Text className="capitalize">{user.course}</Text>
