@@ -8,10 +8,4 @@ export const initialTask: ITask = {
   status: "new",
   assign: "",
   spent: "",
-  todos: [
-    {
-      isDone: false,
-      todo: "test",
-    },
-  ],
 };

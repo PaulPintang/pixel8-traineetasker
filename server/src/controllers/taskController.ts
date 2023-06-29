@@ -229,6 +229,7 @@ export const addTask = asyncHandler(
         deliverable,
         course: supervisor.course,
         comments: [],
+        todos: [],
       });
       res.json(task);
     } else {
