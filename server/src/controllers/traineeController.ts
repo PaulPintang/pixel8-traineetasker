@@ -36,7 +36,13 @@ export const addTrainee = asyncHandler(
         role: "trainee",
         timesheet: [],
       });
-      await Trainee.create({ ...req.body });
+      await Trainee.create({
+        ...req.body,
+        hours: {
+          ...req.body.hours,
+          pending: req.body.hours.ojtHours,
+        },
+      });
       res.json(user);
     } else {
       res.json(401);
@@ -105,7 +111,7 @@ export const updateDtr = asyncHandler(
           const hoursSpent = Math.floor(timeDiff / (1000 * 60 * 60)); // Convert milliseconds to hours
           const hours = {
             rendered: trainee.hours.rendered + hoursSpent,
-            pending: trainee.hours.ojtHours - hoursSpent,
+            pending: trainee.hours.pending - hoursSpent,
           };
           await Trainee.findByIdAndUpdate(
             trainee._id,
@@ -183,7 +189,7 @@ export const updateDtr = asyncHandler(
           const hoursSpent = Math.floor(timeDiff / (1000 * 60 * 60)); // Convert milliseconds to hours
           const hours = {
             rendered: trainee.hours.rendered + hoursSpent,
-            pending: trainee.hours.ojtHours - hoursSpent,
+            pending: trainee.hours.pending - hoursSpent,
           };
           await Trainee.findByIdAndUpdate(
             trainee._id,

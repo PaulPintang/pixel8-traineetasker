@@ -91,7 +91,6 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                   )}
                   <Text fw="bold">
                     {" "}
-                    +{" "}
                     {spent.totalSpent.hours === 1
                       ? spent.totalSpent.hours + "hr"
                       : spent.totalSpent.hours > 1

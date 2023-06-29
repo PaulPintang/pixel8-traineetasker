@@ -13,6 +13,8 @@ import { JoinRoom, socket } from "../utils/socketConnect";
 
 const RootLayout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { pathname } = location;
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const { data: account, isLoading, isSuccess } = useRefetchQuery();
@@ -34,9 +36,14 @@ const RootLayout = () => {
         <StepperInfo />
       ) : (
         <>
-          {user && <Navigation />}
+          {user && pathname !== "/" && <Navigation />}
           <Suspense>
-            <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]">
+            {/* <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]"> */}
+            <div
+              className={`bg-opacity-30 w-full px-4 pt-[18px] ${
+                pathname !== "/" ? "bg-slate-50" : ""
+              }`}
+            >
               <Outlet />
             </div>
           </Suspense>

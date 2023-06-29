@@ -163,7 +163,7 @@ const TaskTableCard = () => {
                   scope="col"
                   className=" md:table-cell lg:table-cell px-5 py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
-                  <Text>Spent</Text>
+                  <Text>Total spent</Text>
                 </th>
 
                 <th
