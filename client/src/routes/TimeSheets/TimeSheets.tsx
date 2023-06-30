@@ -225,39 +225,46 @@ const TimeSheets = () => {
                 />
               </>
             )}
-            <>
-              {/* hide if sheet not started and inprogress task is more than one */}
-              <Text fw="bold">Current task:</Text>
-              <Popover position="bottom" withArrow shadow="md" opened={opened}>
-                <Popover.Target>
-                  <Text
-                    c="dimmed"
-                    className="cursor-pointer hover:text-gray-400 transition-all"
-                    onMouseEnter={open}
-                    onMouseLeave={close}
-                  >
-                    {oldtask?.ticketno}
-                  </Text>
-                </Popover.Target>
-                <Popover.Dropdown sx={{ pointerEvents: "none" }}>
-                  <Box component="div">
-                    <Text fw="bold" c="dark" fz="sm" pb={5}>
-                      {oldtask?.taskname}
+            {inprogress?.length !== 0 && (
+              <>
+                {/* hide if sheet not started and inprogress task is more than one */}
+                <Text fw="bold">Current task:</Text>
+                <Popover
+                  position="bottom"
+                  withArrow
+                  shadow="md"
+                  opened={opened}
+                >
+                  <Popover.Target>
+                    <Text
+                      c="dimmed"
+                      className="cursor-pointer hover:text-gray-400 transition-all"
+                      onMouseEnter={open}
+                      onMouseLeave={close}
+                    >
+                      {oldtask?.ticketno}
                     </Text>
-                    <Group className="text-gray-500" fz="xs" spacing={8}>
-                      <Text>Added:</Text>
-                      <Text>{formatDateTime(oldtask?.createdAt!).date}</Text>
-                    </Group>
-                    <Group className="text-gray-500" fz="xs" spacing={8}>
-                      <Text>Started:</Text>
-                      <Text>
-                        {formatDateTime(oldtask?.timeline?.startedAt!).date}
+                  </Popover.Target>
+                  <Popover.Dropdown sx={{ pointerEvents: "none" }}>
+                    <Box component="div">
+                      <Text fw="bold" c="dark" fz="sm" pb={5}>
+                        {oldtask?.taskname}
                       </Text>
-                    </Group>
-                  </Box>
-                </Popover.Dropdown>
-              </Popover>
-            </>
+                      <Group className="text-gray-500" fz="xs" spacing={8}>
+                        <Text>Added:</Text>
+                        <Text>{formatDateTime(oldtask?.createdAt!).date}</Text>
+                      </Group>
+                      <Group className="text-gray-500" fz="xs" spacing={8}>
+                        <Text>Started:</Text>
+                        <Text>
+                          {formatDateTime(oldtask?.timeline?.startedAt!).date}
+                        </Text>
+                      </Group>
+                    </Box>
+                  </Popover.Dropdown>
+                </Popover>
+              </>
+            )}
           </Group>
 
           {/* show if inporgress task is more than one */}

@@ -90,7 +90,11 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                     <Text>On timesheet: </Text>
                   )}
                   <Text fw="bold">
-                    {" "}
+                    {task.timeline?.revisions.length !== 0 ? (
+                      <span>+ </span>
+                    ) : (
+                      ""
+                    )}
                     {spent.totalSpent.hours === 1
                       ? spent.totalSpent.hours + "hr"
                       : spent.totalSpent.hours > 1
@@ -104,11 +108,13 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                   </Text>
                 </Group>
               )}
-              {task.spent !== "" && (
+              {task.timeline?.revisions.length !== 0 ? (
                 <Group className="text-gray-500" fz="xs" spacing={8}>
                   <Text>Recorded spent: </Text>
                   <Text fw="bold">{task.spent}</Text>
                 </Group>
+              ) : (
+                ""
               )}
             </Box>
           </Box>

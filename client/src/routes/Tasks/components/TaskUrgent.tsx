@@ -13,6 +13,7 @@ import {
   IconCircleCheckFilled,
   IconClockPause,
   IconExclamationCircle,
+  IconPlaystationSquare,
   IconUrgent,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -77,13 +78,13 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                         setViewId(task._id!);
                       }}
                     >
-                      <IconCircleCheckFilled
-                        className="text-green-300 mt-[2px]"
+                      <IconPlaystationSquare
+                        className="text-yellow-300 mt-[2px]"
                         size={18}
                       />
                       <div className="text-xs flex flex-col gap-[1px]">
                         <Text className="text-gray-700">
-                          Your ticket no. <b>{task.ticketno}</b> is completed!
+                          Your ticket no. <b>{task.ticketno}</b> is pending!
                         </Text>
                         <Group spacing={10}>
                           <Text className="text-gray-600  text-[11px] font-semibold">
@@ -93,9 +94,17 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                             {task.taskname}
                           </Text>
                         </Group>
-                        <Text className="text-gray-500  text-[11px]">
+                        <Group spacing={10}>
+                          <Text className="text-gray-600  text-[11px] font-semibold">
+                            Recorded spent:
+                          </Text>
+                          <Text className="text-gray-600  text-[11px]">
+                            {task.spent}
+                          </Text>
+                        </Group>
+                        {/* <Text className="text-gray-500  text-[11px]">
                           December 12, 2022 at 09:05 AM
-                        </Text>
+                        </Text> */}
                       </div>
                     </Flex>
                   </Menu.Item>

@@ -134,12 +134,12 @@ const Header = () => {
         {user ? (
           <Menu shadow="md" position="bottom-end">
             <Menu.Target>
-              <ActionIcon radius="xl" size={38} variant="transparent">
+              <ActionIcon radius="xl" size={38}>
                 <Avatar
                   radius={100}
                   src={user?.picture}
                   alt=""
-                  size={38}
+                  size={36}
                   imageProps={{ referrerPolicy: "no-referrer" }}
                 />
               </ActionIcon>

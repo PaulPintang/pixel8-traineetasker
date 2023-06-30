@@ -6,7 +6,8 @@ const Documentation = () => {
     <Stack align="center" className="text-center" spacing={60}>
       <div className="max-w-[799px] mx-auto">
         <Title fz={45} className="mx-auto">
-          Unleash Your Potential with Efficient Task Management
+          {/* Unleash Your Potential with Efficient Task Management */}
+          Empowering Tomorrow's Professionals
         </Title>
         <Text c="dimmed" className="max-w-[590px] mx-auto pt-2">
           Welcome to our platform, where your dreams take flight! We aim to
