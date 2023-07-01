@@ -66,7 +66,7 @@ const TaskTableCard = () => {
         <td className=" md:table-cell lg:table-cell pl-3">
           <Text>{task.taskname}</Text>
         </td>
-        <td className=" md:table-cell lg:table-cell">
+        <td className="hidden md:table-cell lg:table-cell">
           <Text>{task.ticketno}</Text>
         </td>
         <td className="px-5 py-2  md:table-cell lg:table-cell ">
@@ -89,7 +89,7 @@ const TaskTableCard = () => {
             )}
           </Text>
         </td>
-        <td className=" py-2  md:table-cell lg:table-cell">
+        <td className=" py-2 hidden md:table-cell lg:table-cell">
           <div className="flex bg-gray-100  rounded items-center max-w-max px-2 py-1 gap-2">
             <div
               className={`w-2 h-2 ${
@@ -155,7 +155,7 @@ const TaskTableCard = () => {
                 </th>
                 <th
                   scope="col"
-                  className="rounded-tr-md md:rounded-none lg:rounded-none py-3 md:pr-3 lg:pr-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm"
+                  className="hidden  md:table-cell lg:table-cell rounded-tr-md md:rounded-none lg:rounded-none py-3 md:pr-3 lg:pr-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm"
                 >
                   <Text>Ticket No.</Text>
                 </th>
@@ -168,7 +168,7 @@ const TaskTableCard = () => {
 
                 <th
                   scope="col"
-                  className="  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="hidden  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
                   <Text>Status</Text>
                 </th>

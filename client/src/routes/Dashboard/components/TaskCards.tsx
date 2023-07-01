@@ -165,7 +165,7 @@ const TaskCards = () => {
             {user?.role === "trainee" || pathname.includes("profile") ? (
               <>
                 <Text fz={13} c="dimmed">
-                  Pending hours
+                  Pending
                 </Text>
                 <Text>{trainee?.hours?.pending}</Text>
               </>
@@ -196,7 +196,7 @@ const TaskCards = () => {
             {user?.role === "trainee" || pathname.includes("profile") ? (
               <>
                 <Text fz={13} c="dimmed">
-                  Rendered hours
+                  Rendered
                 </Text>
                 <Text>{trainee?.hours?.rendered}</Text>
               </>

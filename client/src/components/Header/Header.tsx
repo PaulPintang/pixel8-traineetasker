@@ -93,7 +93,7 @@ const Header = () => {
   return (
     <Flex justify="space-between" align="center">
       <NavLink to="/" className="text-white">
-        <div className="w-[160px] md:w-[200px] lg:w-[200px]">
+        <div className="w-[160px] md:w-[180px] lg:w-[180px]">
           <Image src={logo} className="relative" left={-20} />
           {/* <Image src={logo} width={205} className="relative" left={-20} /> */}
         </div>

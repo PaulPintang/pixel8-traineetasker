@@ -25,20 +25,20 @@ const Dashboard = () => {
   return (
     <>
       <Grid pb={5}>
-        <Grid.Col className="space-y-1" span={8}>
+        <Grid.Col className="space-y-1" md={8} lg={8} sm="auto">
           <TasksLabels />
           <TaskCards />
         </Grid.Col>
-        <Grid.Col span={4}>
+        <Grid.Col lg={4} md={4} sm="auto">
           <InfoCard />
         </Grid.Col>
 
         {user?.role === "trainee" ? (
           <>
-            <Grid.Col span={8}>
+            <Grid.Col md={8} lg={8} sm="auto">
               <TaskTableCard />
             </Grid.Col>
-            <Grid.Col className="bg-bl ue-300" span={4}>
+            <Grid.Col className="bg-bl ue-300" md={4} lg={4} sm="auto">
               <TasksTodoCard />
             </Grid.Col>
           </>

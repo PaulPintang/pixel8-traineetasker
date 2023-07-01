@@ -1,4 +1,12 @@
-import { Button, Flex, Group, Text, Avatar, Tooltip } from "@mantine/core";
+import {
+  Button,
+  Flex,
+  Group,
+  Text,
+  Avatar,
+  Tooltip,
+  ScrollArea,
+} from "@mantine/core";
 import {
   IconPhoto,
   IconMessageCircle,
@@ -24,6 +32,7 @@ const Navigation = () => {
 
   return (
     <Flex justify="space-between" align="center">
+      {/* <ScrollArea w={340} className="bg-red-400"> */}
       <Group spacing={0}>
         <NavLink to="dashboard" className="text-gray-700">
           <Button
@@ -96,7 +105,8 @@ const Navigation = () => {
           </>
         )}
       </Group>
-      <Group>
+      {/* </ScrollArea> */}
+      <Group className="hidden md:flex lg:flex">
         <Group spacing={10}>
           <Text fz="xs" className="text-gray-800 font-semibold">
             Schedule:

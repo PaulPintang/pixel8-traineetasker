@@ -1,8 +1,18 @@
-import { Card, Text, Flex, Group, Button, Pagination } from "@mantine/core";
+import {
+  Card,
+  Text,
+  Flex,
+  Group,
+  Button,
+  Pagination,
+  ActionIcon,
+  Menu,
+  Stack,
+} from "@mantine/core";
 import { chunk } from "lodash";
 import { useEffect, useState } from "react";
 import { TimeSheetsLabels } from "../../components/ColorLabels";
-import { IconClock } from "@tabler/icons-react";
+import { IconClock, IconDots } from "@tabler/icons-react";
 import { checkTime } from "../../utils/checkTime";
 import {
   useAddDtrMutation,
@@ -135,7 +145,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
 
   const rows = items[page - 1]?.map((record: IDtr) => (
     <tr className="border-none ">
-      <td className="hidden md:table-cell lg:table-cell pl-3">
+      <td className=" md:table-cell lg:table-cell pl-3">
         <Text>
           {formatDateTime(record.date!).date === date.toDateString()
             ? "Today"
@@ -160,10 +170,58 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
           </Group>
         </Flex>
       </td>
-      <td className="py-2 hidden md:table-cell lg:table-cell ">
+      <td className="py-2  md:table-cell lg:table-cell ">
         <Text fw="bold" fz="xs">
           {record.status}
         </Text>
+      </td>
+      <td className="py-2 table-cell  md:hidden lg:hidden ">
+        <Menu
+          shadow="md"
+          transitionProps={{ transition: "rotate-right", duration: 150 }}
+          withArrow
+        >
+          <Menu.Target>
+            <ActionIcon variant="white" color="cyan">
+              <IconDots size={19} />
+            </ActionIcon>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            {/* {Object.values(sheet.morning!).every((value) => value === "") ? ( */}
+            {record.morning?.in !== "" && (
+              <>
+                <Menu.Label>Morning</Menu.Label>
+                <Menu.Item p={0} className="bg-white hover:bg-white">
+                  <Stack px={10} pb={5} spacing={1}>
+                    <Group spacing={8} className="text-xs">
+                      <IconClock size={16} className="text-yellow-400" />
+                      <span>{record.morning?.in}</span> -{" "}
+                      <span>{record.morning?.out}</span>
+                    </Group>
+                  </Stack>
+                </Menu.Item>
+                <Menu.Divider />
+              </>
+            )}
+            {/* ) : ( */}
+
+            {record.afternoon?.in !== "" && (
+              <>
+                <Menu.Label>Afternoon</Menu.Label>
+                <Menu.Item p={0} className="bg-white hover:bg-white">
+                  <Stack px={10} pb={5} spacing={1}>
+                    <Group spacing={8} className="text-xs">
+                      <IconClock size={16} className="text-violet-400" />
+                      <span>{record.afternoon?.in}</span> -{" "}
+                      <span>{record.afternoon?.out}</span>
+                    </Group>
+                  </Stack>
+                </Menu.Item>
+              </>
+            )}
+          </Menu.Dropdown>
+        </Menu>
       </td>
     </tr>
   ));
@@ -228,28 +286,32 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
               <tr>
                 <th
                   scope="col"
-                  className="md:px-3 lg:px-3 pl-3 py-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider  bg-gray-100 shadow-sm rounded-tl-md"
+                  className=" md:px-3 lg:px-3 pl-3 py-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider  bg-gray-100 shadow-sm rounded-tl-md"
                 >
                   Date
                 </th>
                 <th
                   scope="col"
-                  className="rounded-tr-md md:rounded-none lg:rounded-none py-3 md:pr-3 lg:pr-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider  bg-gray-100 shadow-sm"
+                  className="hidden  md:table-cell lg:table-cell rounded-tl-md md:rounded-none lg:rounded-none py-3  md:pr-3 lg:pr-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider  bg-gray-100 shadow-sm"
                 >
                   Morning
                 </th>
                 <th
                   scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider bg-gray-100 shadow-sm"
+                  className="hidden md:table-cell lg:table-cell py-3 text-left text-[12px] font-[600] text-gray-400 tracking-wider bg-gray-100 shadow-sm rounded-tr-md lg:rounded-none"
                 >
                   Afternoon
                 </th>
                 <th
                   scope="col"
-                  className="py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm rounded-tr-md"
+                  className="  md:table-cell lg:table-cell  py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm lg:rounded-tr-md rounded-none"
                 >
                   Status
                 </th>
+                <th
+                  scope="col"
+                  className="  md:hidden lg:hidden table-cell  py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm rounded-tr-md"
+                ></th>
               </tr>
             </thead>
 

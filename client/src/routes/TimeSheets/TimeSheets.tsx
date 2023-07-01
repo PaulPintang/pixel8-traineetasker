@@ -82,12 +82,12 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
 
     return (
       <tr>
-        <td className="hidden md:table-cell lg:table-cell pl-3">
+        <td className="md:table-cell lg:table-cell pl-3">
           <Text>
             {format.date === date.toDateString() ? "Today" : format.date}
           </Text>
         </td>
-        <td className="hidden md:table-cell lg:table-cell">
+        <td className="md:table-cell lg:table-cell">
           <Text>{sheet.task}</Text>
         </td>
         <td className="hidden md:table-cell lg:table-cell">
@@ -124,7 +124,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
             </Text>
           )}
         </td>
-        <td className="dark:text-gray-400  hidden md:table-cell lg:table-cell">
+        <td className="dark:text-gray-400 md:table-cell lg:table-cell">
           <Menu
             shadow="md"
             transitionProps={{ transition: "rotate-right", duration: 150 }}
@@ -318,7 +318,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
 
                 <th
                   scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="hidden md:table-cell lg:table-cell py-3 text-left text-[11px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
                   <Text>Total Spent</Text>
                 </th>
