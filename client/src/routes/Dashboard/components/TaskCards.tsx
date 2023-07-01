@@ -9,17 +9,32 @@ import {
 } from "@tabler/icons-react";
 import React from "react";
 import { useAppSelector } from "../../../app/hooks";
-import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
+import {
+  useGetAllTraineeQuery,
+  useGetTraineeProfileQuery,
+} from "../../../features/api/trainee/traineeApiSlice";
 import { useLocation } from "react-router-dom";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
+import { ITrainee } from "../../../interfaces/user.interface";
 
-const TaskCards = () => {
+interface Props {
+  profile: ITrainee;
+}
+
+const TaskCards = ({ profile }: Props) => {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
-  const { data: trainee } = useGetTraineeProfileQuery(user?._id, {
-    skip: user?.role !== "trainee",
+  const { data: trainee } = useGetTraineeProfileQuery();
+  // const { data: trainee } = useGetTraineeProfileQuery(user?._id, {
+  //   skip: user?.role !== "trainee",
+  // });
+  const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
+    skip: user?.role === "trainee",
   });
+
+  const profileInfo = trainees?.find((trainee) => trainee._id === profile._id);
+
   const { data: tasks } = useGetAllTasksQuery();
   return (
     <Grid grow>
@@ -36,7 +51,12 @@ const TaskCards = () => {
                   New Task
                 </Text>
                 <Text>
-                  {tasks?.filter((task) => task.status === "new").length}
+                  {user?.role === "trainee"
+                    ? tasks?.filter((task) => task.status === "new").length
+                    : tasks?.filter(
+                        (task) =>
+                          task.status === "new" && task.assign === profile.name
+                      ).length}
                 </Text>
               </>
             ) : (
@@ -68,7 +88,13 @@ const TaskCards = () => {
                   Failed
                 </Text>
                 <Text>
-                  {tasks?.filter((task) => task.status === "failed").length}
+                  {user?.role === "trainee"
+                    ? tasks?.filter((task) => task.status === "failed").length
+                    : tasks?.filter(
+                        (task) =>
+                          task.status === "failed" &&
+                          task.assign === profile.name
+                      ).length}
                 </Text>
               </>
             ) : (
@@ -103,7 +129,14 @@ const TaskCards = () => {
                 </Text>
 
                 <Text>
-                  {tasks?.filter((task) => task.status === "completed").length}
+                  {user?.role === "trainee"
+                    ? tasks?.filter((task) => task.status === "completed")
+                        .length
+                    : tasks?.filter(
+                        (task) =>
+                          task.status === "completed" &&
+                          task.assign === profile.name
+                      ).length}
                 </Text>
               </>
             ) : (
@@ -136,7 +169,11 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   OJT hours
                 </Text>
-                <Text>{trainee?.hours?.ojtHours}</Text>
+                <Text>
+                  {user?.role === "trainee"
+                    ? trainee?.hours?.ojtHours
+                    : profile?.hours?.ojtHours}
+                </Text>
               </>
             ) : (
               <>
@@ -167,7 +204,11 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   Pending
                 </Text>
-                <Text>{trainee?.hours?.pending}</Text>
+                <Text>
+                  {user?.role === "trainee"
+                    ? trainee?.hours?.pending
+                    : profile?.hours?.pending}
+                </Text>
               </>
             ) : (
               <>
@@ -198,7 +239,11 @@ const TaskCards = () => {
                 <Text fz={13} c="dimmed">
                   Rendered
                 </Text>
-                <Text>{trainee?.hours?.rendered}</Text>
+                <Text>
+                  {user?.role === "trainee"
+                    ? trainee?.hours?.rendered
+                    : profile?.hours?.rendered}
+                </Text>
               </>
             ) : (
               <>

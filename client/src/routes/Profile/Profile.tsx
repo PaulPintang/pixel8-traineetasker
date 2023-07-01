@@ -82,7 +82,7 @@ const Profile = () => {
         </Grid.Col>
         <Grid.Col span="auto" className="space-y-1">
           <TasksLabels />
-          <TaskCards />
+          <TaskCards profile={trainee!} />
         </Grid.Col>
         <Grid.Col sm="auto" lg="content" md="content">
           <InfoCard trainee={trainee!} />
