@@ -81,17 +81,22 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
     return (
       <tr>
         <td className=" md:table-cell lg:table-cell pl-3 pt-2">
-          <Text className="font-semibold">{`${format.date} at ${format.time}`}</Text>
+          <Text className="font-semibold">
+            <span className="hidden md:flex lg:flex">
+              {`${format.date} at ${format.time}`}
+            </span>
+            <span className="flex md:hidden lg:hidden">{format.date}</span>
+          </Text>
         </td>
-        <td className=" md:table-cell lg:table-cell  pt-2">
+        <td className="hidden md:table-cell lg:table-cell  pt-2">
           <Text className="font-semibold">{task.taskname}</Text>
         </td>
-        <td className=" md:table-cell lg:table-cell  pt-2">
+        <td className="hidden md:table-cell lg:table-cell  pt-2">
           <Text className="font-semibold">{task.ticketno}</Text>
         </td>
 
         {!pathname.includes("profile") ? (
-          <td className=" md:table-cell lg:table-cell  pt-2">
+          <td className="hidden md:table-cell lg:table-cell  pt-2">
             {task.assign ? (
               <Text className="font-semibold">{task.assign}</Text>
             ) : (
@@ -110,20 +115,25 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
         )}
 
         <td className=" md:table-cell lg:table-cell  pt-2">
-          <Group className="rounded bg-gray-50 max-w-max px-2 py-1 gap-2">
-            <div
-              className={`p-1 ${
-                task.status === "new"
-                  ? "bg-indigo-300"
-                  : task.status === "inprogress"
-                  ? "bg-violet-400"
-                  : task.status === "completed"
-                  ? "bg-green-300"
-                  : task.status === "forqa"
-                  ? "bg-yellow-300"
-                  : "bg-red-300"
-              }`}
-            ></div>
+          <Flex
+            className="rounded bg-gray-50 max-w-max px-2 py-1 gap-2"
+            align="center"
+          >
+            <div>
+              <div
+                className={`p-1 ${
+                  task.status === "new"
+                    ? "bg-indigo-300"
+                    : task.status === "inprogress"
+                    ? "bg-violet-400"
+                    : task.status === "completed"
+                    ? "bg-green-300"
+                    : task.status === "forqa"
+                    ? "bg-yellow-300"
+                    : "bg-red-300"
+                }`}
+              ></div>
+            </div>
             <Text
               fw="bold"
               className={`text-[11px] ${
@@ -140,7 +150,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
             >
               {task.status}
             </Text>
-          </Group>
+          </Flex>
         </td>
 
         <td className=" md:table-cell lg:table-cell  pt-2">
@@ -151,7 +161,9 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                 setViewId(task._id!);
                 // setOpened(false);
               }}
-              leftIcon={<IconInfoCircle size={16} />}
+              leftIcon={
+                <IconInfoCircle size={16} className="hidden md:flex lg:flex" />
+              }
               variant="white"
               color="cyan"
               size="xs"
@@ -263,13 +275,13 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                 </th>
                 <th
                   scope="col"
-                  className="rounded-tr-md md:rounded-none lg:rounded-none py-3 md:pr-3 lg:pr-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm"
+                  className="hidden md:table-cell lg:table-cell  py-3 md:pr-3 lg:pr-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm"
                 >
                   <Text>Task Name</Text>
                 </th>
                 <th
                   scope="col"
-                  className=" md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
                   <Text>Ticket No.</Text>
                 </th>
@@ -277,7 +289,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                 {!pathname.includes("profile") && (
                   <th
                     scope="col"
-                    className="  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                    className="hidden  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                   >
                     <Text>Assigned to</Text>
                   </th>

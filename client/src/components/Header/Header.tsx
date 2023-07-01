@@ -112,7 +112,11 @@ const Header = () => {
         )} */}
 
         {user && user?.role !== "admin" && user.course && pathname !== "/" && (
-          <Badge color="teal" variant="dot" className="text-gray-700">
+          <Badge
+            color="teal"
+            variant="dot"
+            className="text-gray-700 hidden md:flex lg:flex"
+          >
             <Group spacing={4}>
               <Text className="capitalize">{user.course}</Text>
               <Text className="capitalize">{user.role}</Text>

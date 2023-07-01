@@ -47,13 +47,14 @@ const traineesTableCard = () => {
 
   const rows = items[page - 1]?.map((trainee) => (
     <tr>
-      <td className="hidden md:table-cell lg:table-cell pl-3 pt-3">
+      <td className=" md:table-cell lg:table-cell pl-3 pt-3">
         <Group spacing={10}>
           <Image
             src={trainee.picture}
             width={35}
             radius="xl"
             imageProps={{ referrerPolicy: "no-referrer" }}
+            className="hidden md:flex lg:flex"
           />
           <div className="-space-y-[2px]">
             <Text className="font-semibold">{trainee.name}</Text>
@@ -91,7 +92,7 @@ const traineesTableCard = () => {
           </ActionIcon>
         </Link>
       </td> */}
-      <td className="hidden md:table-cell lg:table-cell pt-2">
+      <td className=" md:table-cell lg:table-cell pt-2">
         {user?.role !== "Task manager" ? (
           <Link to={`../profile/${trainee._id}`}>
             <Button variant="white" color="cyan" size="xs">
@@ -176,7 +177,7 @@ const traineesTableCard = () => {
                 </th>
                 <th
                   scope="col"
-                  className=" hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
+                  className="hidden  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
                   <Text>Rendered hours</Text>
                 </th>

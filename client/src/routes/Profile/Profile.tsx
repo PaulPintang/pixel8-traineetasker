@@ -46,7 +46,7 @@ const Profile = () => {
   return (
     <>
       <Grid>
-        <Grid.Col span="content">
+        <Grid.Col sm="auto" lg="content" md="content">
           <Flex direction="column" align="center" justify="center" gap="xs">
             <Image
               src={trainee?.picture}
@@ -84,7 +84,7 @@ const Profile = () => {
           <TasksLabels />
           <TaskCards />
         </Grid.Col>
-        <Grid.Col span="content">
+        <Grid.Col sm="auto" lg="content" md="content">
           <InfoCard trainee={trainee!} />
         </Grid.Col>
       </Grid>
