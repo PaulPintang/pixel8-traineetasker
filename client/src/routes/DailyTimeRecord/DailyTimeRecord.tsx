@@ -7,6 +7,7 @@ import { checkTime } from "../../utils/checkTime";
 import {
   useAddDtrMutation,
   useAddTaskTimesheetMutation,
+  useGetAllTraineeQuery,
   useGetTraineeProfileQuery,
   useUpdateDtrMutation,
 } from "../../features/api/trainee/traineeApiSlice";
@@ -14,6 +15,7 @@ import { IDtr, ISheets } from "../../interfaces/records.interface";
 import { formatDateTime } from "../../utils/formatDateTime";
 import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 import { useAppSelector } from "../../app/hooks";
+import { ITrainee } from "../../interfaces/user.interface";
 
 const sheets = [
   {
@@ -62,13 +64,21 @@ interface Records {
     out: string;
   };
 }
+interface PropsOnProfile {
+  profile: ITrainee;
+}
 
-const DailyTimeRecord = () => {
+const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const { user } = useAppSelector((state) => state.auth);
   const [addDtr, dtrstate] = useAddDtrMutation();
   const [recordDtr, { isLoading }] = useUpdateDtrMutation();
   const { data: trainee, refetch } = useGetTraineeProfileQuery();
+  const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
+    skip: user?.role === "trainee",
+  });
   const [timesheet, sheetState] = useAddTaskTimesheetMutation();
+
+  const profileInfo = trainees?.find((trainee) => trainee._id === profile._id);
 
   const { data: tasks } = useGetAllTasksQuery();
   const date = new Date();
@@ -110,7 +120,10 @@ const DailyTimeRecord = () => {
     refetch();
   };
 
-  const items = chunk(trainee?.dtr, 10);
+  const items = chunk(
+    user?.role === "trainee" ? trainee?.dtr : profileInfo?.dtr,
+    10
+  );
 
   const today = trainee?.dtr.find(
     (record) => record.date === formatDateTime(date.toISOString()).date
@@ -172,36 +185,40 @@ const DailyTimeRecord = () => {
     <>
       <Flex justify="space-between" align="center" pb={6}>
         <TimeSheetsLabels />
-        {!today || today?.status !== "recorded" ? (
+        {user.role === "trainee" && (
           <>
-            {isTimeIn ? (
-              <Button
-                color="yellow"
-                size="xs"
-                onClick={handleTimeInOut}
-                loading={isLoading}
-              >
-                Time in
-              </Button>
-            ) : (
-              ""
-            )}
+            {!today || today?.status !== "recorded" ? (
+              <>
+                {isTimeIn ? (
+                  <Button
+                    color="yellow"
+                    size="xs"
+                    onClick={handleTimeInOut}
+                    loading={isLoading}
+                  >
+                    Time in
+                  </Button>
+                ) : (
+                  ""
+                )}
 
-            {isTimeOut ? (
-              <Button
-                color="indigo"
-                size="xs"
-                onClick={handleTimeInOut}
-                loading={isLoading}
-              >
-                Time out
-              </Button>
+                {isTimeOut ? (
+                  <Button
+                    color="indigo"
+                    size="xs"
+                    onClick={handleTimeInOut}
+                    loading={isLoading}
+                  >
+                    Time out
+                  </Button>
+                ) : (
+                  ""
+                )}
+              </>
             ) : (
               ""
             )}
           </>
-        ) : (
-          ""
         )}
       </Flex>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)]">

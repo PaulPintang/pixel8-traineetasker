@@ -93,20 +93,23 @@ const Header = () => {
   return (
     <Flex justify="space-between" align="center">
       <NavLink to="/" className="text-white">
-        <Image src={logo} width={205} className="relative" left={-20} />
+        <div className="w-[160px] md:w-[200px] lg:w-[200px]">
+          <Image src={logo} className="relative" left={-20} />
+          {/* <Image src={logo} width={205} className="relative" left={-20} /> */}
+        </div>
       </NavLink>
       <Group
         spacing={
           user?.role === "admin" || user?.role === "supervisor" ? 15 : 15
         }
       >
-        {user && user?.role !== "admin" && pathname === "/" && (
+        {/* {user && user?.role !== "admin" && pathname === "/" && (
           <NavLink to="dashboard" className="text-white">
             <Button size="xs" color="cyan" variant="white">
               Your Dashboard
             </Button>
           </NavLink>
-        )}
+        )} */}
 
         {user && user?.role !== "admin" && user.course && pathname !== "/" && (
           <Badge color="teal" variant="dot" className="text-gray-700">
@@ -171,6 +174,7 @@ const Header = () => {
             size="xs"
             color="cyan"
             loading={loginState.isLoading}
+            radius={0}
           >
             Login to start
           </Button>

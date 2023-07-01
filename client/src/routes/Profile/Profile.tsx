@@ -131,12 +131,12 @@ const Profile = () => {
         </Tabs.Panel>
         <Tabs.Panel value="timesheet" pt="xs">
           <Suspense fallback="loading sheets">
-            {activeTab === "timesheet" && <TimeSheets />}
+            {activeTab === "timesheet" && <TimeSheets profile={trainee!} />}
           </Suspense>
         </Tabs.Panel>
         <Tabs.Panel value="dtr" pt="xs">
           <Suspense fallback="loading records">
-            {activeTab === "dtr" && <DailyTimeRecord />}
+            {activeTab === "dtr" && <DailyTimeRecord profile={trainee!} />}
           </Suspense>
         </Tabs.Panel>
       </Tabs>

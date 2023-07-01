@@ -31,16 +31,26 @@ import { sheets } from "../../data/sheets";
 // import { Sheets } from "../../interfaces/sheet.interface";
 import { tasks } from "../../data/tasks";
 import { ITask } from "../../interfaces/task.interface";
-import { useGetTraineeProfileQuery } from "../../features/api/trainee/traineeApiSlice";
+import {
+  useGetAllTraineeQuery,
+  useGetTraineeProfileQuery,
+} from "../../features/api/trainee/traineeApiSlice";
 import { formatDateTime } from "../../utils/formatDateTime";
 import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 import { calculateSpentTime } from "../../utils/calculateSpentTime";
+import { ITrainee } from "../../interfaces/user.interface";
+import { useAppSelector } from "../../app/hooks";
 
 // ? if trainee time out in dtr, task hour will automatically stop if time is the trainee out time.
 // ? (ex. 12:00 PM and 5:00 PM, dtr time out and stop the timesheet)
 // ? add task selection if in progress task is more than one.
 
-const TimeSheets = () => {
+interface PropsOnProfile {
+  profile: ITrainee;
+}
+
+const TimeSheets = ({ profile }: PropsOnProfile) => {
+  const { user } = useAppSelector((state) => state.auth);
   const [page, setPage] = useState(1);
   const [opened, { close, open }] = useDisclosure(false);
   const { data: tasks } = useGetAllTasksQuery();
@@ -48,8 +58,17 @@ const TimeSheets = () => {
   // ? test, filter should be in backend
 
   const { data: trainee } = useGetTraineeProfileQuery();
+  const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
+    skip: user?.role === "trainee",
+  });
+  const profileInfo = trainees?.find((trainee) => trainee._id === profile._id);
 
-  const items = chunk(trainee?.timesheet, 10);
+  const items = chunk(
+    user?.role === "trainee" ? trainee?.timesheet : profileInfo?.timesheet,
+    10
+  );
+
+  console.log("PROFILE:", profile);
 
   const rows = items[page - 1]?.map((sheet, index) => {
     const format = formatDateTime(sheet.date!);

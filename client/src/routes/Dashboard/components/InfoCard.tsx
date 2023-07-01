@@ -17,12 +17,16 @@ import {
 } from "../../../features/api/trainee/traineeApiSlice";
 import { ITrainee } from "../../../interfaces/user.interface";
 import { useLocation } from "react-router-dom";
+import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
+import { calculateSpentTime } from "../../../utils/calculateSpentTime";
+import { formatDateTime } from "../../../utils/formatDateTime";
 
 interface Props {
   trainee: ITrainee;
 }
 
 const InfoCard = ({ trainee }: Props) => {
+  const date = new Date();
   const location = useLocation();
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
@@ -30,6 +34,21 @@ const InfoCard = ({ trainee }: Props) => {
     skip: user?.role !== "trainee",
   });
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
+  const { data: tasks } = useGetAllTasksQuery();
+
+  const todayTask = tasks?.find((task) => task.status === "inprogress");
+
+  const sheet =
+    user?.role === "trainee"
+      ? profile?.timesheet.find((task) => task.status === "recording")
+      : trainee?.timesheet.find((task) => task.status === "recording");
+
+  const time = {
+    status: sheet?.status!,
+    morning: sheet?.morning,
+    afternoon: sheet?.afternoon,
+  };
+  const spent = calculateSpentTime(time);
 
   return (
     <Card className="h- rounded-md shadow-md space-y-[6px]">
@@ -67,10 +86,10 @@ const InfoCard = ({ trainee }: Props) => {
               <Box component="div" p={5} pl={10}>
                 <Group spacing={10}>
                   <Text fz={12} className="text-gray-500 font-semibold">
-                    No. of tasks today:
+                    Task today:
                   </Text>
                   <Text fz={12} c="dimmed">
-                    01
+                    {todayTask?.taskname}
                   </Text>
                 </Group>
                 <Group spacing={10}>
@@ -78,7 +97,18 @@ const InfoCard = ({ trainee }: Props) => {
                     Total hours in timesheet:
                   </Text>
                   <Text fz={12} c="dimmed">
-                    8 hours
+                    <span>
+                      {spent.totalSpent.hours === 1
+                        ? spent.totalSpent.hours + "hr"
+                        : spent.totalSpent.hours > 1
+                        ? spent.totalSpent.hours + "hrs"
+                        : spent.totalSpent.hours === 0 && ""}
+                      {spent.totalSpent.minutes === 1
+                        ? spent.totalSpent.minutes + "min"
+                        : spent.totalSpent.minutes > 1
+                        ? spent.totalSpent.minutes + "mins"
+                        : spent.totalSpent.minutes === 0 && ""}
+                    </span>
                   </Text>
                 </Group>
               </Box>
@@ -100,7 +130,8 @@ const InfoCard = ({ trainee }: Props) => {
                   Completed task:
                 </Text>
                 <Text fz={12} c="dimmed">
-                  20 tasks
+                  {tasks?.filter((task) => task.status === "completed").length}{" "}
+                  tasks
                 </Text>
               </Group>
             </Box>
@@ -114,7 +145,15 @@ const InfoCard = ({ trainee }: Props) => {
                     No. of completed task:
                   </Text>
                   <Text fz={12} c="dimmed">
-                    01 task
+                    {
+                      tasks?.filter(
+                        (task) =>
+                          task.status === "completed" &&
+                          formatDateTime(task.timeline?.completedAt!).date ===
+                            formatDateTime(date.toISOString()).date
+                      ).length
+                    }{" "}
+                    task
                   </Text>
                 </Group>
                 <Group spacing={10}>
@@ -122,7 +161,11 @@ const InfoCard = ({ trainee }: Props) => {
                     No. of in progress task:
                   </Text>
                   <Text fz={12} c="dimmed">
-                    12 tasks
+                    {
+                      tasks?.filter((task) => task.status === "inprogress")
+                        .length
+                    }{" "}
+                    tasks
                   </Text>
                 </Group>
               </Box>
