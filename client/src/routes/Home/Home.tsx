@@ -1,5 +1,8 @@
 import { Center, Image, Stack, Title, Text, Button } from "@mantine/core";
-import dashboard from "../../assets/dashboard.png";
+import dashboard from "../../assets/CarouselImages/dashboard.png";
+import tasks from "../../assets/CarouselImages/tasks.png";
+import timesheet from "../../assets/CarouselImages/timesheet.png";
+import dtr from "../../assets/CarouselImages/dtr.png";
 import { useRef } from "react";
 import { Carousel } from "@mantine/carousel";
 import Autoplay from "embla-carousel-autoplay";
@@ -55,7 +58,13 @@ const Home = () => {
             <Image src={dashboard} radius={20} />
           </Carousel.Slide>
           <Carousel.Slide>
-            <Image src={dashboard} radius={20} />
+            <Image src={tasks} radius={20} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <Image src={timesheet} radius={20} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <Image src={dtr} radius={20} />
           </Carousel.Slide>
         </Carousel>
       </div>
