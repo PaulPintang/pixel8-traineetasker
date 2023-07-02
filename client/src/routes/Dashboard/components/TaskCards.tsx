@@ -103,7 +103,11 @@ const TaskCards = ({ profile }: Props) => {
                   Available
                 </Text>
                 <Text>
-                  {tasks?.filter((task) => task.status === "new").length}
+                  {
+                    tasks?.filter(
+                      (task) => task.status === "new" && task.assign === ""
+                    ).length
+                  }
                 </Text>
               </>
             )}

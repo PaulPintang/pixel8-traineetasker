@@ -45,6 +45,7 @@ import TimelineComponent from "./ViewTask/components/Timeline";
 import { socket } from "../../../../utils/socketConnect";
 import { JoinRoom } from "../../../../utils/socketConnect";
 import { ISheets } from "../../../../interfaces/records.interface";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface ModalProps {
   viewId: string | null;
@@ -54,6 +55,8 @@ interface ModalProps {
 }
 
 const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
+  const isMobile = useMediaQuery("(max-width: 50em)");
+
   const { data: tasks } = useGetAllTasksQuery();
   const fail = useRef<HTMLButtonElement>(null);
   const complete = useRef<HTMLButtonElement>(null);
@@ -70,6 +73,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
 
   // ? TRAINEE
   const handleTaskStatus = async () => {
+    JoinRoom(user?.course!, user?.role!);
     const status =
       task?.status === "new" || task?.status === "pending"
         ? "inprogress"
@@ -101,11 +105,13 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
 
   // ? SUPERVISOR
   const handleCheckTask = async (status: "completed" | "failed") => {
+    JoinRoom(user?.course!, user?.role!);
     const data = { _id: task?._id, status };
     await taskStatus({ task: data, rooms: [user?.course] });
   };
 
   const addComment = async () => {
+    JoinRoom(user?.course!, user?.role!);
     const message = {
       _id: task?._id,
       msg: msg.current?.value,
@@ -119,6 +125,7 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
       size="sm"
       opened={view}
       onClose={toggle}
+      fullScreen={isMobile}
       title={
         <Breadcrumbs className="text-xs text-gray-500">
           <Text>Tasks</Text>

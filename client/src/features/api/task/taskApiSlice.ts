@@ -77,7 +77,7 @@ export const taskApiSlice = apiSlice.injectEndpoints({
           const { data: newtask } = await queryFulfilled;
           socket.emit("add", {
             task: newtask,
-            rooms: ["Task manager", "QA Personnel", "supervisor"],
+            rooms: ["Task manager", "QA Personnel", "supervisor", "admin"],
           });
         } catch {}
       },

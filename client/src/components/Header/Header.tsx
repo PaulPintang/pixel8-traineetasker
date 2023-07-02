@@ -99,9 +99,10 @@ const Header = () => {
         </div>
       </NavLink>
       <Group
-        spacing={
-          user?.role === "admin" || user?.role === "supervisor" ? 15 : 15
-        }
+        // spacing={
+        //   user?.role === "admin" || user?.role === "supervisor" ? 15 : 15
+        // }
+        spacing={15}
       >
         {/* {user && user?.role !== "admin" && pathname === "/" && (
           <NavLink to="dashboard" className="text-white">
@@ -127,14 +128,14 @@ const Header = () => {
         {user && user?.role !== "trainee" && (
           <>
             {user?.role === "admin" && <MenuSelectCourse />}
-            <Group spacing={8}>
-              {user?.role === "admin" && <MenuEditSchedule />}
-              {user?.role === "supervisor" || user.role === "admin" ? (
-                <MenuManageAccounts />
-              ) : (
-                ""
-              )}
-            </Group>
+            {/* <Group spacing={8}> */}
+            {/* {user?.role === "admin" && <MenuEditSchedule />} */}
+            {user?.role === "supervisor" || user.role === "admin" ? (
+              <MenuManageAccounts />
+            ) : (
+              ""
+            )}
+            {/* </Group> */}
           </>
         )}
 

@@ -16,6 +16,7 @@ import {
   useGetAllTasksQuery,
   useTodoTaskMutation,
 } from "../../../features/api/task/taskApiSlice";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface ModalProps {
   currentTask: ITask;
@@ -34,6 +35,7 @@ type Todo = {
 };
 
 const AddTodoModal = ({ add, toggle, currentTask }: ModalProps) => {
+  const isMobile = useMediaQuery("(max-width: 50em)");
   // const { refetch } = useGetAllTasksQuery();
   const [todo, setTodo] = useState<Todo>({
     isDone: false,
@@ -59,6 +61,7 @@ const AddTodoModal = ({ add, toggle, currentTask }: ModalProps) => {
     <Modal
       size="sm"
       opened={add}
+      fullScreen={isMobile}
       onClose={() => {
         toggle();
         setTodo({ ...todo, todo: "" });

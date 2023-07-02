@@ -30,10 +30,10 @@ const AddTaskModal = ({ add, toggle }: ModalProps) => {
   });
 
   const handleAddTask = async () => {
+    JoinRoom(user?.course!, user?.role!);
     await addTask(toAddTask);
     // socket.emit("course", user?.course);
     // const newtask: any = await addTask(toAddTask);
-    // await JoinRoom(user?.course!, user?.role!);
     // socket.emit("add", {
     //   task: newtask.data,
     //   rooms: ["Task manager", "QA Personnel", "supervisor"],

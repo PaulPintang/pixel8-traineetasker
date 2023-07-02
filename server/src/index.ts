@@ -62,24 +62,20 @@ io.on("connection", (socket) => {
       socket.to(room).emit("assignTask", task);
       console.log(`Task assign to room: ${room}`);
     });
-    // socket.to(data.course).to(data.email).emit("assignTask")
   });
   socket.on("add", ({ task, rooms }) => {
     rooms.forEach((room: string) => {
       socket.to(room).emit("addTask", task);
       console.log(`Task added to room: ${room}`);
     });
-    // socket.broadcast.emit("addTask", data);
   });
   socket.on("status", ({ task, rooms }) => {
-    // socket.broadcast.emit("taskStatus", data);
     rooms.forEach((room: string) => {
       socket.to(room).emit("taskStatus", task);
       console.log(`Task status update to room: ${room}`);
     });
   });
   socket.on("comment", ({ msg, rooms }) => {
-    // socket.broadcast.emit("taskComment", data);
     rooms.forEach((room: string) => {
       socket.to(room).emit("taskComment", msg);
       console.log(`Comment added in room: ${room}`);

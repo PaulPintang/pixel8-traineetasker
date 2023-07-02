@@ -12,7 +12,9 @@ export const getAllAccount = asyncHandler(
     next: NextFunction
   ) => {
     if (res.locals.user.role === "admin") {
-      const accounts = await Account.find({ role: "supervisor" });
+      const roles = ["QA Personnel", "Task manager", "supervisor"];
+      const accounts = await Account.find({ role: { $in: roles } });
+      // const accounts = await Account.find({ role: "supervisor" });
       res.json(accounts);
     } else {
       const user = await Account.findOne({ email: res.locals.user.email });

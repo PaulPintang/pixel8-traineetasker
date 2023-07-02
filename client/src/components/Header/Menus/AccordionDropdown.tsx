@@ -19,6 +19,8 @@ import { useState } from "react";
 import { IconSettings } from "@tabler/icons-react";
 import { IAccount } from "../../../interfaces/user.interface";
 import { useDisclosure } from "@mantine/hooks";
+import { useGetAllTraineeQuery } from "../../../features/api/trainee/traineeApiSlice";
+import { useAppSelector } from "../../../app/hooks";
 
 const useStyles = createStyles((theme) => ({
   root: {
@@ -72,10 +74,12 @@ function AccordionContent({ name, picture, email }: IAccount) {
 }
 
 const AccordionDropdown = () => {
+  const { user } = useAppSelector((state) => state.auth);
   const { classes } = useStyles();
   const [opened, { toggle, close }] = useDisclosure(false);
 
   const [updateAccount, { isLoading }] = useUpdateAccountMutation();
+  const { data: trainees } = useGetAllTraineeQuery(user?.course!);
 
   const { data: accounts } = useGetAllAccountQuery();
   const [email, setEmail] = useState("");
@@ -86,83 +90,103 @@ const AccordionDropdown = () => {
     close();
   };
 
-  const items = accounts?.map((account) => {
-    // const total = trainees?.filter(
-    //   (trainee) => trainee.course === item?.course
-    // );
+  console.log(accounts);
 
-    return (
-      <Accordion.Item
-        value={account._id!}
-        key={account.name}
-        className="border -none"
-        p={3}
-      >
-        <Accordion.Control className="p-1" onClick={close}>
-          <AccordionContent {...account} />
-        </Accordion.Control>
-        <Accordion.Panel>
-          <Group spacing={10}>
-            <Text fz={12} className="text-gray-500 font-semibold">
-              Total Trainee's:
-            </Text>
-            <Text fz={12} c="dimmed">
-              7
-            </Text>
-          </Group>
-          <Group spacing={10}>
-            <Text fz={12} className="text-gray-500 font-semibold">
-              QA Personnel:
-            </Text>
-            <Text fz={12} c="dimmed">
-              Juan Dela Cruz
-            </Text>
-          </Group>
-          <Group spacing={10}>
-            <Text fz={12} className="text-gray-500 font-semibold">
-              Task manager:
-            </Text>
-            <Text fz={12} c="dimmed">
-              Justin Bieber
-            </Text>
-          </Group>
-          {/* <Menu.Item className="bg-white hover:bg-white" p={0}> */}
-          <Box maw={400} mx="auto">
-            <Button
-              onClick={toggle}
-              leftIcon={<IconSettings size={17} />}
-              variant="white"
-              color="cyan"
-              size="xs"
-              pl={0}
-              mt={6}
-              compact
-            >
-              Change account
-            </Button>
-            <Collapse in={opened}>
-              <TextInput
+  const items = accounts
+    ?.filter((acc) => acc.role === "supervisor")
+    .map((account) => {
+      // const total = trainees?.filter(
+      //   (trainee) => trainee.course === item?.course
+      // );
+
+      return (
+        <Accordion.Item
+          value={account._id!}
+          key={account.name}
+          className="border -none"
+          p={3}
+        >
+          <Accordion.Control className="p-1" onClick={close}>
+            <AccordionContent {...account} />
+          </Accordion.Control>
+          <Accordion.Panel>
+            <Group spacing={10}>
+              <Text fz={12} className="text-gray-500 font-semibold">
+                Total Trainee's:
+              </Text>
+              <Text fz={12} c="dimmed">
+                {
+                  trainees?.filter(
+                    (trainee) => trainee.course === account.course
+                  ).length
+                }
+              </Text>
+            </Group>
+            <Group spacing={10}>
+              <Text fz={12} className="text-gray-500 font-semibold">
+                QA Personnel:
+              </Text>
+              <Text fz={12} c="dimmed">
+                {
+                  accounts.filter(
+                    (acc) =>
+                      acc.role === "QA Personnel" &&
+                      account.course === acc.course
+                  ).length
+                }
+              </Text>
+            </Group>
+            <Group spacing={10}>
+              <Text fz={12} className="text-gray-500 font-semibold">
+                Task manager:
+              </Text>
+              <Text fz={12} c="dimmed">
+                {
+                  accounts.filter(
+                    (acc) =>
+                      acc.role === "Task manager" &&
+                      account.course === acc.course
+                  ).length
+                }
+              </Text>
+            </Group>
+            {/* <Menu.Item className="bg-white hover:bg-white" p={0}> */}
+            <Box maw={400} mx="auto">
+              <Button
+                onClick={toggle}
+                leftIcon={<IconSettings size={17} />}
+                variant="white"
+                color="cyan"
                 size="xs"
-                placeholder="email here"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <Flex justify="flex-end" pt={10}>
-                <Button
+                pl={0}
+                mt={6}
+                compact
+              >
+                Change account
+              </Button>
+              <Collapse in={opened}>
+                <TextInput
                   size="xs"
-                  onClick={() => handleUpdateAccount(account._id!)}
-                  loading={isLoading}
-                >
-                  Save
-                </Button>
-              </Flex>
-            </Collapse>
-          </Box>
-          {/* </Menu.Item> */}
-        </Accordion.Panel>
-      </Accordion.Item>
-    );
-  });
+                  placeholder="email here"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <Flex justify="flex-end" pt={10}>
+                  <Button
+                    size="xs"
+                    onClick={() => handleUpdateAccount(account._id!)}
+                    loading={isLoading}
+                  >
+                    Save
+                  </Button>
+                </Flex>
+              </Collapse>
+            </Box>
+            {/* </Menu.Item> */}
+          </Accordion.Panel>
+        </Accordion.Item>
+      );
+    });
 
   return (
     <Accordion

@@ -24,6 +24,7 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
   const [assignTask, { isLoading }] = useAssignTaskMutation();
 
   const handleAssign = async () => {
+    JoinRoom(user?.course!, user?.role!);
     const data = { _id: task._id, name: assignTo, course: user?.course };
     await assignTask({ task: data, rooms: [user?.course] });
     toggle();
