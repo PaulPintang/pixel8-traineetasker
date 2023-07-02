@@ -1,72 +1,66 @@
-import {
-  Button,
-  Title,
-  Text,
-  Grid,
-  Card,
-  Box,
-  Flex,
-  Group,
-} from "@mantine/core";
-import { lazy, Suspense } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import ToastNotify from "../../components/ToastNotify";
-
-// const AccountsTable = lazy(() => import("./components/AccountsTable"));
-import AccountsTable from "./components/AccountsTable";
-import { IconClock } from "@tabler/icons-react";
-import AddAccountModal from "./components/AddAccountModal";
-import ScheduleModal from "./components/ScheduleModal";
-import { useDisclosure } from "@mantine/hooks";
-import Documentation from "../Documentation";
-
-const Dashboard = lazy(() => import("../Dashboard/Dashboard"));
+import { Center, Image, Stack, Title, Text, Button } from "@mantine/core";
+import dashboard from "../../assets/dashboard.png";
+import { useRef } from "react";
+import { Carousel } from "@mantine/carousel";
+import Autoplay from "embla-carousel-autoplay";
+import { IconArrowNarrowRight } from "@tabler/icons-react";
+import { useAppSelector } from "../../app/hooks";
+import { useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const Home = () => {
-  const dispatch = useAppDispatch();
+  const location = useLocation();
+  const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
-  const [time, timeToggle] = useDisclosure();
-  const [add, addToggle] = useDisclosure();
-
+  const autoplay = useRef(Autoplay({ delay: 3000 }));
   return (
-    <>
-      {user?.role === "admin" ? (
-        <>
-          <Flex align="center" justify="space-between">
-            <Title order={3}>On the Job Training / Internship</Title>
+    <Stack align="center" className="text-center" spacing={60}>
+      <div>
+        <Title fz={45} className="mx-auto">
+          Empowering Tomorrow's Professionals
+        </Title>
+        <Text c="dimmed" className="max-w-[590px] mx-auto pt-2">
+          Welcome to our platform, where your dreams take flight! We aim to
+          empower you to elevate your learning experience and help you thrive in
+          your chosen field.
+        </Text>
+
+        {user && pathname === "/" && (
+          <NavLink to="dashboard" className="text-white">
             <Button
-              onClick={timeToggle.toggle}
-              leftIcon={<IconClock size={18} />}
-              variant="white"
               color="cyan"
-              size="xs"
+              mt={20}
+              rightIcon={<IconArrowNarrowRight />}
+              radius={0}
             >
-              Edit Schedule
+              Proceed to dashboard
             </Button>
-          </Flex>
-
-          <Box className="h-[calc(100vh-210px)]">
-            <Card className="rounded-md shadow-md space-y-[11px] " mt={18}>
-              <Flex justify="space-between">
-                <Text>Manage accounts</Text>
-                <Button size="xs" color="cyan" onClick={addToggle.toggle}>
-                  Add Account
-                </Button>
-              </Flex>
-              <AccountsTable />
-            </Card>
-          </Box>
-
-          <Text className="text-gray-500  text-sm font-semibold">
-            @ 2023 | Pixel8 Web Solutions
-          </Text>
-          <AddAccountModal add={add} toggle={addToggle.toggle} />
-          <ScheduleModal open={time} toggle={timeToggle.toggle} />
-        </>
-      ) : (
-        <Documentation />
-      )}
-    </>
+          </NavLink>
+        )}
+      </div>
+      {/* <div className="w-[970px] shadow-2xl"> */}
+      <div className="md:w-[970px] xl:w-[970px] w-full shadow-2xl md:rounded-3xl lg:rounded-3xl rounded-lg bg-gray-50 p-1">
+        {/* <Image src={dashboard} className="shadow-2xl" /> */}
+        <Carousel
+          mx="auto"
+          withIndicators
+          loop
+          plugins={[autoplay.current]}
+          onMouseEnter={autoplay.current.stop}
+          onMouseLeave={autoplay.current.reset}
+          withControls={false}
+          slideGap={8}
+        >
+          <Carousel.Slide>
+            <Image src={dashboard} radius={20} />
+          </Carousel.Slide>
+          <Carousel.Slide>
+            <Image src={dashboard} radius={20} />
+          </Carousel.Slide>
+        </Carousel>
+      </div>
+      <div className="py-[100px]"></div>
+    </Stack>
   );
 };
 

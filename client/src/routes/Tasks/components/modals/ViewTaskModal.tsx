@@ -154,16 +154,19 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
             >
               {task.assign ? "Reassign" : "Assign"}
             </Button>
-          ) : task?.status === "new" ||
-            (task?.status === "pending" && user?.role === "trainee") ? (
-            <Button
-              color={task.status === "new" ? "indigo" : "yellow"}
-              size="xs"
-              onClick={handleTaskStatus}
-              loading={taskState.isLoading}
-            >
-              Start task
-            </Button>
+          ) : task?.status === "new" || task?.status === "pending" ? (
+            <>
+              {user?.role === "trainee" && (
+                <Button
+                  color={task.status === "new" ? "indigo" : "yellow"}
+                  size="xs"
+                  onClick={handleTaskStatus}
+                  loading={taskState.isLoading}
+                >
+                  Start task
+                </Button>
+              )}
+            </>
           ) : task?.status === "forqa" && user?.role === "QA Personnel" ? (
             <Group spacing={10}>
               <Tooltip

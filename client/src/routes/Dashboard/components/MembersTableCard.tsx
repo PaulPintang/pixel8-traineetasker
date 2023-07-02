@@ -30,11 +30,14 @@ import { useDisclosure } from "@mantine/hooks";
 // import { trainees } from "../../../data/trainees";
 import { useGetAllTraineeQuery } from "../../../features/api/trainee/traineeApiSlice";
 import { useAppSelector } from "../../../app/hooks";
+import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 
 const traineesTableCard = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
+  const { data: tasks } = useGetAllTasksQuery();
 
+  const [assignTo, setAssignTo] = useState("");
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [filterBy, setFilterBy] = useState<string | null>("");
@@ -42,6 +45,10 @@ const traineesTableCard = () => {
   //   const data = trainees?.filter((trainee) =>
   //     filterBy ? trainee.status === filterBy : trainee
   //   );
+
+  // useEffect(() => {
+  //   toggle();
+  // }, [assignTo]);
 
   const items = chunk(trainees, 4);
 
@@ -82,7 +89,13 @@ const traineesTableCard = () => {
       </td>
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
         <Text className="font-semibold">
-          {trainee.completedTask} <span className="font-normal">tasks</span>
+          {
+            tasks?.filter(
+              (task) =>
+                task.assign === trainee.name && task.status === "completed"
+            ).length
+          }{" "}
+          <span className="font-normal">tasks</span>
         </Text>
       </td>
       {/* <td className="hidden md:table-cell lg:table-cell pl-3 ">
@@ -126,7 +139,10 @@ const traineesTableCard = () => {
                     </Button>
                   </Link>
                   <Button
-                    onClick={toggle}
+                    onClick={() => {
+                      setAssignTo(trainee.name!);
+                      toggle();
+                    }}
                     leftIcon={<IconUser size={16} />}
                     variant="white"
                     color="cyan"
@@ -228,7 +244,7 @@ const traineesTableCard = () => {
           />
         </Flex>
       </Card>
-      <AssignTaskModal assign={assign} toggle={toggle} />
+      <AssignTaskModal assignTo={assignTo} assign={assign} toggle={toggle} />
     </>
   );
 };

@@ -21,6 +21,7 @@ import { useAppSelector } from "../../app/hooks";
 import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 import { ITrainee } from "../../interfaces/user.interface";
 import { useLocation } from "react-router-dom";
+import AssignTaskModal from "../Dashboard/components/AssignTaskModal";
 
 interface Props {
   trainee: ITrainee;
@@ -32,6 +33,7 @@ const Tasks = ({ trainee }: Props) => {
   const { user } = useAppSelector((state) => state.auth);
   const [add, toggleAdd] = useDisclosure(false);
   const [update, toggleUpdate] = useDisclosure(false);
+  const [assign, toggleAssign] = useDisclosure(false);
   const [view, toggleView] = useDisclosure(false);
   const [viewId, setViewId] = useState<string | null>(null);
   const { data: tasks } = useGetAllTasksQuery();
@@ -48,7 +50,15 @@ const Tasks = ({ trainee }: Props) => {
           />
         )}
         {user?.role === "Task manager" && (
-          <Button color="cyan" size="xs" onClick={toggleAdd.toggle}>
+          <Button
+            color="cyan"
+            size="xs"
+            onClick={
+              user?.role === "Task manager" && !pathname.includes("profile")
+                ? toggleAdd.toggle
+                : toggleAssign.toggle
+            }
+          >
             {user?.role === "Task manager" && !pathname.includes("profile")
               ? "Add task"
               : "Assign task"}
@@ -172,6 +182,11 @@ const Tasks = ({ trainee }: Props) => {
 
       {/* Modals */}
       <AddTaskModal add={add} toggle={toggleAdd.toggle} />
+      <AssignTaskModal
+        assignTo={trainee?.name!}
+        assign={assign}
+        toggle={toggleAssign.toggle}
+      />
       <UpdateTaskModal update={update} toggle={toggleUpdate.toggle} />
       <ViewTaskModal
         tasks={tasks}

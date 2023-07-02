@@ -1,4 +1,14 @@
-import { Modal, Autocomplete, Button, Text, Group, Box } from "@mantine/core";
+import {
+  Modal,
+  Autocomplete,
+  Button,
+  Text,
+  Group,
+  Box,
+  Image,
+  Flex,
+  Stack,
+} from "@mantine/core";
 import { tasks } from "../../../../data/tasks";
 import { members } from "../../../../data/members";
 import { useGetAllTraineeQuery } from "../../../../features/api/trainee/traineeApiSlice";
@@ -23,22 +33,20 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   const [assignTask, { isLoading }] = useAssignTaskMutation();
 
-  const handleAssign = async () => {
+  const handleAssign = async (name: string) => {
     JoinRoom(user?.course!, user?.role!);
-    const data = { _id: task._id, name: assignTo, course: user?.course };
+    setAssignTo(name);
+    const data = { _id: task._id, name: name, course: user?.course };
     await assignTask({ task: data, rooms: [user?.course] });
     toggle();
   };
 
   return (
     <Modal
-      size="sm"
+      size="md"
       opened={assign}
       onClose={toggle}
-      title="Assign task"
-      centered
-    >
-      <div className="space-y-2">
+      title={
         <Group spacing={8}>
           <Text fz="sm" className="text-gray-500 font-semibold">
             Task:
@@ -47,17 +55,51 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
             {task.taskname}
           </Text>
         </Group>
-        <Autocomplete
-          value={assignTo}
-          onChange={setAssignTo}
-          data={trainees?.map((member) => member.name!)}
-          dropdownPosition="bottom"
-          placeholder="Pick one"
-        />
-
-        <Button onClick={handleAssign} loading={isLoading} fullWidth>
-          Assign
-        </Button>
+      }
+      centered
+    >
+      <div className="space-y-2">
+        {/* <Group spacing={8}>
+          <Text fz="sm" className="text-gray-500 font-semibold">
+            Task:
+          </Text>
+          <Text fz="sm" c="dimmed">
+            {task.taskname}
+          </Text>
+        </Group> */}
+        <Stack spacing={9} p={8}>
+          <>
+            <Text fz="sm" fw="bold">
+              Members
+            </Text>
+            {trainees?.map((account) => (
+              <Flex justify="space-between" align="center">
+                <Group spacing={10}>
+                  <Image
+                    src={account.picture}
+                    width={35}
+                    radius="xl"
+                    imageProps={{ referrerPolicy: "no-referrer" }}
+                  />
+                  <div className="-space-y-[2px]">
+                    <Text size="sm">{account.name}</Text>
+                    <Text c="dimmed" size="xs">
+                      {account.email}
+                    </Text>
+                  </div>
+                </Group>
+                <Button
+                  size="xs"
+                  variant="white"
+                  onClick={() => handleAssign(account.name!)}
+                  loading={isLoading && assignTo === account.name}
+                >
+                  Assign
+                </Button>
+              </Flex>
+            ))}
+          </>
+        </Stack>
       </div>
     </Modal>
   );

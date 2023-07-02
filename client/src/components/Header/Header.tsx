@@ -159,13 +159,15 @@ const Header = () => {
                 <Text>{user.email}</Text>
               </Menu.Label>
               <Menu.Divider />
-              <Menu.Item className="text-red-400 bg-white hover:bg-white p-0">
+              <Menu.Item
+                className="text-red-400 bg-white hover:bg-white p-0"
+                onClick={handleOnLogout}
+              >
                 <Button
                   leftIcon={<IconLogout size={15} />}
                   variant="white"
                   size="xs"
                   color="red"
-                  onClick={handleOnLogout}
                   loading={logoutState.isLoading}
                 >
                   Sign out
