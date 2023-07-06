@@ -37,9 +37,9 @@ const Comments = ({ task, user, assign }: Props) => {
                   {item.by}
                 </Text>
               </Group>
-              <Text c="dimmed" fz="xs">
+              {/* <Text c="dimmed" fz="xs">
                 2 min ago
-              </Text>
+              </Text> */}
             </Flex>
           </Paper>
         );
