@@ -10,12 +10,15 @@ import { IconArrowNarrowRight } from "@tabler/icons-react";
 import { useAppSelector } from "../../app/hooks";
 import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const Home = () => {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
   const autoplay = useRef(Autoplay({ delay: 3000 }));
+
+  useDocumentTitle("TraineeTasker");
   return (
     <Stack align="center" className="text-center" spacing={60}>
       <div>

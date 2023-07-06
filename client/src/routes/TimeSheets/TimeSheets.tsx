@@ -40,6 +40,7 @@ import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 import { calculateSpentTime } from "../../utils/calculateSpentTime";
 import { ITrainee } from "../../interfaces/user.interface";
 import { useAppSelector } from "../../app/hooks";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 // ? if trainee time out in dtr, task hour will automatically stop if time is the trainee out time.
 // ? (ex. 12:00 PM and 5:00 PM, dtr time out and stop the timesheet)
@@ -68,8 +69,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
     10
   );
 
-  console.log("PROFILE:", profile);
-
+  useDocumentTitle("Timesheet");
   const rows = items[page - 1]?.map((sheet, index) => {
     const format = formatDateTime(sheet.date!);
 

@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
-import { lazy, useState } from "react";
+import { lazy, useState, useEffect } from "react";
 import { TasksLabels } from "../../components/ColorLabels";
 import TaskCards from "./components/TaskCards";
 import InfoCard from "./components/InfoCard";
@@ -18,9 +18,13 @@ import TasksTodoCard from "./components/TasksTodoCard";
 const MembersTableCard = lazy(() => import("./components/MembersTableCard"));
 import MembersAssignTask from "./components/MembersAssignTask";
 import { useGetTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
+import { useLocation } from "react-router-dom";
 
 const Dashboard = () => {
   const { user } = useAppSelector((state) => state.auth);
+
+  useDocumentTitle("Dashboard");
 
   return (
     <>

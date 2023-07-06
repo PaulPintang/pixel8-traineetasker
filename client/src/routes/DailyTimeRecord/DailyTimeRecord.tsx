@@ -26,6 +26,7 @@ import { formatDateTime } from "../../utils/formatDateTime";
 import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 import { useAppSelector } from "../../app/hooks";
 import { ITrainee } from "../../interfaces/user.interface";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const sheets = [
   {
@@ -142,6 +143,8 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const todaydtr = trainee?.dtr.some(
     (record) => record.date === formatDateTime(date.toISOString()).date
   );
+
+  useDocumentTitle("DailyTimeRecords");
 
   const rows = items[page - 1]?.map((record: IDtr) => (
     <tr className="border-none ">

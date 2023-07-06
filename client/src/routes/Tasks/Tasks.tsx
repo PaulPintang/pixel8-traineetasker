@@ -14,7 +14,7 @@ import TaskUrgent from "./components/TaskUrgent";
 const TaskTable = lazy(() => import("./components/TaskTable"));
 // import TaskTable from "./components/TaskTable";
 import AddTaskModal from "./components/modals/AddTaskModal";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
 import ViewTaskModal from "./components/modals/ViewTaskModal";
 import UpdateTaskModal from "./components/modals/UpdateTaskModal";
 import { useAppSelector } from "../../app/hooks";
@@ -38,6 +38,8 @@ const Tasks = ({ trainee }: Props) => {
   const [viewId, setViewId] = useState<string | null>(null);
   const { data: tasks } = useGetAllTasksQuery();
   const [activeTab, setActiveTab] = useState<string | null>("inprogress");
+
+  useDocumentTitle("Tasks");
   return (
     <>
       <Flex justify="space-between">

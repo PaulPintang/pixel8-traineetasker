@@ -10,6 +10,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import RootLayout from "./routes/RootLayout";
 import { Protected } from "./middleware/Protected";
 import Profile from "./routes/Profile/Profile";
+import useDocumentTitle from "./hooks/useDocumentTitle";
 const Dashboard = lazy(() => import("./routes/Dashboard/Dashboard"));
 const TimeSheets = lazy(() => import("./routes/TimeSheets/TimeSheets"));
 const Tasks = lazy(() => import("./routes/Tasks/Tasks"));
