@@ -1,6 +1,5 @@
 import asyncHandler from "express-async-handler";
 import { Response, Request, NextFunction } from "express";
-import { IAccount, ITrainee } from "../interfaces/user.interface";
 import Task from "../models/taskModel";
 import Account from "../models/accountModel";
 import Trainee from "../models/traineeModel";
@@ -8,16 +7,10 @@ import { initialTask } from "../data/task";
 import { ITask } from "../interfaces/task.interface";
 import { formatDateTime } from "../utils/formatDateTime";
 import { checkTime } from "../utils/checkTime";
-import { calculateSpentTime } from "../utils/calculateSpentTime";
 
 export const getAllTasks = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { role, email } = res.locals.user;
-
-    // if (role === "admin") {
-    //   const tasks = await Task.find();
-    //   res.json(tasks);
-    // } else {
+    const { email } = res.locals.user;
     const account = await Account.findOne({ email });
     if (account.role !== "trainee") {
       const tasks = await Task.find({ course: account.course });
@@ -26,9 +19,6 @@ export const getAllTasks = asyncHandler(
       const tasks = await Task.find({ assign: account.name });
       res.json(tasks);
     }
-    // const tasks = await Task.find({ assign: "", course: account.course });
-    // res.json(tasks);
-    // }
   }
 );
 
@@ -125,9 +115,6 @@ export const updateTaskStatus = asyncHandler(
       // UPDATING TASK SPENT
 
       const tasksheet = timesheet.filter((item) => item.status === "recording");
-      // const tasksheet = timesheet.filter(
-      //   (item) => item.ticket === task.ticketno
-      // );
 
       const totalMorningSpentTime = tasksheet.reduce((total, item) => {
         const morningStart = new Date(`2000/01/01 ${item.morning.start}`);

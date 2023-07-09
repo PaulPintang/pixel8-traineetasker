@@ -1,9 +1,7 @@
-import e, { NextFunction, Request, Response } from "express";
-import Trainee from "../models/traineeModel";
+import { NextFunction, Request, Response } from "express";
 import Account from "../models/accountModel";
-import { IAccount, ITrainee } from "../interfaces/user.interface";
+import { IAccount } from "../interfaces/user.interface";
 import asyncHandler from "express-async-handler";
-import { userData } from "../data/user";
 import { generateToken } from "../utils/generateToken";
 
 // * vulnerable, can bypass login if other account used as request body, it will return a token

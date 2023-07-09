@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
 import { Response, Request, NextFunction } from "express";
-import { IAccount, ITrainee } from "../interfaces/user.interface";
+import { IAccount } from "../interfaces/user.interface";
 import Account from "../models/accountModel";
 import Task from "../models/taskModel";
 import { generateToken } from "../utils/generateToken";
@@ -14,7 +14,6 @@ export const getAllAccount = asyncHandler(
     if (res.locals.user.role === "admin") {
       const roles = ["QA Personnel", "Task manager", "supervisor"];
       const accounts = await Account.find({ role: { $in: roles } });
-      // const accounts = await Account.find({ role: "supervisor" });
       res.json(accounts);
     } else {
       const user = await Account.findOne({ email: res.locals.user.email });
@@ -38,7 +37,6 @@ export const refetchAccount = asyncHandler(
 export const addAccount = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const { name, email, course, newrole } = req.body;
-    // const { name, email, course, newrole } = req.body;
     const role = res.locals.user.role;
 
     const newroles = ["QA Personnel", "Task manager"];

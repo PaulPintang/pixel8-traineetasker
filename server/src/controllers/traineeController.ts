@@ -1,11 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import Trainee from "../models/traineeModel";
 import Task from "../models/taskModel";
 import Account from "../models/accountModel";
 import { ITrainee } from "../interfaces/user.interface";
 import asyncHandler from "express-async-handler";
-import { userData } from "../data/user";
 import { IDtr } from "../interfaces/records.interface";
 import { formatDateTime } from "../utils/formatDateTime";
 import { checkTime } from "../utils/checkTime";
