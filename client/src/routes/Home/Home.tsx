@@ -1,4 +1,4 @@
-import { Center, Image, Stack, Title, Text, Button } from "@mantine/core";
+import { Image, Stack, Title, Text, Button } from "@mantine/core";
 import dashboard from "../../assets/CarouselImages/dashboard.png";
 import tasks from "../../assets/CarouselImages/tasks.png";
 import timesheet from "../../assets/CarouselImages/timesheet.png";
@@ -44,9 +44,7 @@ const Home = () => {
           </NavLink>
         )}
       </div>
-      {/* <div className="w-[970px] shadow-2xl"> */}
       <div className="md:w-[970px] xl:w-[970px] w-full shadow-2xl md:rounded-3xl lg:rounded-3xl rounded-lg bg-gray-50 p-1">
-        {/* <Image src={dashboard} className="shadow-2xl" /> */}
         <Carousel
           mx="auto"
           withIndicators

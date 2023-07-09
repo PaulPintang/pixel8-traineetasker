@@ -1,19 +1,9 @@
-import {
-  Modal,
-  TextInput,
-  Button,
-  Group,
-  Flex,
-  Card,
-  Text,
-} from "@mantine/core";
+import { Modal, TextInput, Button, Flex } from "@mantine/core";
 import { useState } from "react";
 import { ITask } from "../../../../interfaces/task.interface";
-import { IconLink, IconPlus } from "@tabler/icons-react";
 import { useAddTaskMutation } from "../../../../features/api/task/taskApiSlice";
-import { JoinRoom, socket } from "../../../../utils/socketConnect";
+import { JoinRoom } from "../../../../utils/socketConnect";
 
-import { useEffect } from "react";
 import { useAppSelector } from "../../../../app/hooks";
 interface ModalProps {
   add: boolean;
@@ -32,12 +22,6 @@ const AddTaskModal = ({ add, toggle }: ModalProps) => {
   const handleAddTask = async () => {
     JoinRoom(user?.course!, user?.role!);
     await addTask(toAddTask);
-    // socket.emit("course", user?.course);
-    // const newtask: any = await addTask(toAddTask);
-    // socket.emit("add", {
-    //   task: newtask.data,
-    //   rooms: ["Task manager", "QA Personnel", "supervisor"],
-    // });
     setToAddTask({
       taskname: "",
       ticketno: "",

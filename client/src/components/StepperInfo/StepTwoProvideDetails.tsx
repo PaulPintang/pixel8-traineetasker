@@ -10,9 +10,6 @@ import {
   NumberInput,
 } from "@mantine/core";
 import { Props } from "./StepperInfo";
-import { useAppDispatch } from "../../app/hooks";
-import { setUser } from "../../features/auth/authSlice";
-import { useNavigate } from "react-router-dom";
 
 const StepTwoProvideDetails = ({
   setTraineeInfo,

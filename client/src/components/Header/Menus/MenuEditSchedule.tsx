@@ -1,24 +1,8 @@
-import {
-  Flex,
-  Menu,
-  Button,
-  Text,
-  Stack,
-  Badge,
-  Loader,
-  Group,
-  ActionIcon,
-} from "@mantine/core";
+import { Menu, Button, Text, Group, ActionIcon } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
-import { IconSelector, IconCheck, IconClock } from "@tabler/icons-react";
-import { useAppSelector } from "../../../app/hooks";
-import { useState } from "react";
-import { useUpdateCourseViewMutation } from "../../../features/api/account/accountApiSlice";
+import { IconClock } from "@tabler/icons-react";
 
 const MenuEditSchedule = () => {
-  const [courseView, viewState] = useUpdateCourseViewMutation();
-  const { user } = useAppSelector((state) => state.auth);
-
   return (
     <Menu
       width={260}

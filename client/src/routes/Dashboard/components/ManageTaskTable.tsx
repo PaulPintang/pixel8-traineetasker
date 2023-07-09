@@ -1,21 +1,17 @@
 import {
   Card,
-  Table,
   Text,
   Flex,
   Group,
   Pagination,
-  Tooltip,
   ActionIcon,
-  Select,
-  Button,
   Image,
 } from "@mantine/core";
-import { IconExternalLink, IconId } from "@tabler/icons-react";
+import { IconId } from "@tabler/icons-react";
 import { chunk } from "lodash";
-import { useState, useEffect, ReactNode } from "react";
+import { useState } from "react";
 import avatar from "../../../assets/avatar.png";
-import { members } from "../../../data/members";
+// import { members } from "../../../data/members";
 
 const ManageTaskTable = () => {
   const [page, setPage] = useState(1);
@@ -25,49 +21,49 @@ const ManageTaskTable = () => {
   //     filterBy ? member.status === filterBy : member
   //   );
 
-  const items = chunk(members, 4);
+  // const items = chunk(members, 4);
 
-  const rows = items[page - 1]?.map((member) => (
-    <tr>
-      <td className="hidden md:table-cell lg:table-cell pl-3 pt-3">
-        <Group spacing={10}>
-          <Image src={avatar} width={35} />
-          <div className="-space-y-[2px]">
-            <Text className="font-semibold">{member.name}</Text>
-            <Text c="dimmed">{member.email}</Text>
-          </div>
-        </Group>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <Text className="font-semibold">{member.gender}</Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <Text className="font-semibold">
-          {member.requiredHours} <span className="font-normal">hours</span>
-        </Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <Text className="font-semibold">
-          {member.pendingHours} <span className="font-normal">hours</span>
-        </Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <Text className="font-semibold">
-          {member.renderedHours} <span className="font-normal">hours</span>
-        </Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <Text className="font-semibold">
-          {member.completedTask} <span className="font-normal">tasks</span>
-        </Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <ActionIcon variant="light" color="cyan">
-          <IconId size={19} />
-        </ActionIcon>
-      </td>
-    </tr>
-  ));
+  // const rows = items[page - 1]?.map((member) => (
+  //   <tr>
+  //     <td className="hidden md:table-cell lg:table-cell pl-3 pt-3">
+  //       <Group spacing={10}>
+  //         <Image src={avatar} width={35} />
+  //         <div className="-space-y-[2px]">
+  //           <Text className="font-semibold">{member.name}</Text>
+  //           <Text c="dimmed">{member.email}</Text>
+  //         </div>
+  //       </Group>
+  //     </td>
+  //     <td className="hidden md:table-cell lg:table-cell pl-3 ">
+  //       <Text className="font-semibold">{member.gender}</Text>
+  //     </td>
+  //     <td className="hidden md:table-cell lg:table-cell pl-3 ">
+  //       <Text className="font-semibold">
+  //         {member.requiredHours} <span className="font-normal">hours</span>
+  //       </Text>
+  //     </td>
+  //     <td className="hidden md:table-cell lg:table-cell pl-3 ">
+  //       <Text className="font-semibold">
+  //         {member.pendingHours} <span className="font-normal">hours</span>
+  //       </Text>
+  //     </td>
+  //     <td className="hidden md:table-cell lg:table-cell pl-3 ">
+  //       <Text className="font-semibold">
+  //         {member.renderedHours} <span className="font-normal">hours</span>
+  //       </Text>
+  //     </td>
+  //     <td className="hidden md:table-cell lg:table-cell pl-3 ">
+  //       <Text className="font-semibold">
+  //         {member.completedTask} <span className="font-normal">tasks</span>
+  //       </Text>
+  //     </td>
+  //     <td className="hidden md:table-cell lg:table-cell pl-3 ">
+  //       <ActionIcon variant="light" color="cyan">
+  //         <IconId size={19} />
+  //       </ActionIcon>
+  //     </td>
+  //   </tr>
+  // ));
 
   return (
     <>
@@ -125,46 +121,31 @@ const ManageTaskTable = () => {
                 ></th> */}
               </tr>
             </thead>
-            <tbody className="text-xs text-gray-600">{rows}</tbody>
+            {/* <tbody className="text-xs text-gray-600">{rows}</tbody> */}
           </table>
         </div>
 
         <Flex justify="space-between">
           <Group align="center">
-            {/* <Select
-              size="xs"
-              value={filterBy}
-              onChange={setFilterBy}
-              w={150}
-              placeholder="Filter"
-              data={[
-                { value: "", label: "All tasks" },
-                { value: "new", label: "New" },
-                { value: "inprogress", label: "In-Progress" },
-                { value: "forqa", label: "For-QA" },
-                { value: "failed", label: "Failed" },
-                { value: "completed", label: "Completed" },
-              ]}
-            /> */}
             <Flex>
               <Group spacing={3}>
                 <Text fz="xs" className="uppercase font-semibold text-gray-700">
                   Total:
                 </Text>
                 <Text fz="xs">
-                  {members.length} member{members.length >= 2 && "s"}
+                  {/* {members.length} member{members.length >= 2 && "s"} */}
                 </Text>
               </Group>
             </Flex>
           </Group>
-          <Pagination
+          {/* <Pagination
             total={items.length}
             value={page}
             onChange={setPage}
             size="xs"
             color="teal"
             withEdges
-          />
+          /> */}
         </Flex>
       </Card>
     </>

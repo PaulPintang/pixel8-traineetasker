@@ -1,4 +1,3 @@
-import { method } from "lodash";
 import { apiSlice } from "../apiSlice";
 import { ITrainee } from "../../../interfaces/user.interface";
 import { ISheets } from "../../../interfaces/records.interface";

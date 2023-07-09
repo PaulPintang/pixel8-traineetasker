@@ -1,26 +1,21 @@
 import {
   Card,
-  Table,
-  Text,
   Flex,
   Group,
   Pagination,
-  Tooltip,
-  ActionIcon,
   Button,
+  Text,
   Select,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconExternalLink, IconInfoCircle } from "@tabler/icons-react";
+import { IconInfoCircle } from "@tabler/icons-react";
 import { chunk } from "lodash";
-import { useState, useEffect, ReactNode } from "react";
-import { ITask } from "../../../interfaces/task.interface";
+import { useState } from "react";
 import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
-// import { tasks } from "../../../data/tasks";
-import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { useAppSelector } from "../../../app/hooks";
 import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
 import { calculateSpentTime } from "../../../utils/calculateSpentTime";
+import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 
 const TaskTableCard = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -30,15 +25,12 @@ const TaskTableCard = () => {
   const [viewId, setViewId] = useState<string | null>(null);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
-  // const data = tasks?.filter((task) =>
-  //   filterBy ? task.status === filterBy && task.assign === user?.name : task
-  // );
   const { data: trainee } = useGetTraineeProfileQuery();
 
-  const sheet = trainee?.timesheet.find((task) => task.status === "recording");
+  const sheet = trainee?.timesheet?.find((task) => task.status === "recording");
   const time = {
     status: sheet?.status!,
-    morning: sheet?.morning,
+    morning: sheet?.morning!,
     afternoon: sheet?.afternoon,
   };
   const spent = calculateSpentTime(time);
@@ -54,13 +46,6 @@ const TaskTableCard = () => {
   const items = chunk(data, 5);
 
   const rows = items[page - 1]?.map((task) => {
-    // Extract hours and minutes
-    // const hours = task.spent !== "" ? parseInt(task.spent!.split("hrs")[0]) : 0;
-    // const minutes =
-    //   task.spent !== ""
-    //     ? parseInt(task.spent!.split("hrs")[1].replace("mins", ""))
-    //     : 0;
-
     return (
       <tr>
         <td className=" md:table-cell lg:table-cell pl-3">
@@ -178,10 +163,6 @@ const TaskTableCard = () => {
                 >
                   <Text>Action</Text>
                 </th>
-                {/* <th
-                  scope="col"
-                  className="rounded-tr-md  md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
-                ></th> */}
               </tr>
             </thead>
             <tbody className="text-xs text-gray-600">{rows}</tbody>

@@ -17,10 +17,6 @@ export interface ITrainee extends IAccount {
     pending: number;
   };
   completedTask?: number;
-  timesheet: ISheets[];
-  dtr: IDtr[];
-}
-
-export interface IPixel8Acc extends IAccount {
-  trainees: number;
+  timesheet?: ISheets[];
+  dtr?: IDtr[];
 }

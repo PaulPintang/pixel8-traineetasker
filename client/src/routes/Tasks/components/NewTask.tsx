@@ -1,7 +1,5 @@
-import { Card, Group, Text, Button, Box } from "@mantine/core";
+import { Card, Group, Text, Box } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
-import { ITask } from "../../../interfaces/task.interface";
-// import { tasks } from "../../../data/tasks";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { formatDateTime } from "../../../utils/formatDateTime";
 import { useAppSelector } from "../../../app/hooks";
@@ -43,14 +41,7 @@ const NewTask = ({ toggle, setViewId }: Props) => {
                   <Text>Added:</Text>
                   <Text>{format.date}</Text>
                 </Group>
-                {/* <Group className="text-gray-500" fz="xs" spacing={8}>
-                <Text>Deliverable:</Text>
-                <Text c="blue" fw="bold">
-                  View
-                </Text>
-              </Group> */}
               </Box>
-              {/* <Button size="xs">Start the task</Button> */}
             </Box>
           </Card>
         );

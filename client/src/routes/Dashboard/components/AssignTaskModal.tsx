@@ -1,14 +1,4 @@
-import {
-  Modal,
-  Autocomplete,
-  Button,
-  Text,
-  Group,
-  Box,
-  Stack,
-  Flex,
-} from "@mantine/core";
-import { tasks } from "../../../data/tasks";
+import { Modal, Button, Text, Group, Stack, Flex } from "@mantine/core";
 import {
   useAssignTaskMutation,
   useGetAllTasksQuery,
@@ -28,7 +18,6 @@ const AssignTaskModal = ({ assign, toggle, assignTo }: ModalProps) => {
   const { data: tasks } = useGetAllTasksQuery();
   const [taskId, setTaskId] = useState("");
   const { user } = useAppSelector((state) => state.auth);
-  const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   const [assignTask, { isLoading }] = useAssignTaskMutation();
 
   const handleAssign = async (task: ITask) => {

@@ -1,33 +1,22 @@
 import {
   Card,
-  Table,
   Text,
   Flex,
   Group,
   Pagination,
-  Tooltip,
   ActionIcon,
-  Select,
   Button,
   Image,
   Menu,
   Checkbox,
 } from "@mantine/core";
-import {
-  IconDots,
-  IconEdit,
-  IconExternalLink,
-  IconId,
-  IconUser,
-} from "@tabler/icons-react";
+import { IconDots, IconUser } from "@tabler/icons-react";
 import { chunk } from "lodash";
-import { useState, useEffect, ReactNode } from "react";
-import avatar from "../../../assets/avatar.png";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { IconInfoCircle } from "@tabler/icons-react";
 import AssignTaskModal from "./AssignTaskModal";
 import { useDisclosure } from "@mantine/hooks";
-// import { trainees } from "../../../data/trainees";
 import { useGetAllTraineeQuery } from "../../../features/api/trainee/traineeApiSlice";
 import { useAppSelector } from "../../../app/hooks";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
@@ -40,15 +29,6 @@ const traineesTableCard = () => {
   const [assignTo, setAssignTo] = useState("");
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
-  const [filterBy, setFilterBy] = useState<string | null>("");
-
-  //   const data = trainees?.filter((trainee) =>
-  //     filterBy ? trainee.status === filterBy : trainee
-  //   );
-
-  // useEffect(() => {
-  //   toggle();
-  // }, [assignTo]);
 
   const items = chunk(trainees, 4);
 
@@ -69,9 +49,6 @@ const traineesTableCard = () => {
           </div>
         </Group>
       </td>
-      {/* <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <Text className="font-semibold">{trainee.school}</Text>
-      </td> */}
       <td className="hidden md:table-cell lg:table-cell pl-3 ">
         <Text className="font-semibold">
           {trainee.hours?.ojtHours} <span className="font-normal">hours</span>
@@ -98,13 +75,6 @@ const traineesTableCard = () => {
           <span className="font-normal">tasks</span>
         </Text>
       </td>
-      {/* <td className="hidden md:table-cell lg:table-cell pl-3 ">
-        <Link to={`../profile/${trainee.id}`}>
-          <ActionIcon variant="light" color="cyan">
-            <IconId size={19} />
-          </ActionIcon>
-        </Link>
-      </td> */}
       <td className=" md:table-cell lg:table-cell pt-2">
         {user?.role !== "Task manager" ? (
           <Link to={`../profile/${trainee._id}`}>
@@ -172,12 +142,6 @@ const traineesTableCard = () => {
                 >
                   <Text>Intern</Text>
                 </th>
-                {/* <th
-                  scope="col"
-                  className="rounded-tr-md md:rounded-none lg:rounded-none py-3 md:pr-3 lg:pr-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider  bg-gray-100 shadow-sm"
-                >
-                  <Text>Gender</Text>
-                </th> */}
                 <th
                   scope="col"
                   className="hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"

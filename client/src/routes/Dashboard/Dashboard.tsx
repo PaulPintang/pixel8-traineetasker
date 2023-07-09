@@ -1,25 +1,14 @@
-import {
-  Center,
-  Flex,
-  Button,
-  Title,
-  NumberInput,
-  Grid,
-  Box,
-} from "@mantine/core";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { Grid } from "@mantine/core";
+import { useAppSelector } from "../../app/hooks";
 
-import { lazy, useState, useEffect } from "react";
+import { lazy } from "react";
 import { TasksLabels } from "../../components/ColorLabels";
 import TaskCards from "./components/TaskCards";
 import InfoCard from "./components/InfoCard";
 import TaskTableCard from "./components/TaskTableCard";
 import TasksTodoCard from "./components/TasksTodoCard";
 const MembersTableCard = lazy(() => import("./components/MembersTableCard"));
-import MembersAssignTask from "./components/MembersAssignTask";
-import { useGetTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
-import { useLocation } from "react-router-dom";
 
 const Dashboard = () => {
   const { user } = useAppSelector((state) => state.auth);

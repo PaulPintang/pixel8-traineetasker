@@ -1,15 +1,4 @@
-import React from "react";
-import {
-  Box,
-  Card,
-  Flex,
-  Text,
-  Group,
-  Avatar,
-  Tooltip,
-  Image,
-} from "@mantine/core";
-import avatar from "../../../assets/avatar.png";
+import { Box, Card, Flex, Text, Group, Avatar, Tooltip } from "@mantine/core";
 import { useAppSelector } from "../../../app/hooks";
 import {
   useGetAllTraineeQuery,
@@ -40,8 +29,8 @@ const InfoCard = ({ trainee }: Props) => {
 
   const sheet =
     user?.role === "trainee"
-      ? profile?.timesheet.find((task) => task.status === "recording")
-      : trainee?.timesheet.find((task) => task.status === "recording");
+      ? profile?.timesheet?.find((task) => task.status === "recording")
+      : trainee?.timesheet?.find((task) => task.status === "recording");
 
   const time = {
     status: sheet?.status!,
@@ -181,34 +170,6 @@ const InfoCard = ({ trainee }: Props) => {
           </Text>
           <Tooltip.Group openDelay={300} closeDelay={100}>
             <Avatar.Group spacing="sm">
-              {/* <Tooltip label="Salazar Troop" withArrow>
-                <Avatar src={avatar} radius="xl" size={27} />
-              </Tooltip>
-              <Tooltip label="Jusswaa" withArrow>
-                <Avatar src={avatar} radius="xl" size={27} />
-              </Tooltip>
-              <Tooltip label="Roberto" withArrow>
-                <Avatar src={avatar} radius="xl" size={27} />
-              </Tooltip>
-              <Tooltip label="Mick" withArrow>
-                <Avatar src={avatar} radius="xl" size={27} />
-              </Tooltip>
-              <Tooltip label="Troop" withArrow>
-                <Avatar src={avatar} radius="xl" size={27} />
-              </Tooltip>
-              <Tooltip
-                withArrow
-                label={
-                  <>
-                    <div>John Outcast</div>
-                    <div>Levi Capitan</div>
-                  </>
-                }
-              >
-                <Avatar radius="xl" size={27}>
-                  +2
-                </Avatar> 
-              </Tooltip> */}
               {trainees?.map((trainee) => (
                 <Tooltip
                   label={trainee.name === user?.name ? "You" : trainee.name}

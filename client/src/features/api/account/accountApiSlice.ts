@@ -1,7 +1,5 @@
-import { method } from "lodash";
 import { apiSlice } from "../apiSlice";
 import { IAccount } from "../../../interfaces/user.interface";
-import { ITask } from "../../../interfaces/task.interface";
 import { JoinRoom } from "../../../utils/socketConnect";
 // ? endpoint must be in env
 

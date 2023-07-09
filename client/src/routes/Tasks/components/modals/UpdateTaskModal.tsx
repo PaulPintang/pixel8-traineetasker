@@ -1,12 +1,4 @@
-import {
-  Modal,
-  TextInput,
-  Button,
-  Group,
-  Flex,
-  Card,
-  Text,
-} from "@mantine/core";
+import { Modal, TextInput, Button, Flex } from "@mantine/core";
 import { useState } from "react";
 import { ITask } from "../../../../interfaces/task.interface";
 import { IconLink, IconPlus } from "@tabler/icons-react";

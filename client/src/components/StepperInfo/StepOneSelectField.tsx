@@ -1,6 +1,5 @@
 import { Box, Text, Title, Button, Stack, Radio, Flex } from "@mantine/core";
 import { Props } from "./StepperInfo";
-import { useEffect, useState } from "react";
 
 const StepOneSelectField = ({
   setTraineeInfo,

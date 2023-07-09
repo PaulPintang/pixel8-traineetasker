@@ -4,18 +4,13 @@ import {
   Button,
   Group,
   Flex,
-  Card,
   Text,
-  Select,
   ActionIcon,
 } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 import { useState } from "react";
 import { ITask } from "../../../interfaces/task.interface";
-import {
-  useGetAllTasksQuery,
-  useTodoTaskMutation,
-} from "../../../features/api/task/taskApiSlice";
+import { useTodoTaskMutation } from "../../../features/api/task/taskApiSlice";
 import { useMediaQuery } from "@mantine/hooks";
 
 interface ModalProps {
@@ -24,11 +19,6 @@ interface ModalProps {
   toggle: () => void;
 }
 
-// interface ModalProps {
-//   add: boolean;
-//   toggle: () => void;
-// }
-
 type Todo = {
   isDone: boolean;
   todo: string;
@@ -36,7 +26,6 @@ type Todo = {
 
 const AddTodoModal = ({ add, toggle, currentTask }: ModalProps) => {
   const isMobile = useMediaQuery("(max-width: 50em)");
-  // const { refetch } = useGetAllTasksQuery();
   const [todo, setTodo] = useState<Todo>({
     isDone: false,
     todo: "",
@@ -125,23 +114,6 @@ const AddTodoModal = ({ add, toggle, currentTask }: ModalProps) => {
               </div>
             </div>
           </div>
-          //    <div className="space-y-3 ">
-          //       <div className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative">
-          //         <Text c="dark" fz="xs" className="w-[80%]" py={4}>
-          //           I motice a problem in mobile device where dasd Lorem ipsum
-          //           dolor sit amet consectetur adipisicing elit. Doloremque,
-          //           vitae.
-          //         </Text>
-          //         <div className="absolute top-2 right-3">
-          //           <Group spacing={6}>
-          //             <Checkbox size="xs" color="cyan" />
-          //             <ActionIcon color="red" variant="light" radius="xl">
-          //               <IconX size={15} />
-          //             </ActionIcon>
-          //           </Group>
-          //         </div>
-          //       </div>
-          //     </div>
         ))}
       </div>
 
@@ -166,7 +138,6 @@ const AddTodoModal = ({ add, toggle, currentTask }: ModalProps) => {
             onClick={handleSaveTodo}
             fullWidth
             color="cyan"
-            //   disabled={todo === "" ? true : false}
             loading={isLoading}
           >
             Save

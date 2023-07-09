@@ -2,31 +2,18 @@ import {
   ActionIcon,
   Avatar,
   Button,
-  Center,
   Flex,
   Image,
   Group,
   Text,
   Menu,
   Badge,
-  Stack,
-  Loader,
 } from "@mantine/core";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import logo from "../../assets/Pixel8-Official-Logo.jpg";
-import avatar from "../../assets/avatar.png";
 import { useGoogleLogin } from "@react-oauth/google";
-import {
-  IconArrowRightTail,
-  IconCheck,
-  IconClock,
-  IconLogout,
-  IconSelector,
-  IconSettings,
-  IconUserCircle,
-  IconUsers,
-} from "@tabler/icons-react";
+import { IconLogout } from "@tabler/icons-react";
 import axios from "axios";
 import { setUser, logout } from "../../features/auth/authSlice";
 import {
@@ -35,16 +22,8 @@ import {
 } from "../../features/api/auth/authApiSlice";
 import { useState } from "react";
 import { useUpdateCourseViewMutation } from "../../features/api/account/accountApiSlice";
-import { useEffect } from "react";
 import MenuSelectCourse from "./Menus/MenuSelectCourse";
-import MenuEditSchedule from "./Menus/MenuEditSchedule";
 import MenuManageAccounts from "./Menus/MenuManageAccounts";
-import { socket } from "../../utils/socketConnect";
-
-type Link = {
-  isActive: boolean;
-  isPending: boolean;
-};
 
 const Header = () => {
   const location = useLocation();
@@ -52,12 +31,9 @@ const Header = () => {
   const { pathname } = location;
   const [loginUser, loginState] = useLoginMutation();
   const [logoutUser, logoutState] = useLogoutUserMutation();
-  const [courseView, viewState] = useUpdateCourseViewMutation();
 
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
-  const [course, setCourse] = useState(user?.course);
-  const [menuCouse, setMenuCourse] = useState(false);
 
   const GoogleUseAuth = useGoogleLogin({
     onSuccess: (res) => {
@@ -71,7 +47,6 @@ const Header = () => {
           }
         );
         const { name, email, picture } = account.data;
-        // ? OAuth return email info, and do a POST request to create account in database
         const user = await loginUser({ name, email, picture }).unwrap();
         dispatch(setUser(user));
         navigate("dashboard");
@@ -95,23 +70,9 @@ const Header = () => {
       <NavLink to="/" className="text-white">
         <div className="w-[160px] md:w-[180px] lg:w-[180px]">
           <Image src={logo} className="relative" left={-20} />
-          {/* <Image src={logo} width={205} className="relative" left={-20} /> */}
         </div>
       </NavLink>
-      <Group
-        // spacing={
-        //   user?.role === "admin" || user?.role === "supervisor" ? 15 : 15
-        // }
-        spacing={15}
-      >
-        {/* {user && user?.role !== "admin" && pathname === "/" && (
-          <NavLink to="dashboard" className="text-white">
-            <Button size="xs" color="cyan" variant="white">
-              Your Dashboard
-            </Button>
-          </NavLink>
-        )} */}
-
+      <Group spacing={15}>
         {user && user?.role !== "admin" && user.course && pathname !== "/" && (
           <Badge
             color="teal"

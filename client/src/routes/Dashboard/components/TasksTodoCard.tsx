@@ -1,16 +1,13 @@
 import {
   Card,
-  Center,
   Image,
   Text,
   Button,
-  Box,
   Flex,
   Group,
   ActionIcon,
   ScrollArea,
   Checkbox,
-  Tooltip,
 } from "@mantine/core";
 import empty from "../../../assets/emptytodo.png";
 import AddTodoModal from "./AddTodoModal";
@@ -20,17 +17,9 @@ import {
   useGetAllTasksQuery,
   useTodoTaskMutation,
 } from "../../../features/api/task/taskApiSlice";
-import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
-import { useState, useEffect, useMemo } from "react";
-
-type Todo = {
-  isDone: boolean;
-  todo: string;
-};
 
 const TasksTodoCard = () => {
   const { data: tasks } = useGetAllTasksQuery();
-  const { data: trainee } = useGetTraineeProfileQuery();
   const [taskTodo] = useTodoTaskMutation();
 
   const [add, { toggle }] = useDisclosure();
@@ -41,7 +30,6 @@ const TasksTodoCard = () => {
       _id: currentTask?._id,
       todos: currentTask?.todos?.filter((link, i) => i !== index),
     });
-    // setTodos(res.data);
   };
 
   const isTodoDone = async (index: number) => {
@@ -56,8 +44,6 @@ const TasksTodoCard = () => {
       _id: currentTask?._id,
       todos: updatedTodos,
     });
-
-    // setTodos(res.data);
   };
 
   return (

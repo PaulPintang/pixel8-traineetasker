@@ -1,4 +1,3 @@
-import React from "react";
 import { Group, Flex, Text } from "@mantine/core";
 
 export const TasksLabels = () => {

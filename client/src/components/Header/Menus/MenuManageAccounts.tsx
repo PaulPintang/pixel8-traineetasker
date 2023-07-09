@@ -1,52 +1,13 @@
-import {
-  Flex,
-  Menu,
-  Button,
-  Text,
-  Stack,
-  Badge,
-  Loader,
-  ActionIcon,
-  Group,
-  Accordion,
-  Avatar,
-  rem,
-  Box,
-  Collapse,
-  Divider,
-  TextInput,
-} from "@mantine/core";
-import { createStyles } from "@mantine/core";
-import {
-  IconSelector,
-  IconCheck,
-  IconClock,
-  IconUsers,
-  IconUser,
-  IconUserCircle,
-  IconSettings,
-} from "@tabler/icons-react";
+import { Menu, ActionIcon } from "@mantine/core";
+import { IconUsers } from "@tabler/icons-react";
 import { useAppSelector } from "../../../app/hooks";
-import { useState, lazy } from "react";
-import {
-  useGetAllAccountQuery,
-  useUpdateCourseViewMutation,
-  useUpdateAccountMutation,
-} from "../../../features/api/account/accountApiSlice";
-import { IAccount } from "../../../interfaces/user.interface";
-import { useGetAllTraineeQuery } from "../../../features/api/trainee/traineeApiSlice";
-import { useDisclosure } from "@mantine/hooks";
-import ManageAccountModal from "./AccountsDropdown";
+import { lazy } from "react";
+
 import AccountsDropdown from "./AccountsDropdown";
 const AccordionDropdown = lazy(() => import("./AccordionDropdown"));
 
 const MenuManageAccounts = () => {
-  const [opened, { toggle, close }] = useDisclosure(false);
   const { user } = useAppSelector((state) => state.auth);
-  const [email, setEmail] = useState("");
-  const { data: accounts } = useGetAllAccountQuery();
-  const { data: trainees } = useGetAllTraineeQuery(user?.course!);
-  const [courseView, viewState] = useUpdateCourseViewMutation();
 
   return (
     <div>

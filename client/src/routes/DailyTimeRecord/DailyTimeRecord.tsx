@@ -10,12 +10,11 @@ import {
   Stack,
 } from "@mantine/core";
 import { chunk } from "lodash";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TimeSheetsLabels } from "../../components/ColorLabels";
 import { IconClock, IconDots } from "@tabler/icons-react";
 import { checkTime } from "../../utils/checkTime";
 import {
-  useAddDtrMutation,
   useAddTaskTimesheetMutation,
   useGetAllTraineeQuery,
   useGetTraineeProfileQuery,
@@ -28,60 +27,12 @@ import { useAppSelector } from "../../app/hooks";
 import { ITrainee } from "../../interfaces/user.interface";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
-const sheets = [
-  {
-    date: "Monday, January 4 2023",
-    task: "Dashboard",
-    ticket: 12.011,
-    deliverable: "C",
-    status: "completed",
-    spent: 8,
-  },
-  {
-    date: "Monday, January 3 2023",
-    task: "Header",
-    ticket: 14.007,
-    deliverable: "N",
-    status: "new",
-    spent: 12,
-  },
-  {
-    date: "Monday, January 2 2023",
-    task: "Data from backend",
-    ticket: 88.906,
-    deliverable: "Y",
-    status: "inprogress",
-    spent: 10,
-  },
-  {
-    date: "Monday, January 1 2023",
-    task: "Modals",
-    ticket: 137.33,
-    deliverable: "Ba",
-    status: "failed",
-    spent: 13,
-  },
-];
-
-interface Records {
-  date: string;
-  status: "recording" | "recorded";
-  morning: {
-    in: string;
-    out: string;
-  };
-  afternoon: {
-    in: string;
-    out: string;
-  };
-}
 interface PropsOnProfile {
   profile: ITrainee;
 }
 
 const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const { user } = useAppSelector((state) => state.auth);
-  const [addDtr, dtrstate] = useAddDtrMutation();
   const [recordDtr, { isLoading }] = useUpdateDtrMutation();
   const { data: trainee, refetch } = useGetTraineeProfileQuery();
   const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
@@ -112,16 +63,15 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
 
   const handleTimeInOut = async () => {
     await recordDtr();
-    const todaytask = trainee?.timesheet.some(
+    const todaytask = trainee?.timesheet?.some(
       (record) => record.date === formatDateTime(date.toISOString()).date
     );
     const isThereInProgress = tasks?.some(
       (task) => task.status === "inprogress"
     );
     if (!todaytask && isThereInProgress) {
-      // ! what if inprogress task is more than one
       const inprogress = tasks?.filter((task) => task.status === "inprogress");
-      const sheet: ISheets = {
+      const sheet = {
         task: inprogress?.[0].taskname,
         ticket: inprogress?.[0].ticketno,
       };
@@ -136,11 +86,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
     10
   );
 
-  const today = trainee?.dtr.find(
-    (record) => record.date === formatDateTime(date.toISOString()).date
-  );
-
-  const todaydtr = trainee?.dtr.some(
+  const today = trainee?.dtr?.find(
     (record) => record.date === formatDateTime(date.toISOString()).date
   );
 
@@ -191,7 +137,6 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            {/* {Object.values(sheet.morning!).every((value) => value === "") ? ( */}
             {record.morning?.in !== "" && (
               <>
                 <Menu.Label>Morning</Menu.Label>
@@ -207,7 +152,6 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
                 <Menu.Divider />
               </>
             )}
-            {/* ) : ( */}
 
             {record.afternoon?.in !== "" && (
               <>
@@ -246,7 +190,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
     <>
       <Flex justify="space-between" align="center" pb={6}>
         <TimeSheetsLabels />
-        {user.role === "trainee" && (
+        {user?.role === "trainee" && (
           <>
             {!today || today?.status !== "recorded" ? (
               <>

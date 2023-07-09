@@ -1,15 +1,11 @@
 import {
   Card,
-  Center,
   Image,
   Text,
   Button,
-  Box,
   Flex,
   Group,
-  Divider,
   ScrollArea,
-  Tooltip,
 } from "@mantine/core";
 import empty from "../../../assets/emptytodo.png";
 import avatar from "../../../assets/avatar.png";
@@ -20,17 +16,6 @@ const MembersAssignTask = () => {
   return (
     <>
       <Card className="h-[290px] rounded-md shadow-md ">
-        {/* <Flex justify="space-between" align="center">
-          <Text c="dark" fw="bold" className="uppercase" fz="sm" pb={8}>
-            Assign task
-          </Text>
-          <Tooltip
-            label={<Text fz={12}>List of members with no task!</Text>}
-            color="cyan"
-          >
-            <IconInfoCircle size={18} className="text-gray-700" />
-          </Tooltip>
-        </Flex> */}
         <ScrollArea className="h-[84%]" scrollbarSize={8}>
           <div className="text-[13px] space-y-2">
             {members.map((member) => (
@@ -66,16 +51,6 @@ const MembersAssignTask = () => {
             ))}
           </div>
         </ScrollArea>
-        {/* <Flex pt={4}>
-          <Group spacing={3}>
-            <Text fz="xs" className="uppercase font-semibold text-gray-700">
-              Total:
-            </Text>
-            <Text fz="xs">
-              {members.length} member{members.length >= 2 && "s"}
-            </Text>
-          </Group>
-        </Flex> */}
       </Card>
     </>
   );

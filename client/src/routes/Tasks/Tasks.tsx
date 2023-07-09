@@ -5,15 +5,9 @@ const NewTask = lazy(() => import("./components/NewTask"));
 const InProgress = lazy(() => import("./components/InProgress"));
 const ForQa = lazy(() => import("./components/ForQa"));
 const Completed = lazy(() => import("./components/Completed"));
-// import NewTask from "./components/NewTask";
-// import InProgress from "./components/InProgress";
-// import ForQa from "./components/ForQa";
-// import Completed from "./components/Completed";
-import { IconBug, IconUrgent } from "@tabler/icons-react";
+
 import TaskUrgent from "./components/TaskUrgent";
 const TaskTable = lazy(() => import("./components/TaskTable"));
-// import TaskTable from "./components/TaskTable";
-import AddTaskModal from "./components/modals/AddTaskModal";
 import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
 import ViewTaskModal from "./components/modals/ViewTaskModal";
 import UpdateTaskModal from "./components/modals/UpdateTaskModal";
@@ -22,6 +16,7 @@ import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 import { ITrainee } from "../../interfaces/user.interface";
 import { useLocation } from "react-router-dom";
 import AssignTaskModal from "../Dashboard/components/AssignTaskModal";
+import AddTaskModal from "./components/modals/AddTaskModal";
 
 interface Props {
   trainee: ITrainee;

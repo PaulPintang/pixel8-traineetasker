@@ -29,9 +29,7 @@ const MenuSelectCourse = () => {
           variant="light"
           size="xs"
           color="gray"
-          // loading={viewState.isLoading}
         >
-          {/* Software Development */}
           <Text c="dark">
             {course === "developer"
               ? "System Development"
@@ -44,7 +42,6 @@ const MenuSelectCourse = () => {
 
       <Menu.Dropdown className="pr-3 py-2">
         <Stack spacing={3} w={205} p={2}>
-          {/* <Menu.Item p={0} className="hover:bg-white"> */}
           <Flex
             justify="space-between"
             align="center"
@@ -69,15 +66,12 @@ const MenuSelectCourse = () => {
             >
               Software Analyst
             </Button>
-            {/* {course === "analyst" && <IconCheck size={17} />} */}
             {viewState.isLoading && course === "analyst" ? (
               <Loader size="xs" color="gray" />
             ) : (
               course === "analyst" && <IconCheck size={17} />
             )}
           </Flex>
-          {/* </Menu.Item> */}
-          {/* <Menu.Item p={0} className="hover:bg-white"> */}
           <Flex
             justify="space-between"
             align="center"
@@ -99,18 +93,15 @@ const MenuSelectCourse = () => {
               variant="white"
               size="xs"
               color="dark"
-              // loading={viewState.isLoading}
             >
               Software Development
             </Button>
-            {/* {course === "developer" && <IconCheck size={17} />} */}
             {viewState.isLoading && course === "developer" ? (
               <Loader size="xs" color="gray" />
             ) : (
               course === "developer" && <IconCheck size={17} />
             )}
           </Flex>
-          {/* </Menu.Item> */}
 
           <Flex
             justify="space-between"
@@ -133,20 +124,15 @@ const MenuSelectCourse = () => {
               variant="white"
               size="xs"
               color="dark"
-              // loading={viewState.isLoading && "designer" ? true : false}
             >
               UI/UX Designer
             </Button>
-            {/* {course === "designer" && <IconCheck size={17} />} */}
             {viewState.isLoading && course === "designer" ? (
               <Loader size="xs" color="gray" />
             ) : (
               course === "designer" && <IconCheck size={17} />
             )}
           </Flex>
-          {/* <Button mt={2} size="xs" ml={11} mb={8}>
-                    Add new course
-                  </Button> */}
         </Stack>
       </Menu.Dropdown>
     </Menu>

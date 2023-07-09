@@ -7,7 +7,6 @@ import {
   IconStar,
   IconUrgent,
 } from "@tabler/icons-react";
-import React from "react";
 import { useAppSelector } from "../../../app/hooks";
 import {
   useGetAllTraineeQuery,
@@ -26,14 +25,9 @@ const TaskCards = ({ profile }: Props) => {
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
   const { data: trainee } = useGetTraineeProfileQuery();
-  // const { data: trainee } = useGetTraineeProfileQuery(user?._id, {
-  //   skip: user?.role !== "trainee",
-  // });
   const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
     skip: user?.role === "trainee",
   });
-
-  const profileInfo = trainees?.find((trainee) => trainee._id === profile._id);
 
   const { data: tasks } = useGetAllTasksQuery();
   return (

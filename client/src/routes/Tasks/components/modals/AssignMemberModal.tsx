@@ -1,26 +1,10 @@
-import {
-  Modal,
-  Autocomplete,
-  Button,
-  Text,
-  Group,
-  Box,
-  Image,
-  Flex,
-  Stack,
-} from "@mantine/core";
-import { tasks } from "../../../../data/tasks";
-import { members } from "../../../../data/members";
+import { Modal, Button, Text, Group, Image, Flex, Stack } from "@mantine/core";
 import { useGetAllTraineeQuery } from "../../../../features/api/trainee/traineeApiSlice";
 import { useAppSelector } from "../../../../app/hooks";
 import { ITask } from "../../../../interfaces/task.interface";
-import {
-  useAssignTaskMutation,
-  useGetAllTasksQuery,
-} from "../../../../features/api/task/taskApiSlice";
+import { useAssignTaskMutation } from "../../../../features/api/task/taskApiSlice";
 import { useState } from "react";
-import { useEffect } from "react";
-import { JoinRoom, socket } from "../../../../utils/socketConnect";
+import { JoinRoom } from "../../../../utils/socketConnect";
 interface ModalProps {
   task: ITask;
   assign: boolean;
@@ -59,14 +43,6 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
       centered
     >
       <div className="space-y-2">
-        {/* <Group spacing={8}>
-          <Text fz="sm" className="text-gray-500 font-semibold">
-            Task:
-          </Text>
-          <Text fz="sm" c="dimmed">
-            {task.taskname}
-          </Text>
-        </Group> */}
         <Stack spacing={9} p={8}>
           <>
             <Text fz="sm" fw="bold">

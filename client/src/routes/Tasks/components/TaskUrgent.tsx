@@ -1,16 +1,5 @@
+import { Text, Menu, Tabs, Group, ScrollArea, Flex } from "@mantine/core";
 import {
-  Text,
-  Menu,
-  Tabs,
-  Button,
-  Group,
-  ScrollArea,
-  Divider,
-  Flex,
-} from "@mantine/core";
-import {
-  IconChecks,
-  IconCircleCheckFilled,
   IconClockPause,
   IconExclamationCircle,
   IconPlaystationSquare,
@@ -102,9 +91,6 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                             {task.spent}
                           </Text>
                         </Group>
-                        {/* <Text className="text-gray-500  text-[11px]">
-                          December 12, 2022 at 09:05 AM
-                        </Text> */}
                       </div>
                     </Flex>
                   </Menu.Item>

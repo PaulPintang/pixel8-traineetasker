@@ -1,5 +1,4 @@
 import { ITask } from "../../../interfaces/task.interface";
-import { IAccount } from "../../../interfaces/user.interface";
 import { apiSlice } from "../apiSlice";
 import { socket } from "../../../utils/socketConnect";
 

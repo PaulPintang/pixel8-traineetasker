@@ -39,7 +39,6 @@ const useStyles = createStyles((theme) => ({
     transition: "transform 150ms ease",
 
     "&[data-active]": {
-      // transform: "scale(1.03)",
       backgroundColor:
         theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
       boxShadow: theme.shadows.md,
@@ -90,15 +89,9 @@ const AccordionDropdown = () => {
     close();
   };
 
-  console.log(accounts);
-
   const items = accounts
     ?.filter((acc) => acc.role === "supervisor")
     .map((account) => {
-      // const total = trainees?.filter(
-      //   (trainee) => trainee.course === item?.course
-      // );
-
       return (
         <Accordion.Item
           value={account._id!}
@@ -150,7 +143,6 @@ const AccordionDropdown = () => {
                 }
               </Text>
             </Group>
-            {/* <Menu.Item className="bg-white hover:bg-white" p={0}> */}
             <Box maw={400} mx="auto">
               <Button
                 onClick={toggle}
@@ -182,7 +174,6 @@ const AccordionDropdown = () => {
                 </Flex>
               </Collapse>
             </Box>
-            {/* </Menu.Item> */}
           </Accordion.Panel>
         </Accordion.Item>
       );

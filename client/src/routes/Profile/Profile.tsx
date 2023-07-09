@@ -1,44 +1,23 @@
 import { Suspense, lazy, useState } from "react";
-import {
-  Grid,
-  Text,
-  Group,
-  Flex,
-  Image,
-  Button,
-  Divider,
-  Tabs,
-  Card,
-} from "@mantine/core";
+import { Grid, Text, Image, Button, Flex, Tabs } from "@mantine/core";
 import TaskCards from "../Dashboard/components/TaskCards";
 import { TasksLabels } from "../../components/ColorLabels";
 import InfoCard from "../Dashboard/components/InfoCard";
-import avatar from "../../assets/avatar.png";
-const Tasks = lazy(() => import("../Tasks/Tasks"));
-// import Tasks from "../Tasks/Tasks";
 import { useParams } from "react-router-dom";
 import RemoveTraineeModal from "./RemoveTraineeModal";
 import { useDisclosure } from "@mantine/hooks";
-import { members } from "../../data/members";
-// import TimeSheets from "../TimeSheets/TimeSheets";
+import Tasks from "../Tasks/Tasks";
 const TimeSheets = lazy(() => import("../TimeSheets/TimeSheets"));
 const DailyTimeRecord = lazy(
   () => import("../DailyTimeRecord/DailyTimeRecord")
 );
 
-// import DailyTimeRecord from "../DailyTimeRecord/DailyTimeRecord";
-import { IconReport } from "@tabler/icons-react";
 import { useAppSelector } from "../../app/hooks";
-import {
-  useGetAllTraineeQuery,
-  useGetTraineeProfileQuery,
-} from "../../features/api/trainee/traineeApiSlice";
-import TaskTable from "../Tasks/components/TaskTable";
+import { useGetAllTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { id } = useParams();
-  // const { data: trainee } = useGetTraineeQuery(id!);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   const [remove, { toggle }] = useDisclosure(false);
   const [activeTab, setActiveTab] = useState<string | null>("tasks");

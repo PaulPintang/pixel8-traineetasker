@@ -33,7 +33,6 @@ import {
   useUpdateAccountMutation,
 } from "../../../features/api/account/accountApiSlice";
 import { useAppSelector } from "../../../app/hooks";
-import { IAccount } from "../../../interfaces/user.interface";
 
 const AccountsDropdown = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -132,7 +131,6 @@ const AccountsDropdown = () => {
                           variant="light"
                           size="xs"
                           color="gray"
-                          // loading={viewState.isLoading}
                         >
                           <Text c="dark">{account.role}</Text>
                         </Button>

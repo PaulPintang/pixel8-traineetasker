@@ -1,16 +1,4 @@
-import {
-  Card,
-  Group,
-  Text,
-  Button,
-  Box,
-  Badge,
-  ActionIcon,
-  Tooltip,
-  Flex,
-} from "@mantine/core";
-import { IconChecks, IconExternalLink } from "@tabler/icons-react";
-import { tasks } from "../../../data/tasks";
+import { Card, Group, Text, Box, Badge } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 interface Props {

@@ -1,33 +1,25 @@
 import {
   Card,
-  Table,
   Text,
   Flex,
   Group,
   Pagination,
-  Tooltip,
   ActionIcon,
   Select,
   Button,
   Badge,
   Menu,
-  Image,
 } from "@mantine/core";
 import {
   IconDots,
   IconEdit,
-  IconExternalLink,
-  IconId,
   IconInfoCircle,
   IconUser,
 } from "@tabler/icons-react";
-import { chunk } from "lodash";
-import { useState, useEffect, ReactNode } from "react";
-import avatar from "../../../assets/avatar.png";
+import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import AssignMemberModal from "./modals/AssignMemberModal";
 import { Dispatch, SetStateAction } from "react";
-// import { tasks } from "../../../data/tasks";
 import {
   useDeleteTaskMutation,
   useGetAllTasksQuery,
@@ -37,7 +29,7 @@ import { useAppSelector } from "../../../app/hooks";
 import { useLocation } from "react-router-dom";
 import { ITask } from "../../../interfaces/task.interface";
 import { ITrainee } from "../../../interfaces/user.interface";
-import { JoinRoom, socket } from "../../../utils/socketConnect";
+import { chunk } from "lodash";
 
 interface Props {
   trainee: ITrainee;
@@ -67,11 +59,6 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
 
   const handleDelete = async (_id: string) => {
     await deleteTask({ _id, rooms: [user?.course] });
-    // await JoinRoom(user?.course, user?.role);
-    // socket.emit("delete", {
-    //   _id,
-    //   rooms: [user?.course],
-    // });
   };
 
   const items = chunk(data, 10);

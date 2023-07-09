@@ -23,12 +23,7 @@ const RemoveTraineeModal = ({ remove, toggle }: ModalProps) => {
         <Text fz="sm" fw={700}>
           Type "remove" to confirm your action
         </Text>
-        <TextInput
-          size="sm"
-          //   value={typeDelete}
-          //   onChange={(e) => setType(e.target.value)}
-          autoFocus
-        />
+        <TextInput size="sm" autoFocus />
         <Flex gap={10} pt={10}>
           <Button onClick={toggle} variant="light" color="gray" fullWidth>
             Cancel
