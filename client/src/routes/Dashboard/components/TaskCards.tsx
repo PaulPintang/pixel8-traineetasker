@@ -17,7 +17,7 @@ import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { ITrainee } from "../../../interfaces/user.interface";
 
 interface Props {
-  profile: ITrainee;
+  profile?: ITrainee;
 }
 
 const TaskCards = ({ profile }: Props) => {
@@ -49,7 +49,7 @@ const TaskCards = ({ profile }: Props) => {
                     ? tasks?.filter((task) => task.status === "new").length
                     : tasks?.filter(
                         (task) =>
-                          task.status === "new" && task.assign === profile.name
+                          task.status === "new" && task.assign === profile?.name
                       ).length}
                 </Text>
               </>
@@ -87,7 +87,7 @@ const TaskCards = ({ profile }: Props) => {
                     : tasks?.filter(
                         (task) =>
                           task.status === "failed" &&
-                          task.assign === profile.name
+                          task.assign === profile?.name
                       ).length}
                 </Text>
               </>
@@ -133,7 +133,7 @@ const TaskCards = ({ profile }: Props) => {
                     : tasks?.filter(
                         (task) =>
                           task.status === "completed" &&
-                          task.assign === profile.name
+                          task.assign === profile?.name
                       ).length}
                 </Text>
               </>

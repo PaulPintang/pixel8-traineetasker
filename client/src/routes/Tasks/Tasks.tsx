@@ -19,7 +19,7 @@ import AssignTaskModal from "../Dashboard/components/AssignTaskModal";
 import AddTaskModal from "./components/modals/AddTaskModal";
 
 interface Props {
-  trainee: ITrainee;
+  trainee?: ITrainee;
 }
 
 const Tasks = ({ trainee }: Props) => {

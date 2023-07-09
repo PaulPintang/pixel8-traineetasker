@@ -11,7 +11,7 @@ import { calculateSpentTime } from "../../../utils/calculateSpentTime";
 import { formatDateTime } from "../../../utils/formatDateTime";
 
 interface Props {
-  trainee: ITrainee;
+  trainee?: ITrainee;
 }
 
 const InfoCard = ({ trainee }: Props) => {

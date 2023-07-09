@@ -28,7 +28,7 @@ import { ITrainee } from "../../interfaces/user.interface";
 import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 interface PropsOnProfile {
-  profile: ITrainee;
+  profile?: ITrainee;
 }
 
 const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
@@ -40,7 +40,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   });
   const [timesheet, sheetState] = useAddTaskTimesheetMutation();
 
-  const profileInfo = trainees?.find((trainee) => trainee._id === profile._id);
+  const profileInfo = trainees?.find((trainee) => trainee._id === profile?._id);
 
   const { data: tasks } = useGetAllTasksQuery();
   const date = new Date();

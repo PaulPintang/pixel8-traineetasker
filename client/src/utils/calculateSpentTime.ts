@@ -1,4 +1,5 @@
 import { formatDateTime } from "./formatDateTime";
+import { ISheets } from "../interfaces/records.interface";
 
 type TimeSpent = {
   status: "recording" | "recorded";
@@ -12,7 +13,7 @@ type TimeSpent = {
   };
 };
 
-export const calculateSpentTime = (time: TimeSpent) => {
+export const calculateSpentTime = (time: ISheets) => {
   const date = new Date();
   const format = formatDateTime(date.toISOString());
 

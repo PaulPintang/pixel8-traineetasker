@@ -1,18 +1,5 @@
-import {
-  Card,
-  Group,
-  Text,
-  Button,
-  Box,
-  Badge,
-  ActionIcon,
-  Tooltip,
-  Flex,
-} from "@mantine/core";
-import { IconChecks, IconExternalLink } from "@tabler/icons-react";
+import { Card, Group, Text, Box, Badge } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
-import { tasks } from "../../../data/tasks";
-import { ITask } from "../../../interfaces/task.interface";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { formatDateTime } from "../../../utils/formatDateTime";
 import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
@@ -29,14 +16,13 @@ const InProgress = ({ toggle, setViewId }: Props) => {
   const inprogress = tasks?.filter((task) => task.status === "inprogress");
   const { data: trainee } = useGetTraineeProfileQuery();
 
-  const sheet = trainee?.timesheet.find((task) => task.status === "recording");
+  const sheet = trainee?.timesheet?.find((task) => task.status === "recording");
   const time = {
     status: sheet?.status!,
     morning: sheet?.morning,
     afternoon: sheet?.afternoon,
   };
   const spent = calculateSpentTime(time);
-  const format = formatDateTime(date.toISOString());
   return (
     <div className="space-y-3">
       {inprogress?.map((task) => (

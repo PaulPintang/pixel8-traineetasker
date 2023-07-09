@@ -32,7 +32,7 @@ import useDocumentTitle from "../../hooks/useDocumentTitle";
 // ? add task selection if in progress task is more than one.
 
 interface PropsOnProfile {
-  profile: ITrainee;
+  profile?: ITrainee;
 }
 
 const TimeSheets = ({ profile }: PropsOnProfile) => {
@@ -47,7 +47,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
     skip: user?.role === "trainee",
   });
-  const profileInfo = trainees?.find((trainee) => trainee._id === profile._id);
+  const profileInfo = trainees?.find((trainee) => trainee._id === profile?._id);
 
   const items = chunk(
     user?.role === "trainee" ? trainee?.timesheet : profileInfo?.timesheet,
@@ -218,17 +218,6 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
         {/* <ManageTaskLabels /> */}
         <Group className="" fz={12}>
           <Group spacing={8} c="dark">
-            {inprogress?.length! > 1 && (
-              <>
-                {/* ? hide if inprogress task if only one and timesheet started  */}
-                <Text fw="bold">Select:</Text>
-                <Select
-                  size="xs"
-                  placeholder="Pick one"
-                  data={inprogress?.map((task) => task.taskname)}
-                />
-              </>
-            )}
             {inprogress?.length !== 0 && (
               <>
                 {/* hide if sheet not started and inprogress task is more than one */}
@@ -270,11 +259,6 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
               </>
             )}
           </Group>
-
-          {/* show if inporgress task is more than one */}
-          {/* <Button size="xs" onClick={handleTask}>
-            Start
-          </Button> */}
         </Group>
       </Flex>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)]">

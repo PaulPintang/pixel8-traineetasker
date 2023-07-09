@@ -51,7 +51,7 @@ const TasksTodoCard = () => {
       <Card className="h-full rounded-md shadow-md ">
         {currentTask ? (
           <>
-            {currentTask?.todos?.length !== 0 ? (
+            {currentTask?.todos?.length ?? 0 !== 0 ? (
               <>
                 <Group spacing={10} pb={5}>
                   <Text fz="sm" className="text-gray-500 font-semibold">

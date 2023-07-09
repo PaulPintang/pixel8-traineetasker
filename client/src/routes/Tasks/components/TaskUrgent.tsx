@@ -107,7 +107,12 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                   );
 
                   // Find the maximum date object using Math.max() and the spread operator
-                  const latest = new Date(Math.max(...dates));
+                  const latest =
+                    dates && dates.length > 0
+                      ? new Date(
+                          Math.max(...dates.map((date) => date.getTime()))
+                        )
+                      : null;
                   return (
                     <Menu.Item p={0} className="bg-white hover:bg-white">
                       <Flex
@@ -135,9 +140,9 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                             </Text>
                           </Group>
                           <Text className="text-gray-500  text-[11px]">
-                            {formatDateTime(latest).date +
+                            {formatDateTime(latest!).date +
                               " at " +
-                              formatDateTime(latest).time}
+                              formatDateTime(latest!).time}
                           </Text>
                         </div>
                       </Flex>
