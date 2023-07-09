@@ -211,7 +211,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                       )}
                     </Menu.Item>
                   )}
-                  <Menu.Item p={0} className="bg-white hover:bg-white">
+                  {/* <Menu.Item p={0} className="bg-white hover:bg-white">
                     <Button
                       onClick={() => {
                         update();
@@ -224,9 +224,9 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                     >
                       Edit
                     </Button>
-                  </Menu.Item>
+                  </Menu.Item> */}
 
-                  {user?.role !== "QA Personnel" && (
+                  {user?.role !== "QA Personnel" && task?.status === "new" && (
                     <Button
                       leftIcon={<IconUser size={16} />}
                       variant="white"

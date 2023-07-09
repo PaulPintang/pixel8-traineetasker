@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from "react";
+import { Suspense, lazy, useState, useEffect } from "react";
 import { Grid, Text, Image, Button, Flex, Tabs } from "@mantine/core";
 import TaskCards from "../Dashboard/components/TaskCards";
 import { TasksLabels } from "../../components/ColorLabels";
@@ -18,11 +18,15 @@ import useDocumentTitle from "../../hooks/useDocumentTitle";
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { id } = useParams();
-  const { data: trainees } = useGetAllTraineeQuery(user?.course!);
+  const { data: trainees, refetch } = useGetAllTraineeQuery(user?.course!);
   const [remove, { toggle }] = useDisclosure(false);
   const [activeTab, setActiveTab] = useState<string | null>("tasks");
 
   const trainee = trainees?.find((member) => member._id! === id);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   useDocumentTitle("Profile");
   return (

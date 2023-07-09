@@ -34,7 +34,6 @@ export const taskApiSlice = apiSlice.injectEndpoints({
           socket.on("deleteTask", (_id: string) => {
             updateCachedData((draft) => {
               const index = draft.findIndex((task) => task._id === _id);
-              console.log("pota", index);
               if (index !== -1) draft.splice(index, 1);
             });
           });
@@ -43,17 +42,14 @@ export const taskApiSlice = apiSlice.injectEndpoints({
               const index = draft.findIndex((task) => task._id === data._id);
               if (index !== -1) draft[index] = data;
             });
-            console.log(data);
           });
           socket.on("taskComment", ({ _id, msg, by }) => {
-            console.log(msg);
             updateCachedData((draft) => {
               const index = draft.findIndex((task) => task._id === _id);
               if (index !== -1) draft[index].comments?.push({ msg, by });
             });
           });
           socket.on("addTask", (task) => {
-            console.log(task);
             updateCachedData((draft) => {
               draft.push(task);
             });

@@ -16,7 +16,6 @@ import { useState } from "react";
 import { TimeSheetsLabels } from "../../components/ColorLabels";
 import { IconClock, IconDots } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
-
 import {
   useGetAllTraineeQuery,
   useGetTraineeProfileQuery,
@@ -42,6 +41,8 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   const [opened, { close, open }] = useDisclosure(false);
   const { data: tasks } = useGetAllTasksQuery();
   const date = new Date();
+  // ? test, filter should be in backend
+
   const { data: trainee } = useGetTraineeProfileQuery();
   const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
     skip: user?.role === "trainee",

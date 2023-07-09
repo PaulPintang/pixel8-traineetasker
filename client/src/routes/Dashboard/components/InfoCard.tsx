@@ -25,19 +25,26 @@ const InfoCard = ({ trainee }: Props) => {
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   const { data: tasks } = useGetAllTasksQuery();
 
-  const todayTask = tasks?.find((task) => task.status === "inprogress");
+  const todayTask = trainee?.timesheet?.find(
+    (task) => task.date === formatDateTime(date.toISOString()).date
+  );
+  const task = tasks?.find((task) => task.ticketno === todayTask?.ticket);
 
   const sheet =
     user?.role === "trainee"
-      ? profile?.timesheet?.find((task) => task.status === "recording")
-      : trainee?.timesheet?.find((task) => task.status === "recording");
+      ? profile?.timesheet?.find(
+          (task) => task.date === formatDateTime(date.toISOString()).date
+        )
+      : trainee?.timesheet?.find(
+          (task) => task.date === formatDateTime(date.toISOString()).date
+        );
 
-  const time = {
-    status: sheet?.status!,
-    morning: sheet?.morning,
-    afternoon: sheet?.afternoon,
-  };
-  const spent = calculateSpentTime(time);
+  // const time = {
+  //   status: sheet?.status!,
+  //   morning: sheet?.morning,
+  //   afternoon: sheet?.afternoon,
+  // };
+  // const spent = calculateSpentTime(time);
 
   return (
     <Card className="h- rounded-md shadow-md space-y-[6px]">
@@ -75,29 +82,29 @@ const InfoCard = ({ trainee }: Props) => {
               <Box component="div" p={5} pl={10}>
                 <Group spacing={10}>
                   <Text fz={12} className="text-gray-500 font-semibold">
-                    Task today:
+                    Inprogress Task:
                   </Text>
                   <Text fz={12} c="dimmed">
-                    {todayTask?.taskname}
+                    {/* {todayTask?.task} */}
+                    {sheet?.task}
                   </Text>
                 </Group>
                 <Group spacing={10}>
                   <Text fz={12} className="text-gray-500 font-semibold">
-                    Total hours in timesheet:
+                    Timesheet records:
                   </Text>
                   <Text fz={12} c="dimmed">
-                    <span>
-                      {spent.totalSpent.hours === 1
-                        ? spent.totalSpent.hours + "hr"
-                        : spent.totalSpent.hours > 1
-                        ? spent.totalSpent.hours + "hrs"
-                        : spent.totalSpent.hours === 0 && ""}
-                      {spent.totalSpent.minutes === 1
-                        ? spent.totalSpent.minutes + "min"
-                        : spent.totalSpent.minutes > 1
-                        ? spent.totalSpent.minutes + "mins"
-                        : spent.totalSpent.minutes === 0 && ""}
-                    </span>
+                    {user?.role === "trainee"
+                      ? profile?.timesheet?.filter(
+                          (sheet) =>
+                            sheet.date ===
+                            formatDateTime(date.toISOString()).date
+                        ).length
+                      : trainee?.timesheet?.filter(
+                          (sheet) =>
+                            sheet.date ===
+                            formatDateTime(date.toISOString()).date
+                        ).length}
                   </Text>
                 </Group>
               </Box>
