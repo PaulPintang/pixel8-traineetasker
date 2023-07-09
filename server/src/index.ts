@@ -25,14 +25,14 @@ const server = http.createServer(app);
 app.use(express.json({ limit: "200mb" }));
 app.use(
   cors({
+    origin: "https://traineetasker.vercel.app",
     credentials: true,
-    origin: "https://traineetasker.vercel.app/",
   })
 );
 
 const io = new Server(server, {
   cors: {
-    origin: "https://traineetasker.vercel.app/",
+    origin: "https://traineetasker.vercel.app",
     credentials: true,
   },
 });
