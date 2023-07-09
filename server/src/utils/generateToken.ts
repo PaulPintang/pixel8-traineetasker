@@ -10,6 +10,7 @@ export const generateToken = (res: Response, payload: ITrainee) => {
     httpOnly: true,
     secure: process.env.NODE_ENV !== "development", // Use secure cookies in production
     // sameSite: "strict", // Prevent CSRF attacks
+    sameSite: "none",
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });
 };
