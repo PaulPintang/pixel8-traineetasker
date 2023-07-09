@@ -170,7 +170,7 @@ const Tasks = ({ trainee }: Props) => {
         </>
       ) : (
         <TaskTable
-          trainee={trainee}
+          trainee={trainee!}
           setViewId={setViewId}
           view={toggleView.toggle}
           update={toggleUpdate.toggle}
