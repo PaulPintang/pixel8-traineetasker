@@ -34,6 +34,7 @@ import {
   useGetTraineeProfileQuery,
 } from "../../features/api/trainee/traineeApiSlice";
 import TaskTable from "../Tasks/components/TaskTable";
+import useDocumentTitle from "../../hooks/useDocumentTitle";
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { id } = useParams();
@@ -43,6 +44,8 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState<string | null>("tasks");
 
   const trainee = trainees?.find((member) => member._id! === id);
+
+  useDocumentTitle("Profile");
   return (
     <>
       <Grid>
