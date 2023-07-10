@@ -23,13 +23,11 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://traineetasker.vercel.app",
-    methods: ["GET", "POST"],
+    origin: "*",
     credentials: true,
   },
 });
 app.use(express.json({ limit: "200mb" }));
-
 app.use(cors());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
