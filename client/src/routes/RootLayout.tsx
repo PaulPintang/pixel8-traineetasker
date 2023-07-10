@@ -24,6 +24,7 @@ const RootLayout = () => {
     refetch().catch((err) => console.log(err));
   }, [account]);
 
+  // console.log(user);
   if (isLoading) return <LoaderFallback text="Preparing your dashboard" />;
 
   return (

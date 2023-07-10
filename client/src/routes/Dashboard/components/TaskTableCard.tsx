@@ -47,7 +47,7 @@ const TaskTableCard = () => {
 
   const rows = items[page - 1]?.map((task) => {
     return (
-      <tr>
+      <tr key={task._id}>
         <td className=" md:table-cell lg:table-cell pl-3">
           <Text>{task.taskname}</Text>
         </td>

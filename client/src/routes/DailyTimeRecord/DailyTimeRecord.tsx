@@ -92,8 +92,8 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
 
   useDocumentTitle("DailyTimeRecords");
 
-  const rows = items[page - 1]?.map((record: IDtr) => (
-    <tr className="border-none ">
+  const rows = items[page - 1]?.map((record: IDtr, index) => (
+    <tr key={index} className="border-none ">
       <td className=" md:table-cell lg:table-cell pl-3">
         <Text>
           {formatDateTime(record.date!).date === date.toDateString()

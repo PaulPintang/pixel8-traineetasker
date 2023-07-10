@@ -179,6 +179,7 @@ const InfoCard = ({ trainee }: Props) => {
             <Avatar.Group spacing="sm">
               {trainees?.map((trainee) => (
                 <Tooltip
+                  key={trainee._id}
                   label={trainee.name === user?.name ? "You" : trainee.name}
                   withArrow
                 >

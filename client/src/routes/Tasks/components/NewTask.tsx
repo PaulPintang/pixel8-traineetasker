@@ -32,7 +32,7 @@ const NewTask = ({ toggle, setViewId }: Props) => {
               <Text fw="bold" c="dark" fz="sm">
                 {task.taskname}
               </Text>
-              <Box>
+              <div>
                 <Group className="text-gray-500" fz="xs" spacing={8}>
                   <Text>Ticket:</Text>
                   <Text>{task.ticketno}</Text>
@@ -41,7 +41,7 @@ const NewTask = ({ toggle, setViewId }: Props) => {
                   <Text>Added:</Text>
                   <Text>{format.date}</Text>
                 </Group>
-              </Box>
+              </div>
             </Box>
           </Card>
         );

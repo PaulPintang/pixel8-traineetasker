@@ -66,7 +66,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
     const spent = calculateSpentTime(time);
 
     return (
-      <tr>
+      <tr key={index}>
         <td className="md:table-cell lg:table-cell pl-3">
           <Text>
             {format.date === date.toDateString() ? "Today" : format.date}
