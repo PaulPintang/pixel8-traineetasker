@@ -23,33 +23,8 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 app.use(express.json({ limit: "200mb" }));
-// app.use(
-//   cors({
-//     origin: "https://traineetasker.vercel.app",
-//     methods: ["GET", "POST"],
-//     credentials: true,
-//   })
-// );
 
-const corsOptions = {
-  origin: "https://traineetasker.vercel.app",
-  methods: ["GET", "POST"],
-  credentials: true,
-};
-
-// const io = new Server(
-//   server,
-//   cors({
-//     cors: {
-//       origin: "https://traineetasker.vercel.app",
-//       methods: ["GET", "POST"],
-//       credentials: true,
-//     },
-//   })
-// );
-
-// Apply CORS middleware
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/auth", require("./routes/authRoutes"));
@@ -59,44 +34,37 @@ app.use("/api/task", require("./routes/taskRoutes"));
 app.use(errorHandler);
 
 io.on("connection", (socket) => {
-  console.log(`User Connected: ${socket.id}`);
   socket.on("courseRoom", (course: string) => {
     socket.join(course);
     console.log(`Client joined course room: ${course}`);
   });
   socket.on("roleRoom", (role: string) => {
     socket.join(role);
-    console.log(`Client joined role room: ${role}`);
   });
 
   socket.on("assign", ({ task, rooms }) => {
     rooms.forEach((room: string) => {
       socket.to(room).emit("assignTask", task);
-      console.log(`Task assign to room: ${room}`);
     });
   });
   socket.on("add", ({ task, rooms }) => {
     rooms.forEach((room: string) => {
       socket.to(room).emit("addTask", task);
-      console.log(`Task added to room: ${room}`);
     });
   });
   socket.on("status", ({ task, rooms }) => {
     rooms.forEach((room: string) => {
       socket.to(room).emit("taskStatus", task);
-      console.log(`Task status update to room: ${room}`);
     });
   });
   socket.on("comment", ({ msg, rooms }) => {
     rooms.forEach((room: string) => {
       socket.to(room).emit("taskComment", msg);
-      console.log(`Comment added in room: ${room}`);
     });
   });
   socket.on("delete", ({ _id, rooms }) => {
     rooms.forEach((room: string) => {
       socket.to(room).emit("deleteTask", _id);
-      console.log(`Task remove to room: ${room}`);
     });
   });
 });
