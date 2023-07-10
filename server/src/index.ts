@@ -21,23 +21,35 @@ declare module "express" {
 connectDB();
 const app = express();
 const server = http.createServer(app);
-
+const io = new Server(server);
 app.use(express.json({ limit: "200mb" }));
-app.use(
-  cors({
-    origin: "https://traineetasker.vercel.app",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: "https://traineetasker.vercel.app",
+//     methods: ["GET", "POST"],
+//     credentials: true,
+//   })
+// );
 
-const io = new Server(server, {
-  cors: {
-    origin: "https://traineetasker.vercel.app",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
+const corsOptions = {
+  origin: "https://traineetasker.vercel.app",
+  methods: ["GET", "POST"],
+  credentials: true,
+};
 
+// const io = new Server(
+//   server,
+//   cors({
+//     cors: {
+//       origin: "https://traineetasker.vercel.app",
+//       methods: ["GET", "POST"],
+//       credentials: true,
+//     },
+//   })
+// );
+
+// Apply CORS middleware
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/auth", require("./routes/authRoutes"));
