@@ -24,7 +24,6 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "*",
-    credentials: true,
   },
 });
 app.use(express.json({ limit: "200mb" }));
