@@ -21,7 +21,13 @@ declare module "express" {
 connectDB();
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "https://traineetasker.vercel.app",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
 app.use(express.json({ limit: "200mb" }));
 
 app.use(cors());
