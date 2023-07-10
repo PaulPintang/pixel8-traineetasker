@@ -33,6 +33,7 @@ app.use(
 const io = new Server(server, {
   cors: {
     origin: "https://traineetasker.vercel.app",
+    methods: ["GET", "POST"],
     credentials: true,
   },
 });
