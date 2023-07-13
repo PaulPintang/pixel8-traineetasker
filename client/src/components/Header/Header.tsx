@@ -120,10 +120,7 @@ const Header = () => {
                 <Text>{user.email}</Text>
               </Menu.Label>
               <Menu.Divider />
-              <Menu.Item
-                className="text-red-400 bg-white hover:bg-white p-0"
-                onClick={handleOnLogout}
-              >
+              <div onClick={handleOnLogout} className="hover:cursor-pointer">
                 <Button
                   leftIcon={<IconLogout size={15} />}
                   variant="white"
@@ -133,7 +130,7 @@ const Header = () => {
                 >
                   Sign out
                 </Button>
-              </Menu.Item>
+              </div>
             </Menu.Dropdown>
           </Menu>
         ) : (

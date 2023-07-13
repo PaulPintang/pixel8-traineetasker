@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import http from "http";
 import { TokenPayload } from "./interfaces/user.interface";
 import { Server } from "socket.io";
+import path from "path";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ declare module "express" {
 
 const corsOption = {
   origin: "https://traineetasker.vercel.app",
+  // origin: "http://localhost:5173",
   credentials: true,
 };
 
@@ -29,8 +31,15 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: corsOption,
 });
+
+if (process.env.NODE_ENV === "production") {
+  const __dir = path.resolve();
+  app.use(express.static(path.join(__dir, "../client/dist")));
+} else {
+  app.get("/", (req, res) => res.send("Server is ready"));
+}
+
 app.use(express.json({ limit: "200mb" }));
-app.use(cors(corsOption));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/auth", require("./routes/authRoutes"));
