@@ -24,7 +24,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://traineetasker.vercel.app",
+    origin: "https://traineetasker.vercel.app",
     credentials: true,
   },
 });
@@ -82,4 +82,4 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(5000, () => console.log("Server is running on PORT 5000"));
+// server.listen(5000, () => console.log("Server is running on PORT 5000"));
