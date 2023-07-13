@@ -2,14 +2,16 @@ import connectDB from "./config/conn";
 import errorHandler from "./middleware/errorMiddleware";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
+import "dotenv/config";
+
 import cookieParser from "cookie-parser";
 import http from "http";
 import { TokenPayload } from "./interfaces/user.interface";
 import { Server } from "socket.io";
 import path from "path";
 
-dotenv.config();
+// dotenv.config();
 
 declare module "express" {
   interface Response {
@@ -24,29 +26,16 @@ const port = process.env.PORT || 5000;
 connectDB();
 const app = express();
 const server = http.createServer(app);
-const io = new Server(
-  server
-  //   , {
-  //   cors: {
-  //     origin: "http://localhost:5173",
-  //     credentials: true,
-  //   },
-  // }
-);
+const io = new Server(server);
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.ENV === "production") {
   // const __dir = path.resolve();
   // app.use(express.static(path.join(__dir, "../client/dist")));
   app.use(express.static("dist"));
 } else {
   app.get("/", (req, res) => res.send("Server is ready"));
 }
-// app.use(
-//   cors({
-//     origin: "http://localhost:5173",
-//     credentials: true,
-//   })
-// );
+
 app.use(express.json({ limit: "200mb" }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
