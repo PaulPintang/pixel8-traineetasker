@@ -24,25 +24,30 @@ const port = process.env.PORT || 5000;
 connectDB();
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "https://traineetasker.vercel.app",
-    credentials: true,
-  },
-});
-
-// if (process.env.NODE_ENV === "production") {
-// const __dir = path.resolve();
-// app.use(express.static(path.join(__dir, "../client/dist")));
-// app.use(express.static("dist"));
-// } else {
-app.get("/", (req, res) => res.send("Server is ready"));
-// }
-
-app.use(express.json({ limit: "200mb" }));
-app.use(
-  cors({ origin: "https://traineetasker.vercel.app", credentials: true })
+const io = new Server(
+  server
+  //   , {
+  //   cors: {
+  //     origin: "http://localhost:5173",
+  //     credentials: true,
+  //   },
+  // }
 );
+
+if (process.env.NODE_ENV === "production") {
+  // const __dir = path.resolve();
+  // app.use(express.static(path.join(__dir, "../client/dist")));
+  app.use(express.static("dist"));
+} else {
+  app.get("/", (req, res) => res.send("Server is ready"));
+}
+// app.use(
+//   cors({
+//     origin: "http://localhost:5173",
+//     credentials: true,
+//   })
+// );
+app.use(express.json({ limit: "200mb" }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/auth", require("./routes/authRoutes"));
@@ -52,6 +57,7 @@ app.use("/api/task", require("./routes/taskRoutes"));
 app.use(errorHandler);
 
 io.on("connection", (socket) => {
+  console.log("User connected with user id", socket.id);
   socket.on("courseRoom", (course: string) => {
     socket.join(course);
     console.log(`Client joined course room: ${course}`);

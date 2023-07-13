@@ -1,9 +1,13 @@
 import { io } from "socket.io-client";
 
-export const socket = io("/api", {
-  // export const socket = io(import.meta.env.VITE_LOCAL_SERVER, {
-  withCredentials: true,
-});
+export const socket = io();
+// export const socket = io("http://localhost:5000", {
+//   // path: "/socket.io",
+//   // withCredentials: true,
+// });
+// export const socket = io(import.meta.env.VITE_LOCAL_SERVER, {
+//   withCredentials: true,
+// });
 
 export const JoinRoom = (course: string, role: string) => {
   socket.emit("courseRoom", course);
