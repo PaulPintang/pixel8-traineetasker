@@ -7,6 +7,9 @@ export default defineConfig({
       // "/api": "http://localhost:5000",
       "/api": "https://traineetasker-server.vercel.app",
     },
+    cors: {
+      credentials: true,
+    },
   },
   plugins: [react()],
 });
