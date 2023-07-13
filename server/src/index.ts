@@ -31,7 +31,7 @@ const io = new Server(server);
 if (process.env.ENV === "production") {
   // const __dir = path.resolve();
   // app.use(express.static(path.join(__dir, "../client/dist")));
-  app.use(express.static("dist"));
+  app.use(express.static("../dist"));
 } else {
   app.get("/", (req, res) => res.send("Server is ready"));
 }
