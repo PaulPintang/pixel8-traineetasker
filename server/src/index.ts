@@ -19,16 +19,14 @@ declare module "express" {
   }
 }
 
-const corsOption = {
-  origin: "*",
-  credentials: true,
-};
-
 connectDB();
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: corsOption,
+  cors: {
+    origin: "http://traineetasker.vercel.app",
+    credentials: true,
+  },
 });
 
 // if (process.env.NODE_ENV === "production") {
