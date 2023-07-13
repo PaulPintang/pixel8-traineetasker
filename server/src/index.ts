@@ -20,7 +20,7 @@ declare module "express" {
 }
 
 const corsOption = {
-  origin: "https://traineetasker.vercel.app",
+  origin: "*",
   // origin: "http://localhost:5173",
   credentials: true,
 };
@@ -33,8 +33,9 @@ const io = new Server(server, {
 });
 
 if (process.env.NODE_ENV === "production") {
-  const __dir = path.resolve();
-  app.use(express.static(path.join(__dir, "../client/dist")));
+  // const __dir = path.resolve();
+  // app.use(express.static(path.join(__dir, "../client/dist")));
+  app.use(express.static("dist"));
 } else {
   app.get("/", (req, res) => res.send("Server is ready"));
 }
