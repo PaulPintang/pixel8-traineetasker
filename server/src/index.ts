@@ -22,7 +22,7 @@ declare module "express" {
 const corsOption = {
   origin: "*",
   // origin: "http://localhost:5173",
-  credentials: true,
+  // credentials: true,
 };
 
 connectDB();
