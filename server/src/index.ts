@@ -38,6 +38,9 @@ app.get("/", (req, res) => res.send("Server is ready"));
 // }
 
 app.use(express.json({ limit: "200mb" }));
+app.use(
+  cors({ origin: "https://traineetasker.vercel.app", credentials: true })
+);
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/auth", require("./routes/authRoutes"));
