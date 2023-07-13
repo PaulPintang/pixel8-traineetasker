@@ -29,7 +29,11 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 if (process.env.ENV === "production") {
+  const __dir = path.resolve();
   app.use(express.static("dist"));
+  app.get("/", (req, res) =>
+    res.sendFile("index.html", { root: path.join(__dir, "dist") })
+  );
 } else {
   app.get("/", (req, res) => res.send("Server is ready"));
 }
