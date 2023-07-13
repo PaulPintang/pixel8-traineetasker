@@ -21,9 +21,7 @@ declare module "express" {
 
 const corsOption = {
   origin: "*",
-  // origin: "https://tra",
   credentials: true,
-  methods: ["GET", "POST"],
 };
 
 connectDB();
@@ -33,13 +31,13 @@ const io = new Server(server, {
   cors: corsOption,
 });
 
-if (process.env.NODE_ENV === "production") {
-  // const __dir = path.resolve();
-  // app.use(express.static(path.join(__dir, "../client/dist")));
-  app.use(express.static("dist"));
-} else {
-  app.get("/", (req, res) => res.send("Server is ready"));
-}
+// if (process.env.NODE_ENV === "production") {
+// const __dir = path.resolve();
+// app.use(express.static(path.join(__dir, "../client/dist")));
+// app.use(express.static("dist"));
+// } else {
+app.get("/", (req, res) => res.send("Server is ready"));
+// }
 
 app.use(express.json({ limit: "200mb" }));
 app.use(cookieParser());
