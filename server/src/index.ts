@@ -21,7 +21,7 @@ declare module "express" {
 
 const corsOption = {
   origin: "*",
-  // origin: "http://localhost:5173",
+  // origin: "https://tra",
   credentials: true,
   methods: ["GET", "POST"],
 };
