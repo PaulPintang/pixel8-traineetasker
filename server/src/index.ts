@@ -19,6 +19,8 @@ declare module "express" {
   }
 }
 
+const port = process.env.PORT || 5000;
+
 connectDB();
 const app = express();
 const server = http.createServer(app);
@@ -38,9 +40,9 @@ app.get("/", (req, res) => res.send("Server is ready"));
 // }
 
 app.use(express.json({ limit: "200mb" }));
-app.use(
-  cors({ origin: "https://traineetasker.vercel.app", credentials: true })
-);
+// app.use(
+//   cors({ origin: "https://traineetasker.vercel.app", credentials: true })
+// );
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/auth", require("./routes/authRoutes"));
@@ -85,4 +87,4 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(5000, () => console.log("Server is running on PORT 5000"));
+server.listen(port, () => console.log(`Server started on port ${port}`));
