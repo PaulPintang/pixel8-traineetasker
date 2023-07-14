@@ -29,9 +29,9 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 if (process.env.ENV === "production") {
-  const __dirname = path.resolve();
+  // const __dirname = path.resolve();
   app.use(express.static("../dist"));
-  app.get("/", (req, res) => res.sendFile(__dirname + "../dist/index.html"));
+  app.get("/", (req, res) => res.sendFile("../dist/index.html"));
 } else {
   app.get("/", (req, res) => res.send("Server is ready"));
 }
