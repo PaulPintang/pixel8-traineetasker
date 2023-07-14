@@ -33,12 +33,13 @@ app.use(express.urlencoded({ extended: false }));
 
 // if (process.env.ENV !== "development") {
 // const __dirname = path.resolve();
-app.use(express.static("dist"));
+app.use(express.static(__dirname + "/dist"));
 // app.use(express.static(path.join(__dirname, "/dist")));
 // app.get("/*", (req, res) => res.sendFile(__dirname + "/dist/index.html"));
 
 // console.log(__dirname);
-app.get("/", (req, res) => res.sendFile("index.html", { root: "dist" }));
+app.get("/", (req, res) => res.sendFile(__dirname + "/dist/index.html"));
+// app.get("/", (req, res) => res.sendFile("index.html", { root: "/dist" }));
 // } else {
 //   app.get("/", (req, res) => res.send("Server is ready"));
 // }
