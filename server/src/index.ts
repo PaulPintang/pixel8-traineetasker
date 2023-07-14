@@ -1,17 +1,12 @@
 import connectDB from "./config/conn";
 import errorHandler from "./middleware/errorMiddleware";
 import express from "express";
-import cors from "cors";
-// import dotenv from "dotenv";
 import "dotenv/config";
 
 import cookieParser from "cookie-parser";
 import http from "http";
 import { TokenPayload } from "./interfaces/user.interface";
 import { Server } from "socket.io";
-import path from "path";
-
-// dotenv.config();
 
 declare module "express" {
   interface Response {
@@ -30,20 +25,8 @@ const io = new Server(server);
 app.use(express.json({ limit: "200mb" }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-
-// if (process.env.ENV !== "development") {
-// const __dirname = path.resolve();
-app.use(express.static(__dirname + "/dist"));
-// app.use(express.static(path.join(__dirname, "/dist")));
-// app.get("/*", (req, res) => res.sendFile(__dirname + "/dist/index.html"));
-
-// console.log(__dirname);
-app.get("/", (req, res) => res.sendFile(__dirname + "/dist/index.html"));
-// app.get("/", (req, res) => res.sendFile("index.html", { root: "/dist" }));
-// } else {
-//   app.get("/", (req, res) => res.send("Server is ready"));
-// }
-
+app.use(express.static("dist"));
+app.get("/", (req, res) => res.sendFile("index.html", { root: "dist" }));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/account", require("./routes/accountRoutes"));
 app.use("/api/trainee", require("./routes/traineeRoutes"));
