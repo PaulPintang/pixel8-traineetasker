@@ -26,8 +26,8 @@ const io = new Server(server);
 app.use(express.json({ limit: "200mb" }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static("public"));
-app.get("/", (req, res) => res.sendFile("index.html", { root: "public" }));
+app.use(express.static("dist"));
+// app.get("/", (req, res) => res.sendFile("index.html", { root: "dist" }));
 // app.get("/", (req, res) => {
 //   res.sendFile("index.html", { root: path.join(__dirname, "public") });
 // });
