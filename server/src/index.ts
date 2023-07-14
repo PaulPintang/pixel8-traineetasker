@@ -31,7 +31,7 @@ app.use(express.json({ limit: "200mb" }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
-if (process.env.NODE_ENV !== "development") {
+if (process.env.ENV !== "development") {
   app.use(express.static("./dist"));
   app.get("/*", (req, res) => res.sendFile("index.html", { root: "./dist" }));
 } else {
