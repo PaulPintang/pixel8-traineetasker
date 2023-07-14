@@ -27,10 +27,10 @@ app.use(express.json({ limit: "200mb" }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
-// app.get("/", (req, res) => res.sendFile("index.html", { root: "./dist" }));
-app.get("/", (req, res) => {
-  res.sendFile("index.html", { root: path.join(__dirname, "public") });
-});
+app.get("/", (req, res) => res.sendFile("index.html", { root: "public" }));
+// app.get("/", (req, res) => {
+//   res.sendFile("index.html", { root: path.join(__dirname, "public") });
+// });
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/account", require("./routes/accountRoutes"));
 app.use("/api/trainee", require("./routes/traineeRoutes"));
