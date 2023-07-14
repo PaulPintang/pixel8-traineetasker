@@ -32,8 +32,11 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
 if (process.env.ENV !== "development") {
-  app.use(express.static("./dist"));
-  app.get("/*", (req, res) => res.sendFile("index.html", { root: "./dist" }));
+  const __dirname = path.resolve();
+  // app.use(express.static("./dist"));
+  app.use(express.static(path.join(__dirname, "/dist")));
+  app.get("/", (req, res) => res.sendFile(__dirname + "/dist/index.html"));
+  // app.get("/*", (req, res) => res.sendFile("index.html", { root: "./dist" }));
 } else {
   app.get("/", (req, res) => res.send("Server is ready"));
 }
