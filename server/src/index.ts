@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import http from "http";
 import { TokenPayload } from "./interfaces/user.interface";
 import { Server } from "socket.io";
+import path = require("path");
 
 declare module "express" {
   interface Response {
@@ -25,8 +26,11 @@ const io = new Server(server);
 app.use(express.json({ limit: "200mb" }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static("./dist"));
-app.get("/", (req, res) => res.sendFile("index.html", { root: "./dist" }));
+app.use(express.static("public"));
+// app.get("/", (req, res) => res.sendFile("index.html", { root: "./dist" }));
+app.get("/", (req, res) => {
+  res.sendFile("index.html", { root: path.join(__dirname, "public") });
+});
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/account", require("./routes/accountRoutes"));
 app.use("/api/trainee", require("./routes/traineeRoutes"));
