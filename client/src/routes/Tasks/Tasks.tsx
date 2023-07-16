@@ -149,24 +149,16 @@ const Tasks = ({ trainee }: Props) => {
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="new" pt="xs">
-              <Suspense fallback="loading tasks">
-                <NewTask setViewId={setViewId} toggle={toggleView.toggle} />
-              </Suspense>
+              <NewTask setViewId={setViewId} toggle={toggleView.toggle} />
             </Tabs.Panel>
             <Tabs.Panel value="inprogress" pt="xs">
-              <Suspense fallback="loading sheets">
-                <InProgress setViewId={setViewId} toggle={toggleView.toggle} />
-              </Suspense>
+              <InProgress setViewId={setViewId} toggle={toggleView.toggle} />
             </Tabs.Panel>
             <Tabs.Panel value="forqa" pt="xs">
-              <Suspense fallback="loading records">
-                <ForQa setViewId={setViewId} toggle={toggleView.toggle} />
-              </Suspense>
+              <ForQa setViewId={setViewId} toggle={toggleView.toggle} />
             </Tabs.Panel>
             <Tabs.Panel value="completed" pt="xs">
-              <Suspense fallback="loading records">
-                <Completed setViewId={setViewId} toggle={toggleView.toggle} />
-              </Suspense>
+              <Completed setViewId={setViewId} toggle={toggleView.toggle} />
             </Tabs.Panel>
           </Tabs>
         </>

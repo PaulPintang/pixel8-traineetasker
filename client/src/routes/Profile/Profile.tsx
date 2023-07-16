@@ -29,6 +29,21 @@ const Profile = () => {
   }, []);
 
   useDocumentTitle("Profile");
+
+  interface SuspenseTabsProps {
+    tab: string;
+  }
+
+  const SuspenseTabs = ({ tab }: SuspenseTabsProps) => {
+    return (
+      <Button variant="white" color="dark" size="xs" mb={55} loading>
+        <Text c="dark" fz="xs" className="tracking-wide">
+          loading {tab} . . .
+        </Text>
+      </Button>
+    );
+  };
+
   return (
     <>
       <Grid>
@@ -113,17 +128,17 @@ const Profile = () => {
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="tasks" pt="xs">
-          <Suspense fallback="loading tasks">
+          <Suspense fallback={<SuspenseTabs tab="tasks" />}>
             <Tasks trainee={trainee!} />
           </Suspense>
         </Tabs.Panel>
         <Tabs.Panel value="timesheet" pt="xs">
-          <Suspense fallback="loading sheets">
+          <Suspense fallback={<SuspenseTabs tab="timesheets" />}>
             {activeTab === "timesheet" && <TimeSheets profile={trainee!} />}
           </Suspense>
         </Tabs.Panel>
         <Tabs.Panel value="dtr" pt="xs">
-          <Suspense fallback="loading records">
+          <Suspense fallback={<SuspenseTabs tab="dtr" />}>
             {activeTab === "dtr" && <DailyTimeRecord profile={trainee!} />}
           </Suspense>
         </Tabs.Panel>
