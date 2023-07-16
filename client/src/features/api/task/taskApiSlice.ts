@@ -6,6 +6,8 @@ export const taskApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllTasks: builder.query<ITask[], void | ITask>({
       query: () => "task/all",
+      transformResponse: (res: ITask[]) =>
+        res.slice().sort((a, b) => b.createdAt!.localeCompare(a.createdAt!)),
       providesTags: ["Task"],
       async onCacheEntryAdded(
         user,

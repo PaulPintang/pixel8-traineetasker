@@ -25,6 +25,6 @@ export interface ITask {
       todo: string;
     }
   ];
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }

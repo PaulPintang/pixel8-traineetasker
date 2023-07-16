@@ -51,7 +51,13 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   const profileInfo = trainees?.find((trainee) => trainee._id === profile?._id);
 
   const items = chunk(
-    user?.role === "trainee" ? trainee?.timesheet : profileInfo?.timesheet,
+    user?.role === "trainee"
+      ? trainee?.timesheet
+          ?.slice()
+          .sort((a, b) => b.date!.localeCompare(a.date!))
+      : profileInfo?.timesheet
+          ?.slice()
+          .sort((a, b) => b.date!.localeCompare(a.date!)),
     10
   );
 
