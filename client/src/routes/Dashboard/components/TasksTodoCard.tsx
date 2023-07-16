@@ -66,9 +66,10 @@ const TasksTodoCard = () => {
                     You've got {currentTask?.todos?.length} todos for this task
                   </Text>
                   <Button size="xs" variant="white" onClick={toggle}>
-                    + Add more
+                    <Text>+ Add more</Text>
                   </Button>
                 </Flex>
+
                 <ScrollArea.Autosize mah={220} scrollbarSize={8}>
                   <div className="space-y-3 ">
                     {currentTask?.todos?.map((todo, index) => (

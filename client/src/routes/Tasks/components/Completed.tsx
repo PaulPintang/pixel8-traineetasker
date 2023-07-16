@@ -67,6 +67,12 @@ const Completed = ({ toggle, setViewId }: Props) => {
           </Box>
         </Card>
       ))}
+
+      {completed?.length === 0 && (
+        <Text c="dimmed" fs="italic" fz="xs" className="tracking-normal">
+          there are no completed tasks!
+        </Text>
+      )}
     </div>
   );
 };

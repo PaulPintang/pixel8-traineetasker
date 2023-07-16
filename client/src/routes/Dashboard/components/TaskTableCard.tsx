@@ -6,6 +6,7 @@ import {
   Button,
   Text,
   Select,
+  Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconInfoCircle } from "@tabler/icons-react";
@@ -16,10 +17,12 @@ import { useAppSelector } from "../../../app/hooks";
 import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
 import { calculateSpentTime } from "../../../utils/calculateSpentTime";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
+import EmptyState from "../../../components/EmptyState";
+import GettingData from "../../../components/GettingData";
 
 const TaskTableCard = () => {
   const { user } = useAppSelector((state) => state.auth);
-  const { data: tasks } = useGetAllTasksQuery();
+  const { data: tasks, isLoading } = useGetAllTasksQuery();
   const [view, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [viewId, setViewId] = useState<string | null>(null);
@@ -125,6 +128,24 @@ const TaskTableCard = () => {
     );
   });
 
+  // const GettingOrders = () => {
+  //   return (
+  //     <>
+  //       <tbody>
+  //         <tr className="h-full w-full absolute left-0">
+  //           <td className="flex items-center justify-center h-full bg-white">
+  //             <Button variant="white" color="dark" size="xs" mb={55} loading>
+  //               <Text c="dark" fz="xs" className="tracking-wide">
+  //                 Loading tasks . . .
+  //               </Text>
+  //             </Button>
+  //           </td>
+  //         </tr>
+  //       </tbody>
+  //     </>
+  //   );
+  // };
+
   return (
     <>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-375px)]">
@@ -165,7 +186,17 @@ const TaskTableCard = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="text-xs text-gray-600">{rows}</tbody>
+            {isLoading ? (
+              <>
+                <GettingData />
+              </>
+            ) : data?.length === 0 ? (
+              <>
+                <EmptyState text={`There are no ${filterBy!} tasks`} />;
+              </>
+            ) : (
+              <tbody className="text-xs text-gray-600">{rows}</tbody>
+            )}
           </table>
         </div>
 

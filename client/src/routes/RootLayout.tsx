@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Container } from "@mantine/core";
 import { Toaster } from "react-hot-toast";
 import { Outlet, useLocation } from "react-router-dom";
@@ -14,6 +14,7 @@ const RootLayout = () => {
   const location = useLocation();
   const { pathname } = location;
   const dispatch = useAppDispatch();
+  const [loadText, setLoadText] = useState("");
   const { user } = useAppSelector((state) => state.auth);
   const { data: account, isLoading, isSuccess } = useRefetchQuery();
 
@@ -24,7 +25,11 @@ const RootLayout = () => {
     refetch().catch((err) => console.log(err));
   }, [account]);
 
-  if (isLoading) return <LoaderFallback text="Preparing your dashboard" />;
+  useEffect(() => {
+    setLoadText(pathname);
+  }, [pathname]);
+
+  if (isLoading) return <LoaderFallback text="Loading . . ." />;
 
   return (
     <Container size="lg">
@@ -35,7 +40,13 @@ const RootLayout = () => {
       ) : (
         <>
           {user && pathname !== "/" && <Navigation />}
-          <Suspense>
+          <Suspense
+            fallback={
+              <LoaderFallback
+                text={`Loading ${loadText.replace("/", "")} . . .`}
+              />
+            }
+          >
             <div
               className={`bg-opacity-30 w-full md:px-4 lg:px-4 px-2 pt-[18px] ${
                 pathname !== "/" ? "bg-slate-50" : ""

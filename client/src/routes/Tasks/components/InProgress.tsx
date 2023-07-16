@@ -106,6 +106,12 @@ const InProgress = ({ toggle, setViewId }: Props) => {
           </Box>
         </Card>
       ))}
+
+      {inprogress?.length === 0 && (
+        <Text c="dimmed" fs="italic" fz="xs" className="tracking-normal">
+          there are no in progress tasks!
+        </Text>
+      )}
     </div>
   );
 };

@@ -30,6 +30,8 @@ import { useLocation } from "react-router-dom";
 import { ITask } from "../../../interfaces/task.interface";
 import { ITrainee } from "../../../interfaces/user.interface";
 import { chunk } from "lodash";
+import GettingData from "../../../components/GettingData";
+import EmptyState from "../../../components/EmptyState";
 
 interface Props {
   trainee: ITrainee;
@@ -68,7 +70,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
     return (
       <tr>
         <td className=" md:table-cell lg:table-cell pl-3 pt-2">
-          <Text className="font-semibold">
+          <Text>
             <span className="hidden md:flex lg:flex">
               {`${format.date} at ${format.time}`}
             </span>
@@ -76,16 +78,16 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
           </Text>
         </td>
         <td className="hidden md:table-cell lg:table-cell  pt-2">
-          <Text className="font-semibold">{task.taskname}</Text>
+          <Text>{task.taskname}</Text>
         </td>
         <td className="hidden md:table-cell lg:table-cell  pt-2">
-          <Text className="font-semibold">{task.ticketno}</Text>
+          <Text>{task.ticketno}</Text>
         </td>
 
         {!pathname.includes("profile") ? (
           <td className="hidden md:table-cell lg:table-cell  pt-2">
             {task.assign ? (
-              <Text className="font-semibold">{task.assign}</Text>
+              <Text>{task.assign}</Text>
             ) : (
               <Badge
                 color="teal"
@@ -300,7 +302,13 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                 ></th> */}
               </tr>
             </thead>
-            <tbody className="text-xs text-gray-600">{rows}</tbody>
+            {data?.length === 0 ? (
+              <>
+                <EmptyState text={`There are no ${filterBy!} tasks`} />;
+              </>
+            ) : (
+              <tbody className="text-sm text-gray-600">{rows}</tbody>
+            )}
           </table>
         </div>
 

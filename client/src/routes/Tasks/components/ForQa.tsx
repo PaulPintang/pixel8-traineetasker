@@ -62,6 +62,12 @@ const ForQa = ({ toggle, setViewId }: Props) => {
           </Box>
         </Card>
       ))}
+
+      {forqa?.length === 0 && (
+        <Text c="dimmed" fs="italic" fz="xs" className="tracking-normal">
+          there are no for-QA tasks!
+        </Text>
+      )}
     </div>
   );
 };

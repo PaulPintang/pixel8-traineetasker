@@ -26,6 +26,7 @@ import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 import { useAppSelector } from "../../app/hooks";
 import { ITrainee } from "../../interfaces/user.interface";
 import { useDocumentTitle } from "@mantine/hooks";
+import EmptyState from "../../components/EmptyState";
 
 interface PropsOnProfile {
   profile?: ITrainee;
@@ -35,9 +36,12 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const { user } = useAppSelector((state) => state.auth);
   const [recordDtr, { isLoading }] = useUpdateDtrMutation();
   const { data: trainee, refetch } = useGetTraineeProfileQuery();
-  const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
-    skip: user?.role === "trainee",
-  });
+  const { data: trainees, isLoading: traineeLoading } = useGetAllTraineeQuery(
+    profile?.course!,
+    {
+      skip: user?.role === "trainee",
+    }
+  );
   const [timesheet, sheetState] = useAddTaskTimesheetMutation();
 
   const profileInfo = trainees?.find((trainee) => trainee._id === profile?._id);
@@ -81,10 +85,9 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
     refetch();
   };
 
-  const items = chunk(
-    user?.role === "trainee" ? trainee?.dtr : profileInfo?.dtr,
-    10
-  );
+  const data = user?.role === "trainee" ? trainee?.dtr : profileInfo?.dtr;
+
+  const items = chunk(data, 10);
 
   const today = trainee?.dtr?.find(
     (record) => record.date === formatDateTime(date.toISOString()).date
@@ -262,7 +265,13 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
               </tr>
             </thead>
 
-            <tbody className="text-sm text-gray-600">{rows}</tbody>
+            {data?.length === 0 ? (
+              <>
+                <EmptyState text="No records found" />;
+              </>
+            ) : (
+              <tbody className="text-xs text-gray-600">{rows}</tbody>
+            )}
           </table>
         </div>
 

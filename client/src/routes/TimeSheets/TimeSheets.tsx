@@ -26,6 +26,7 @@ import { calculateSpentTime } from "../../utils/calculateSpentTime";
 import { ITrainee } from "../../interfaces/user.interface";
 import { useAppSelector } from "../../app/hooks";
 import { useDocumentTitle } from "@mantine/hooks";
+import EmptyState from "../../components/EmptyState";
 
 // ? if trainee time out in dtr, task hour will automatically stop if time is the trainee out time.
 // ? (ex. 12:00 PM and 5:00 PM, dtr time out and stop the timesheet)
@@ -306,7 +307,13 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
               </tr>
             </thead>
 
-            <tbody className="text-sm text-gray-600">{rows}</tbody>
+            {trainee?.dtr?.length === 0 && profileInfo?.dtr?.length === 0 ? (
+              <>
+                <EmptyState text="No records found" />;
+              </>
+            ) : (
+              <tbody className="text-sm text-gray-600">{rows}</tbody>
+            )}
           </table>
         </div>
 

@@ -1,4 +1,4 @@
-import { Grid } from "@mantine/core";
+import { Grid, Skeleton } from "@mantine/core";
 import { useAppSelector } from "../../app/hooks";
 import { useDocumentTitle } from "@mantine/hooks";
 import { lazy } from "react";

@@ -46,6 +46,12 @@ const NewTask = ({ toggle, setViewId }: Props) => {
           </Card>
         );
       })}
+
+      {newTasks?.length === 0 && (
+        <Text c="dimmed" fs="italic" fz="xs" className="tracking-normal">
+          there are no new tasks!
+        </Text>
+      )}
     </div>
   );
 };
