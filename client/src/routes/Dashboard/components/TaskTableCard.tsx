@@ -128,24 +128,6 @@ const TaskTableCard = () => {
     );
   });
 
-  // const GettingOrders = () => {
-  //   return (
-  //     <>
-  //       <tbody>
-  //         <tr className="h-full w-full absolute left-0">
-  //           <td className="flex items-center justify-center h-full bg-white">
-  //             <Button variant="white" color="dark" size="xs" mb={55} loading>
-  //               <Text c="dark" fz="xs" className="tracking-wide">
-  //                 Loading tasks . . .
-  //               </Text>
-  //             </Button>
-  //           </td>
-  //         </tr>
-  //       </tbody>
-  //     </>
-  //   );
-  // };
-
   return (
     <>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-375px)]">

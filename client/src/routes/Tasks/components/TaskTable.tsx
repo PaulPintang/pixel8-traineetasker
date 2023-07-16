@@ -251,7 +251,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
 
   return (
     <>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-200px)] mt-4">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)] mt-4">
         <div className="h-[95%] overflow-">
           <table className="border-collapse border-none w-full">
             <thead>

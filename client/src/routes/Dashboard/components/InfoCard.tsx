@@ -258,6 +258,11 @@ const InfoCard = ({ trainee }: Props) => {
           <Text c="dark" size="xs" className="font-semibold">
             Members:
           </Text>
+          {trainees?.length === 0 && (
+            <Text fz={12} c="dimmed">
+              No current trainee's
+            </Text>
+          )}
           <Tooltip.Group openDelay={300} closeDelay={100}>
             <Avatar.Group spacing="sm">
               {trainees?.map((trainee) => (

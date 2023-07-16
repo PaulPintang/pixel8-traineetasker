@@ -35,7 +35,9 @@ const Dashboard = () => {
             </Grid.Col>
           </>
         ) : (
-          <MembersTableCard />
+          <Grid.Col span="auto">
+            <MembersTableCard />
+          </Grid.Col>
         )}
       </Grid>
     </>
