@@ -11,6 +11,7 @@ export interface IAccount {
 
 export interface ITrainee extends IAccount {
   school?: string;
+  started?: string;
   hours?: {
     ojtHours: number;
     rendered: number;

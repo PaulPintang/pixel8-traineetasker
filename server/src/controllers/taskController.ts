@@ -218,7 +218,7 @@ export const addTask = asyncHandler(
         comments: [],
         todos: [],
       });
-      res.json(task);
+      res.status(200).json(task);
     } else {
       res.status(401);
       throw new Error("Unauthorized");

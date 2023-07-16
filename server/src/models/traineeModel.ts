@@ -54,6 +54,9 @@ const traineeModel = new Schema<ITrainee>({
   school: {
     type: String,
   },
+  started: {
+    type: String,
+  },
   course: {
     type: String,
   },

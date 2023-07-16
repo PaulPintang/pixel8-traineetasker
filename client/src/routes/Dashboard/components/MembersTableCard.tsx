@@ -157,8 +157,10 @@ const traineesTableCard = () => {
 
   return (
     <>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-365px)] w-full">
-        <div className="h-[93%]">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-100px)] w-full">
+        {/* <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-365px)] w-full"> */}
+        <div className="h-[97%]">
+          {/* <div className="h-[93%]"> */}
           <table className="border-collapse border-none w-full">
             <thead>
               <tr>

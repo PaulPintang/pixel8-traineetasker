@@ -44,6 +44,7 @@ const InfoCard = ({ trainee }: Props) => {
           (task) => task.date === formatDateTime(date.toISOString()).date
         );
 
+  console.log("Trainee", trainee);
   return (
     <Card className="h- rounded-md shadow-md space-y-[6px]">
       <Box component="div">
@@ -97,7 +98,19 @@ const InfoCard = ({ trainee }: Props) => {
                   />
                 ) : (
                   <Text fz={12} c="dimmed">
-                    June 07, 2023
+                    {user?.role === "trainee" ? (
+                      <span>
+                        {profile?.started === ""
+                          ? "OJT not started"
+                          : profile?.started}
+                      </span>
+                    ) : (
+                      <span>
+                        {trainee?.started === ""
+                          ? "OJT not started"
+                          : trainee?.started}
+                      </span>
+                    )}
                   </Text>
                 )}
               </Group>

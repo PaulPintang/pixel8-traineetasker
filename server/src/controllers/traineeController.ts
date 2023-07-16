@@ -33,6 +33,7 @@ export const addTrainee = asyncHandler(
         course,
         role: "trainee",
         timesheet: [],
+        started: "",
       });
       await Trainee.create({
         ...req.body,
@@ -71,10 +72,12 @@ export const addTraineeDTR = asyncHandler(
       const dtr = await Trainee.findByIdAndUpdate(
         trainee._id,
         {
+          started: trainee.started === "" ? format.date : trainee.started,
           dtr: [...trainee.dtr, record],
         },
         { new: true }
       );
+
       res.json(dtr);
     }
   }
