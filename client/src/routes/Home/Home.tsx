@@ -10,7 +10,7 @@ import { IconArrowNarrowRight } from "@tabler/icons-react";
 import { useAppSelector } from "../../app/hooks";
 import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
+import { useDocumentTitle } from "@mantine/hooks";
 
 const Home = () => {
   const location = useLocation();

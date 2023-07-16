@@ -24,7 +24,6 @@ const RootLayout = () => {
     refetch().catch((err) => console.log(err));
   }, [account]);
 
-  // console.log(user);
   if (isLoading) return <LoaderFallback text="Preparing your dashboard" />;
 
   return (
@@ -37,7 +36,6 @@ const RootLayout = () => {
         <>
           {user && pathname !== "/" && <Navigation />}
           <Suspense>
-            {/* <div className="bg-slate-50  bg-opacity-30 w-full px-4 pt-[18px]"> */}
             <div
               className={`bg-opacity-30 w-full md:px-4 lg:px-4 px-2 pt-[18px] ${
                 pathname !== "/" ? "bg-slate-50" : ""

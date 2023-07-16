@@ -20,12 +20,12 @@ import {
   useGetTraineeProfileQuery,
   useUpdateDtrMutation,
 } from "../../features/api/trainee/traineeApiSlice";
-import { IDtr, ISheets } from "../../interfaces/records.interface";
+import { IDtr } from "../../interfaces/records.interface";
 import { formatDateTime } from "../../utils/formatDateTime";
 import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 import { useAppSelector } from "../../app/hooks";
 import { ITrainee } from "../../interfaces/user.interface";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
+import { useDocumentTitle } from "@mantine/hooks";
 
 interface PropsOnProfile {
   profile?: ITrainee;

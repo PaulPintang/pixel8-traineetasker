@@ -8,7 +8,8 @@ const Completed = lazy(() => import("./components/Completed"));
 
 import TaskUrgent from "./components/TaskUrgent";
 const TaskTable = lazy(() => import("./components/TaskTable"));
-import { useDisclosure, useDocumentTitle } from "@mantine/hooks";
+import { useDisclosure } from "@mantine/hooks";
+import { useDocumentTitle } from "@mantine/hooks";
 import ViewTaskModal from "./components/modals/ViewTaskModal";
 import UpdateTaskModal from "./components/modals/UpdateTaskModal";
 import { useAppSelector } from "../../app/hooks";
@@ -35,6 +36,7 @@ const Tasks = ({ trainee }: Props) => {
   const [activeTab, setActiveTab] = useState<string | null>("inprogress");
 
   useDocumentTitle("Tasks");
+
   return (
     <>
       <Flex justify="space-between">

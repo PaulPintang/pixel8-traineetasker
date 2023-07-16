@@ -1,6 +1,6 @@
 import { Grid } from "@mantine/core";
 import { useAppSelector } from "../../app/hooks";
-
+import { useDocumentTitle } from "@mantine/hooks";
 import { lazy } from "react";
 import { TasksLabels } from "../../components/ColorLabels";
 import TaskCards from "./components/TaskCards";
@@ -8,7 +8,6 @@ import InfoCard from "./components/InfoCard";
 import TaskTableCard from "./components/TaskTableCard";
 import TasksTodoCard from "./components/TasksTodoCard";
 const MembersTableCard = lazy(() => import("./components/MembersTableCard"));
-import useDocumentTitle from "../../hooks/useDocumentTitle";
 
 const Dashboard = () => {
   const { user } = useAppSelector((state) => state.auth);

@@ -10,14 +10,14 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import RootLayout from "./routes/RootLayout";
 import { Protected } from "./middleware/Protected";
 import Profile from "./routes/Profile/Profile";
-import useDocumentTitle from "./hooks/useDocumentTitle";
 const Dashboard = lazy(() => import("./routes/Dashboard/Dashboard"));
 const TimeSheets = lazy(() => import("./routes/TimeSheets/TimeSheets"));
 const Tasks = lazy(() => import("./routes/Tasks/Tasks"));
 const DailyTimeRecord = lazy(
   () => import("./routes/DailyTimeRecord/DailyTimeRecord")
 );
-const Home = lazy(() => import("./routes/Home/Home"));
+// const Home = lazy(() => import("./routes/Home/Home"));
+import Home from "./routes/Home/Home";
 const ErrorPage = lazy(() => import("./routes/ErrorPage"));
 
 const router = createBrowserRouter([
@@ -34,9 +34,7 @@ const router = createBrowserRouter([
         path: "dashboard",
         element: (
           <Protected>
-            <Suspense fallback={<h1>Preparing yoyr dashboard</h1>}>
-              <Dashboard />
-            </Suspense>
+            <Dashboard />
           </Protected>
         ),
       },

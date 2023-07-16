@@ -14,7 +14,7 @@ const DailyTimeRecord = lazy(
 
 import { useAppSelector } from "../../app/hooks";
 import { useGetAllTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
-import useDocumentTitle from "../../hooks/useDocumentTitle";
+import { useDocumentTitle } from "@mantine/hooks";
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { id } = useParams();
@@ -51,18 +51,20 @@ const Profile = () => {
                 {trainee?.email}
               </Text>
 
-              <div className="pt-1">
-                <Button
-                  onClick={toggle}
-                  size="xs"
-                  variant="light"
-                  color="red"
-                  pt-
-                  fullWidth
-                >
-                  Remove Trainee
-                </Button>
-              </div>
+              {user?.role === "supervisor" && (
+                <div className="pt-1">
+                  <Button
+                    onClick={toggle}
+                    size="xs"
+                    variant="light"
+                    color="red"
+                    pt-
+                    fullWidth
+                  >
+                    Remove Trainee
+                  </Button>
+                </div>
+              )}
             </Flex>
           </Flex>
         </Grid.Col>

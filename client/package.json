@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.6",
     "@mantine/carousel": "^6.0.16",
     "@mantine/core": "^6.0.16",
     "@mantine/dates": "^6.0.16",
