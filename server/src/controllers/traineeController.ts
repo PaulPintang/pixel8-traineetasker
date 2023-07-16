@@ -33,7 +33,6 @@ export const addTrainee = asyncHandler(
         course,
         role: "trainee",
         timesheet: [],
-        started: "",
       });
       await Trainee.create({
         ...req.body,
@@ -41,6 +40,7 @@ export const addTrainee = asyncHandler(
           ...req.body.hours,
           pending: req.body.hours.ojtHours,
         },
+        started: "",
       });
       res.json(user);
     } else {
