@@ -45,6 +45,7 @@ import { socket } from "../../../../utils/socketConnect";
 import { JoinRoom } from "../../../../utils/socketConnect";
 import { ISheets } from "../../../../interfaces/records.interface";
 import { useMediaQuery } from "@mantine/hooks";
+import { calculateSpentTime } from "../../../../utils/calculateSpentTime";
 
 interface ModalProps {
   viewId: string | null;
@@ -69,6 +70,17 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
   const [comment, commentState] = useCommentOnTaskMutation();
   const [timesheet, sheetState] = useAddTaskTimesheetMutation();
   const assign = trainees?.find((trainee) => trainee.name === task?.assign);
+
+  const sheet = trainees!.map((trainee) =>
+    trainee?.timesheet?.find((task) => task?.status === "recording")
+  );
+
+  const time = {
+    status: sheet[0]?.status!,
+    morning: sheet[0]?.morning!,
+    afternoon: sheet[0]?.afternoon,
+  };
+  const spent = calculateSpentTime(time);
 
   // ? TRAINEE
   const handleTaskStatus = async () => {
@@ -297,6 +309,26 @@ const ViewTaskModal = ({ view, viewId, toggle }: ModalProps) => {
             </Group>
           ) : (
             ""
+          )}
+
+          {user?.role !== "trainee" && task?.status === "inprogress" && (
+            <Group align="flex-start">
+              <Text className="w-1/4" c="dimmed" fz="sm">
+                On timesheet
+              </Text>
+              <Text fz="sm">
+                {spent.totalSpent.hours === 1
+                  ? spent.totalSpent.hours + "hr"
+                  : spent.totalSpent.hours > 1
+                  ? spent.totalSpent.hours + "hrs"
+                  : spent.totalSpent.hours === 0 && ""}
+                {spent.totalSpent.minutes === 1
+                  ? spent.totalSpent.minutes + "min"
+                  : spent.totalSpent.minutes > 1
+                  ? spent.totalSpent.minutes + "mins"
+                  : spent.totalSpent.minutes === 0 && ""}
+              </Text>
+            </Group>
           )}
         </div>
 

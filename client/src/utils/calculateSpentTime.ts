@@ -1,18 +1,6 @@
 import { formatDateTime } from "./formatDateTime";
 import { ISheets } from "../interfaces/records.interface";
 
-type TimeSpent = {
-  status: "recording" | "recorded";
-  morning?: {
-    start: string | undefined;
-    end: string | undefined;
-  };
-  afternoon?: {
-    start: string | undefined;
-    end: string | undefined;
-  };
-};
-
 export const calculateSpentTime = (time: ISheets) => {
   const date = new Date();
   const format = formatDateTime(date.toISOString());
@@ -38,9 +26,6 @@ export const calculateSpentTime = (time: ISheets) => {
     }`
   );
 
-  // const morningTimeDiff = Math.abs(
-  //   time.morning?.end !== "" ? morningEnd.getTime() - morningStart.getTime() :
-  // );
   const morningTimeDiff = Math.abs(
     morningEnd.getTime() - morningStart.getTime()
   );

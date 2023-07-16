@@ -32,6 +32,7 @@ import { ITrainee } from "../../../interfaces/user.interface";
 import { chunk } from "lodash";
 import GettingData from "../../../components/GettingData";
 import EmptyState from "../../../components/EmptyState";
+import { calculateSpentTime } from "../../../utils/calculateSpentTime";
 
 interface Props {
   trainee: ITrainee;
@@ -67,6 +68,15 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
 
   const rows = items[page - 1]?.map((task) => {
     const format = formatDateTime(task?.createdAt!);
+    const sheet = trainee?.timesheet?.find(
+      (task) => task.status === "recording"
+    );
+    const time = {
+      status: sheet?.status!,
+      morning: sheet?.morning!,
+      afternoon: sheet?.afternoon,
+    };
+    const spent = calculateSpentTime(time);
     return (
       <tr>
         <td className=" md:table-cell lg:table-cell pl-3 pt-2">
@@ -81,7 +91,30 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
           <Text>{task.taskname}</Text>
         </td>
         <td className="hidden md:table-cell lg:table-cell  pt-2">
-          <Text>{task.ticketno}</Text>
+          <Text>
+            {trainee && (
+              <span>
+                {task.status === "inprogress" ? (
+                  <span>
+                    {spent.totalSpent.hours === 1
+                      ? spent.totalSpent.hours + "hr"
+                      : spent.totalSpent.hours > 1
+                      ? spent.totalSpent.hours + "hrs"
+                      : spent.totalSpent.hours === 0 && ""}
+                    {spent.totalSpent.minutes === 1
+                      ? spent.totalSpent.minutes + "min"
+                      : spent.totalSpent.minutes > 1
+                      ? spent.totalSpent.minutes + "mins"
+                      : spent.totalSpent.minutes === 0 && ""}
+                  </span>
+                ) : (
+                  task.spent
+                )}
+              </span>
+            )}
+
+            {!trainee && task.ticketno}
+          </Text>
         </td>
 
         {!pathname.includes("profile") ? (
@@ -272,7 +305,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                   scope="col"
                   className="hidden md:table-cell lg:table-cell py-3 text-left text-[9px] font-[600] text-gray-400   tracking-wider bg-gray-100 shadow-sm"
                 >
-                  <Text>Ticket No.</Text>
+                  <Text>{trainee ? "Total spent" : "Ticket no."}</Text>
                 </th>
 
                 {!pathname.includes("profile") && (
