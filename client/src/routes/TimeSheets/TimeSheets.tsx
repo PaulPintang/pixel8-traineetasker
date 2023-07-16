@@ -262,7 +262,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
           </Group>
         </Group>
       </Flex>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)]">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-160px)]">
         <div className="h-[96%]">
           <table className="border-collapse border-none w-full">
             <thead>
@@ -307,7 +307,8 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
               </tr>
             </thead>
 
-            {trainee?.dtr?.length === 0 && profileInfo?.dtr?.length === 0 ? (
+            {trainee?.timesheet?.length === 0 ||
+            profileInfo?.timesheet?.length === 0 ? (
               <>
                 <EmptyState text="No records found" />;
               </>

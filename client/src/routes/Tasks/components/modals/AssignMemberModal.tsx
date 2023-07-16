@@ -5,6 +5,7 @@ import { ITask } from "../../../../interfaces/task.interface";
 import { useAssignTaskMutation } from "../../../../features/api/task/taskApiSlice";
 import { useState } from "react";
 import { JoinRoom } from "../../../../utils/socketConnect";
+import ToastNotify from "../../../../components/ToastNotify";
 interface ModalProps {
   task: ITask;
   assign: boolean;
@@ -22,6 +23,7 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
     setAssignTo(name);
     const data = { _id: task._id, name: name, course: user?.course };
     await assignTask({ task: data, rooms: [user?.course] });
+    ToastNotify(`Task successfully assigned`, "success");
     toggle();
   };
 

@@ -8,6 +8,7 @@ import { useGetAllTraineeQuery } from "../../../features/api/trainee/traineeApiS
 import { JoinRoom } from "../../../utils/socketConnect";
 import { useState } from "react";
 import { ITask } from "../../../interfaces/task.interface";
+import ToastNotify from "../../../components/ToastNotify";
 interface ModalProps {
   assignTo: string;
   assign: boolean;
@@ -25,6 +26,7 @@ const AssignTaskModal = ({ assign, toggle, assignTo }: ModalProps) => {
     setTaskId(task._id!);
     const data = { _id: task._id, name: assignTo, course: user?.course };
     await assignTask({ task: data, rooms: [user?.course] });
+    ToastNotify(`Task successfully assigned`, "success");
     toggle();
   };
   return (

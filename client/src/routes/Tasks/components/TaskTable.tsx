@@ -14,6 +14,7 @@ import {
   IconDots,
   IconEdit,
   IconInfoCircle,
+  IconTrash,
   IconUser,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -33,6 +34,8 @@ import { chunk } from "lodash";
 import GettingData from "../../../components/GettingData";
 import EmptyState from "../../../components/EmptyState";
 import { calculateSpentTime } from "../../../utils/calculateSpentTime";
+import ToastNotify from "../../../components/ToastNotify";
+import ViewTaskModal from "./modals/ViewTaskModal";
 
 interface Props {
   trainee: ITrainee;
@@ -62,6 +65,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
 
   const handleDelete = async (_id: string) => {
     await deleteTask({ _id, rooms: [user?.course] });
+    ToastNotify("Task deleted successfully", "success");
   };
 
   const items = chunk(data, 10);
@@ -263,7 +267,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
 
                   {user?.role !== "QA Personnel" && task?.status === "new" && (
                     <Button
-                      leftIcon={<IconUser size={16} />}
+                      leftIcon={<IconTrash size={16} />}
                       variant="white"
                       size="xs"
                       color="red"

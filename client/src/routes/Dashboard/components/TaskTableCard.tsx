@@ -224,7 +224,7 @@ const TaskTableCard = () => {
         tasks={tasks}
         viewId={viewId}
         view={view}
-        toggle={toggle}
+        toggleView={toggle}
       />
     </>
   );

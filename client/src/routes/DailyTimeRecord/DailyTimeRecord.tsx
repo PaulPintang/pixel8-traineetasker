@@ -229,7 +229,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
           </>
         )}
       </Flex>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)]">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-160px)]">
         <div className="h-[96%]">
           <table className="border-collapse border-none w-full">
             <thead>

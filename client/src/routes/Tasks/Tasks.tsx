@@ -1,5 +1,5 @@
 import { lazy, useState, Suspense } from "react";
-import { Flex, Grid, Text, Button, Tabs } from "@mantine/core";
+import { Flex, Grid, Text, Button, Tabs, Stack } from "@mantine/core";
 import { ManageTaskLabels } from "../../components/ColorLabels";
 const NewTask = lazy(() => import("./components/NewTask"));
 const InProgress = lazy(() => import("./components/InProgress"));
@@ -18,6 +18,7 @@ import { ITrainee } from "../../interfaces/user.interface";
 import { useLocation } from "react-router-dom";
 import AssignTaskModal from "../Dashboard/components/AssignTaskModal";
 import AddTaskModal from "./components/modals/AddTaskModal";
+import toast from "react-hot-toast";
 
 interface Props {
   trainee?: ITrainee;
@@ -183,7 +184,7 @@ const Tasks = ({ trainee }: Props) => {
         tasks={tasks}
         viewId={viewId}
         view={view}
-        toggle={toggleView.toggle}
+        toggleView={toggleView.toggle}
       />
     </>
   );

@@ -5,6 +5,7 @@ import { useAddTaskMutation } from "../../../../features/api/task/taskApiSlice";
 import { JoinRoom } from "../../../../utils/socketConnect";
 
 import { useAppSelector } from "../../../../app/hooks";
+import ToastNotify from "../../../../components/ToastNotify";
 interface ModalProps {
   add: boolean;
   toggle: () => void;
@@ -21,7 +22,16 @@ const AddTaskModal = ({ add, toggle }: ModalProps) => {
 
   const handleAddTask = async () => {
     JoinRoom(user?.course!, user?.role!);
-    await addTask(toAddTask);
+    try {
+      const res: any = await addTask(toAddTask);
+      if (res.error) {
+        ToastNotify("Task already exist", "error");
+      } else {
+        ToastNotify("New task added", "success");
+      }
+    } catch (error) {
+      ToastNotify("An error occurred while creating the task", "error");
+    }
     setToAddTask({
       taskname: "",
       ticketno: "",
