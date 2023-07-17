@@ -36,13 +36,10 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const { user } = useAppSelector((state) => state.auth);
   const [recordDtr, { isLoading }] = useUpdateDtrMutation();
   const { data: trainee, refetch } = useGetTraineeProfileQuery();
-  const { data: trainees, isLoading: traineeLoading } = useGetAllTraineeQuery(
-    profile?.course!,
-    {
-      skip: user?.role === "trainee",
-    }
-  );
-  const [timesheet, sheetState] = useAddTaskTimesheetMutation();
+  const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
+    skip: user?.role === "trainee",
+  });
+  const [timesheet] = useAddTaskTimesheetMutation();
 
   const profileInfo = trainees?.find((trainee) => trainee._id === profile?._id);
 
@@ -66,7 +63,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const [page, setPage] = useState(1);
 
   const handleTimeInOut = async () => {
-    await recordDtr();
+    await recordDtr({ rooms: [user?.course!] });
     const todaytask = trainee?.timesheet?.some(
       (record) => record.date === formatDateTime(date.toISOString()).date
     );
@@ -95,98 +92,101 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
 
   useDocumentTitle("DailyTimeRecords");
 
-  const rows = items[page - 1]?.map((record: IDtr, index) => (
-    <tr key={index} className="border-none ">
-      <td className=" md:table-cell lg:table-cell pl-3">
-        <Text>
-          {formatDateTime(record.date!).date === date.toDateString()
-            ? "Today"
-            : formatDateTime(record.date!).date}
-        </Text>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell">
-        <Flex>
-          <Group spacing={8}>
-            <IconClock size={16} className="text-yellow-400" />
-            <span>{record.morning?.in}</span> -{" "}
-            <span>{record.morning?.out}</span>
-          </Group>
-        </Flex>
-      </td>
-      <td className="hidden md:table-cell lg:table-cell">
-        <Flex>
-          <Group spacing={8}>
-            <IconClock size={16} className="text-violet-400" />
-            <span>{record.afternoon?.in}</span> -{" "}
-            <span>{record.afternoon?.out}</span>
-          </Group>
-        </Flex>
-      </td>
-      <td className="py-2  md:table-cell lg:table-cell ">
-        {record.status === "recorded" ? (
-          <Flex align="center" gap={8} className="w-full">
-            <div className="bg-green-300 p-1"></div>
-            <Text
-              fz="sm"
-              className="text-gray-400 text-[10px] uppercase font-semibold "
-            >
-              recorded
-            </Text>
-          </Flex>
-        ) : (
-          <Text fz="xs" fw="bold">
-            {record.status}
+  const rows = items[page - 1]
+    ?.slice()
+    .sort((a, b) => b.date!.localeCompare(a.date!))
+    .map((record: IDtr, index) => (
+      <tr key={index} className="border-none ">
+        <td className=" md:table-cell lg:table-cell pl-3">
+          <Text>
+            {formatDateTime(record.date!).date === date.toDateString()
+              ? "Today"
+              : formatDateTime(record.date!).date}
           </Text>
-        )}
-      </td>
-      <td className="py-2 table-cell  md:hidden lg:hidden ">
-        <Menu
-          shadow="md"
-          transitionProps={{ transition: "rotate-right", duration: 150 }}
-          withArrow
-        >
-          <Menu.Target>
-            <ActionIcon variant="white" color="cyan">
-              <IconDots size={19} />
-            </ActionIcon>
-          </Menu.Target>
+        </td>
+        <td className="hidden md:table-cell lg:table-cell">
+          <Flex>
+            <Group spacing={8}>
+              <IconClock size={16} className="text-yellow-400" />
+              <span>{record.morning?.in}</span> -{" "}
+              <span>{record.morning?.out}</span>
+            </Group>
+          </Flex>
+        </td>
+        <td className="hidden md:table-cell lg:table-cell">
+          <Flex>
+            <Group spacing={8}>
+              <IconClock size={16} className="text-violet-400" />
+              <span>{record.afternoon?.in}</span> -{" "}
+              <span>{record.afternoon?.out}</span>
+            </Group>
+          </Flex>
+        </td>
+        <td className="py-2  md:table-cell lg:table-cell ">
+          {record.status === "recorded" ? (
+            <Flex align="center" gap={8} className="w-full">
+              <div className="bg-green-300 p-1"></div>
+              <Text
+                fz="sm"
+                className="text-gray-400 text-[10px] uppercase font-semibold "
+              >
+                recorded
+              </Text>
+            </Flex>
+          ) : (
+            <Text fz="xs" fw="bold">
+              {record.status}
+            </Text>
+          )}
+        </td>
+        <td className="py-2 table-cell  md:hidden lg:hidden ">
+          <Menu
+            shadow="md"
+            transitionProps={{ transition: "rotate-right", duration: 150 }}
+            withArrow
+          >
+            <Menu.Target>
+              <ActionIcon variant="white" color="cyan">
+                <IconDots size={19} />
+              </ActionIcon>
+            </Menu.Target>
 
-          <Menu.Dropdown>
-            {record.morning?.in !== "" && (
-              <>
-                <Menu.Label>Morning</Menu.Label>
-                <Menu.Item p={0} className="bg-white hover:bg-white">
-                  <Stack px={10} pb={5} spacing={1}>
-                    <Group spacing={8} className="text-xs">
-                      <IconClock size={16} className="text-yellow-400" />
-                      <span>{record.morning?.in}</span> -{" "}
-                      <span>{record.morning?.out}</span>
-                    </Group>
-                  </Stack>
-                </Menu.Item>
-                <Menu.Divider />
-              </>
-            )}
+            <Menu.Dropdown>
+              {record.morning?.in !== "" && (
+                <>
+                  <Menu.Label>Morning</Menu.Label>
+                  <Menu.Item p={0} className="bg-white hover:bg-white">
+                    <Stack px={10} pb={5} spacing={1}>
+                      <Group spacing={8} className="text-xs">
+                        <IconClock size={16} className="text-yellow-400" />
+                        <span>{record.morning?.in}</span> -{" "}
+                        <span>{record.morning?.out}</span>
+                      </Group>
+                    </Stack>
+                  </Menu.Item>
+                  <Menu.Divider />
+                </>
+              )}
 
-            {record.afternoon?.in !== "" && (
-              <>
-                <Menu.Label>Afternoon</Menu.Label>
-                <Menu.Item p={0} className="bg-white hover:bg-white">
-                  <Stack px={10} pb={5} spacing={1}>
-                    <Group spacing={8} className="text-xs">
-                      <IconClock size={16} className="text-violet-400" />
-                      <span>{record.afternoon?.in}</span> -{" "}
-                      <span>{record.afternoon?.out}</span>
-                    </Group>
-                  </Stack>
-                </Menu.Item>
-              </>
-            )}
-          </Menu.Dropdown>
-        </Menu>
-      </td>
-    </tr>
-  ));
+              {record.afternoon?.in !== "" && (
+                <>
+                  <Menu.Label>Afternoon</Menu.Label>
+                  <Menu.Item p={0} className="bg-white hover:bg-white">
+                    <Stack px={10} pb={5} spacing={1}>
+                      <Group spacing={8} className="text-xs">
+                        <IconClock size={16} className="text-violet-400" />
+                        <span>{record.afternoon?.in}</span> -{" "}
+                        <span>{record.afternoon?.out}</span>
+                      </Group>
+                    </Stack>
+                  </Menu.Item>
+                </>
+              )}
+            </Menu.Dropdown>
+          </Menu>
+        </td>
+      </tr>
+    ));
 
   const isTimeIn =
     !today && schedule.morning.in === currentHour
@@ -240,6 +240,26 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
             )}
           </>
         )}
+
+        <>
+          <Button
+            color="yellow"
+            size="xs"
+            onClick={handleTimeInOut}
+            loading={isLoading}
+          >
+            Time in
+          </Button>
+
+          <Button
+            color="indigo"
+            size="xs"
+            onClick={handleTimeInOut}
+            loading={isLoading}
+          >
+            Time out
+          </Button>
+        </>
       </Flex>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-160px)]">
         <div className="h-[96%]">

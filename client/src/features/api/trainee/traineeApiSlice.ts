@@ -1,16 +1,42 @@
 import { apiSlice } from "../apiSlice";
 import { ITrainee } from "../../../interfaces/user.interface";
-import { ISheets } from "../../../interfaces/records.interface";
 import { JoinRoom } from "../../../utils/socketConnect";
-// ? endpoint must be in env
+import { socket } from "../../../utils/socketConnect";
 
 export const traineeApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllTrainee: builder.query<ITrainee[], string>({
-      query: (course) => ({
-        url: `/trainee/${course}`,
-        providesTags: ["Trainee"],
-      }),
+      query: (course) => `/trainee/${course}`,
+      providesTags: ["Trainee"],
+      async onCacheEntryAdded(
+        course,
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+      ) {
+        try {
+          await cacheDataLoaded;
+
+          socket.on("addTimeSheet", (data) => {
+            updateCachedData((draft) => {
+              const index = draft.findIndex(
+                (trainee) => trainee._id === data._id
+              );
+              if (index !== -1) draft[index].timesheet = data.timesheet;
+            });
+          });
+
+          socket.on("dailyTimeRecord", (data) => {
+            console.log("DATA EMITTED:", data);
+            updateCachedData((draft) => {
+              const index = draft.findIndex(
+                (trainee) => trainee._id === data._id
+              );
+              if (index !== -1) draft[index].dtr = data.dtr;
+            });
+          });
+        } catch {}
+        await cacheEntryRemoved;
+        socket.close();
+      },
     }),
     getTraineeProfile: builder.query<ITrainee, string | void>({
       query: (id) => ({
@@ -32,30 +58,39 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
         } catch {}
       },
     }),
-    addTaskTimesheet: builder.mutation<
-      ITrainee,
-      { sheet: ISheets; rooms: string[] }
-    >({
+    addTaskTimesheet: builder.mutation({
       query: ({ sheet }) => ({
         url: "/trainee/timesheet",
         method: "PUT",
         body: sheet,
       }),
       invalidatesTags: ["Trainee"],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data: profile } = await queryFulfilled;
+          socket.emit("sheet", {
+            trainee: profile,
+            rooms: arg.rooms,
+          });
+        } catch {}
+      },
     }),
-    // addDtr: builder.mutation<ITrainee, void>({
-    //   query: () => ({
-    //     url: "/trainee/dtr",
-    //     method: "PUT",
-    //   }),
-    //   invalidatesTags: ["Trainee"],
-    // }),
-    updateDtr: builder.mutation<ITrainee, void>({
+    updateDtr: builder.mutation({
       query: () => ({
         url: "/trainee/dtr/inout",
         method: "PUT",
       }),
-      invalidatesTags: ["Trainee", "Task"],
+      invalidatesTags: ["Trainee"],
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data: profile } = await queryFulfilled;
+          console.log("emitted", profile);
+          socket.emit("dtr", {
+            trainee: profile,
+            rooms: arg.rooms,
+          });
+        } catch {}
+      },
     }),
   }),
 });
@@ -65,6 +100,5 @@ export const {
   useAddTraineeMutation,
   useGetTraineeProfileQuery,
   useAddTaskTimesheetMutation,
-  // useAddDtrMutation,
   useUpdateDtrMutation,
 } = traineeApiSlice;
