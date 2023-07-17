@@ -44,7 +44,6 @@ const InfoCard = ({ trainee }: Props) => {
           (task) => task.date === formatDateTime(date.toISOString()).date
         );
 
-  console.log("Trainee", trainee);
   return (
     <Card className="h- rounded-md shadow-md space-y-[6px]">
       <Box component="div">

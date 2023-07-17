@@ -96,6 +96,17 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                   </Menu.Item>
                 ))}
             </ScrollArea.Autosize>
+            {tasks?.filter((task) => task.status === "pending").length ===
+              0 && (
+              <Text
+                c="dimmed"
+                fs="italic"
+                fz="xs"
+                className="tracking-normal text-center"
+              >
+                no pending tasks!
+              </Text>
+            )}
           </Tabs.Panel>
           <Tabs.Panel value="second" className="space-y-2 p-2">
             <ScrollArea.Autosize mah={258} scrollbarSize={7}>
@@ -105,14 +116,14 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                   const dates = task.timeline?.revisions.map(
                     (dateStr) => new Date(dateStr)
                   );
-
-                  // Find the maximum date object using Math.max() and the spread operator
                   const latest =
                     dates && dates.length > 0
                       ? new Date(
                           Math.max(...dates.map((date) => date.getTime()))
                         )
                       : null;
+
+                  console.log(latest);
                   return (
                     <Menu.Item p={0} className="bg-white hover:bg-white">
                       <Flex
@@ -150,6 +161,16 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                   );
                 })}
             </ScrollArea.Autosize>
+            {tasks?.filter((task) => task.status === "failed").length === 0 && (
+              <Text
+                c="dimmed"
+                fs="italic"
+                fz="xs"
+                className="tracking-normal text-center"
+              >
+                no failed tasks!
+              </Text>
+            )}
           </Tabs.Panel>
         </Tabs>
       </Menu.Dropdown>

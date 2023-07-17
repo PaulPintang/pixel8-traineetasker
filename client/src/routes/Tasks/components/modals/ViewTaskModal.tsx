@@ -3,25 +3,21 @@ import {
   Text,
   Group,
   Flex,
-  Menu,
-  Timeline,
   Tabs,
   Image,
   Breadcrumbs,
   Title,
   Button,
-  TextInput,
   ActionIcon,
   Textarea,
-  Paper,
   Tooltip,
-  Avatar,
   Badge,
+  Anchor,
 } from "@mantine/core";
-import avatar from "../../../../assets/avatar.png";
 import {
   IconChecks,
   IconExclamationCircle,
+  IconLink,
   IconMessage,
   IconSend,
 } from "@tabler/icons-react";
@@ -31,7 +27,6 @@ import {
   useTaskStatusMutation,
 } from "../../../../features/api/task/taskApiSlice";
 import { ITask } from "../../../../interfaces/task.interface";
-import { IconUser } from "@tabler/icons-react";
 import {
   useAddTaskTimesheetMutation,
   useGetAllTraineeQuery,
@@ -41,7 +36,6 @@ import Comments from "./ViewTask/components/Comments";
 import { useAppSelector } from "../../../../app/hooks";
 import { useRef, useState } from "react";
 import TimelineComponent from "./ViewTask/components/Timeline";
-import { socket } from "../../../../utils/socketConnect";
 import { JoinRoom } from "../../../../utils/socketConnect";
 import { ISheets } from "../../../../interfaces/records.interface";
 import { useMediaQuery } from "@mantine/hooks";
@@ -158,108 +152,87 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
           <Title order={4} c="dark">
             {task?.taskname}
           </Title>
-          {
-            // task?.status === "new" &&
-            // user?.role !== "supervisor" &&
-            // user?.role !== "admin" &&
-            // user?.role !== "trainee" ? (
-            //   <Button
-            //     onClick={() => {
-            //       toggleView!();
-            //     }}
-            //     leftIcon={<IconUser size={16} />}
-            //     variant="white"
-            //     color={task.assign ? "indigo" : "cyan"}
-            //     size="xs"
-            //   >
-            //     {task.assign ? "Reassign" : "Assign"}
-            //   </Button>
-            // ) :
-
-            task?.status === "new" || task?.status === "pending" ? (
-              <>
-                {user?.role === "trainee" && (
-                  <Button
-                    color={task.status === "new" ? "indigo" : "yellow"}
-                    size="xs"
-                    onClick={handleTaskStatus}
-                    loading={taskState.isLoading}
-                  >
-                    Start task
-                  </Button>
-                )}
-              </>
-            ) : task?.status === "forqa" && user?.role === "QA Personnel" ? (
-              <Group spacing={10}>
-                <Tooltip
-                  withArrow
-                  color="cyan"
-                  position="bottom"
-                  label={<Text fz="xs">mark as completed</Text>}
-                >
-                  <ActionIcon
-                    ref={complete}
-                    color="cyan"
-                    id="complete"
-                    onClick={() => {
-                      setStatus("complete");
-                      handleCheckTask("completed");
-                    }}
-                    loading={
-                      taskState.isLoading && status === "complete"
-                        ? true
-                        : false
-                    }
-                  >
-                    <IconChecks size={20} />
-                  </ActionIcon>
-                </Tooltip>
-                <Tooltip
-                  withArrow
-                  color="red"
-                  position="bottom"
-                  label={<Text fz="xs">mark as failed</Text>}
-                >
-                  <ActionIcon
-                    color="red"
-                    ref={fail}
-                    id="fail"
-                    onClick={() => {
-                      setStatus("failed");
-                      handleCheckTask("failed");
-                    }}
-                    loading={
-                      taskState.isLoading && status === "failed" ? true : false
-                    }
-                  >
-                    <IconExclamationCircle size={20} />
-                  </ActionIcon>
-                </Tooltip>
-              </Group>
-            ) : task?.status === "failed" && user?.role === "trainee" ? (
-              <Button
-                color="cyan"
-                size="xs"
-                onClick={handleTaskStatus}
-                loading={taskState.isLoading}
-              >
-                Revise
-              </Button>
-            ) : (
-              task?.status === "inprogress" &&
-              task.assign === user?.name &&
-              user?.role === "trainee" && (
+          {task?.status === "new" || task?.status === "pending" ? (
+            <>
+              {user?.role === "trainee" && (
                 <Button
-                  color="teal"
+                  color={task.status === "new" ? "indigo" : "yellow"}
                   size="xs"
                   onClick={handleTaskStatus}
                   loading={taskState.isLoading}
                 >
-                  Done task
+                  Start task
                 </Button>
-              )
+              )}
+            </>
+          ) : task?.status === "forqa" && user?.role === "QA Personnel" ? (
+            <Group spacing={10}>
+              <Tooltip
+                withArrow
+                color="cyan"
+                position="bottom"
+                label={<Text fz="xs">mark as completed</Text>}
+              >
+                <ActionIcon
+                  ref={complete}
+                  color="cyan"
+                  id="complete"
+                  onClick={() => {
+                    setStatus("complete");
+                    handleCheckTask("completed");
+                  }}
+                  loading={
+                    taskState.isLoading && status === "complete" ? true : false
+                  }
+                >
+                  <IconChecks size={20} />
+                </ActionIcon>
+              </Tooltip>
+              <Tooltip
+                withArrow
+                color="red"
+                position="bottom"
+                label={<Text fz="xs">mark as failed</Text>}
+              >
+                <ActionIcon
+                  color="red"
+                  ref={fail}
+                  id="fail"
+                  onClick={() => {
+                    setStatus("failed");
+                    handleCheckTask("failed");
+                  }}
+                  loading={
+                    taskState.isLoading && status === "failed" ? true : false
+                  }
+                >
+                  <IconExclamationCircle size={20} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
+          ) : task?.status === "failed" && user?.role === "trainee" ? (
+            <Button
+              color="cyan"
+              size="xs"
+              onClick={handleTaskStatus}
+              loading={taskState.isLoading}
+            >
+              Revise
+            </Button>
+          ) : (
+            task?.status === "inprogress" &&
+            task.assign === user?.name &&
+            user?.role === "trainee" && (
+              <Button
+                color="teal"
+                size="xs"
+                onClick={handleTaskStatus}
+                loading={taskState.isLoading}
+              >
+                Done task
+              </Button>
             )
-          }
+          )}
         </Group>
         <div className="space-y-2">
           {task?.status !== "new" || task.assign ? (
@@ -344,6 +317,21 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
               </Text>
             </Group>
           )}
+          <Group align="center">
+            <Text className="w-1/4" c="dimmed" fz="sm">
+              Deliverable
+            </Text>
+            <Anchor href={task?.deliverable} target="_blank">
+              <Button
+                size="sm"
+                variant="white"
+                compact
+                leftIcon={<IconLink size={18} />}
+              >
+                View
+              </Button>
+            </Anchor>
+          </Group>
         </div>
 
         <Tabs defaultValue="second" pt={10} color="cyan">

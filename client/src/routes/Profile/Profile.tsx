@@ -127,17 +127,17 @@ const Profile = () => {
             </Button>
           </Tabs.Tab>
         </Tabs.List>
-        <Tabs.Panel value="tasks" pt="xs">
+        <Tabs.Panel value="tasks" pt="xs" pb="lg">
           <Suspense fallback={<SuspenseTabs tab="tasks" />}>
             <Tasks trainee={trainee!} />
           </Suspense>
         </Tabs.Panel>
-        <Tabs.Panel value="timesheet" pt="xs">
+        <Tabs.Panel value="timesheet" pt="xs" pb="lg">
           <Suspense fallback={<SuspenseTabs tab="timesheets" />}>
             {activeTab === "timesheet" && <TimeSheets profile={trainee!} />}
           </Suspense>
         </Tabs.Panel>
-        <Tabs.Panel value="dtr" pt="xs">
+        <Tabs.Panel value="dtr" pt="xs" pb="lg">
           <Suspense fallback={<SuspenseTabs tab="dtr" />}>
             {activeTab === "dtr" && <DailyTimeRecord profile={trainee!} />}
           </Suspense>

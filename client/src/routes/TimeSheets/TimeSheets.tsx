@@ -10,6 +10,7 @@ import {
   Popover,
   Box,
   Select,
+  Button,
 } from "@mantine/core";
 import { chunk } from "lodash";
 import { useState } from "react";
@@ -51,164 +52,164 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   const profileInfo = trainees?.find((trainee) => trainee._id === profile?._id);
 
   const items = chunk(
-    user?.role === "trainee"
-      ? trainee?.timesheet
-          ?.slice()
-          .sort((a, b) => b.date!.localeCompare(a.date!))
-      : profileInfo?.timesheet
-          ?.slice()
-          .sort((a, b) => b.date!.localeCompare(a.date!)),
+    user?.role === "trainee" ? trainee?.timesheet : profileInfo?.timesheet,
     10
   );
 
   useDocumentTitle("Timesheet");
-  const rows = items[page - 1]?.map((sheet, index) => {
-    const format = formatDateTime(sheet.date!);
+  const rows = items[page - 1]
+    ?.slice()
+    .sort((a, b) => b.task!.localeCompare(a.task!))
+    .sort((a, b) => b.status!.localeCompare(a.status!))
+    .map((sheet, index) => {
+      const format = formatDateTime(sheet.date!);
 
-    const time = {
-      status: sheet.status,
-      morning: sheet.morning,
-      afternoon: sheet.afternoon,
-    };
-    const spent = calculateSpentTime(time);
+      const time = {
+        status: sheet.status,
+        morning: sheet.morning,
+        afternoon: sheet.afternoon,
+      };
+      const spent = calculateSpentTime(time);
 
-    return (
-      <tr key={index}>
-        <td className="md:table-cell lg:table-cell pl-3">
-          <Text>
-            {format.date === date.toDateString() ? "Today" : format.date}
-          </Text>
-        </td>
-        <td className="md:table-cell lg:table-cell">
-          <Text>{sheet.task}</Text>
-        </td>
-        <td className="hidden md:table-cell lg:table-cell">
-          <Text>{sheet.ticket}</Text>
-        </td>
-        <td className="py-2 hidden md:table-cell lg:table-cell ">
-          <Text>
-            {spent.totalSpent.hours === 1
-              ? spent.totalSpent.hours + "hr"
-              : spent.totalSpent.hours > 1
-              ? spent.totalSpent.hours + "hrs"
-              : spent.totalSpent.hours === 0 && ""}
-            {spent.totalSpent.minutes === 1
-              ? spent.totalSpent.minutes + "min"
-              : spent.totalSpent.minutes > 1
-              ? spent.totalSpent.minutes + "mins"
-              : spent.totalSpent.minutes === 0 && ""}
-          </Text>
-        </td>
-        <td className="py-2 hidden md:table-cell lg:table-cell ">
-          {sheet.status === "recorded" ? (
-            <Flex align="center" gap={8}>
-              <div className="bg-green-300 p-1"></div>
-              <Text
-                fz="sm"
-                className="text-gray-400  text-[10px] uppercase font-semibold "
-              >
-                recorded
-              </Text>
-            </Flex>
-          ) : (
-            <Text fz="xs" fw="bold">
-              {sheet.status}
+      return (
+        <tr key={index}>
+          <td className="md:table-cell lg:table-cell pl-3">
+            <Text>
+              {format.date === date.toDateString() ? "Today" : format.date}
             </Text>
-          )}
-        </td>
-        <td className="dark:text-gray-400 md:table-cell lg:table-cell">
-          <Menu
-            shadow="md"
-            transitionProps={{ transition: "rotate-right", duration: 150 }}
-            withArrow
-          >
-            <Menu.Target>
-              <ActionIcon variant="white" color="cyan">
-                <IconDots size={19} />
-              </ActionIcon>
-            </Menu.Target>
+          </td>
+          <td className="md:table-cell lg:table-cell">
+            <Text>{sheet.task}</Text>
+          </td>
+          <td className="hidden md:table-cell lg:table-cell">
+            <Text>{sheet.ticket}</Text>
+          </td>
+          <td className="py-2 hidden md:table-cell lg:table-cell ">
+            <Text>
+              {spent.totalSpent.hours === 1
+                ? spent.totalSpent.hours + "hr"
+                : spent.totalSpent.hours > 1
+                ? spent.totalSpent.hours + "hrs"
+                : spent.totalSpent.hours === 0 && ""}
+              {spent.totalSpent.minutes === 1
+                ? spent.totalSpent.minutes + "min"
+                : spent.totalSpent.minutes > 1
+                ? spent.totalSpent.minutes + "mins"
+                : spent.totalSpent.minutes === 0 && ""}
+            </Text>
+          </td>
+          <td className="py-2 hidden md:table-cell lg:table-cell ">
+            {sheet.status === "recorded" ? (
+              <Flex align="center" gap={8}>
+                <div className="bg-green-300 p-1"></div>
+                <Text
+                  fz="sm"
+                  className="text-gray-400  text-[10px] uppercase font-semibold "
+                >
+                  recorded
+                </Text>
+              </Flex>
+            ) : (
+              <Text fz="xs" fw="bold">
+                {sheet.status}
+              </Text>
+            )}
+          </td>
+          <td className="dark:text-gray-400 md:table-cell lg:table-cell">
+            <Menu
+              shadow="md"
+              transitionProps={{ transition: "rotate-right", duration: 150 }}
+              withArrow
+            >
+              <Menu.Target>
+                <ActionIcon variant="white" color="cyan">
+                  <IconDots size={19} />
+                </ActionIcon>
+              </Menu.Target>
 
-            <Menu.Dropdown>
-              {/* {Object.values(sheet.morning!).every((value) => value === "") ? ( */}
-              {sheet.morning?.start !== "" && (
-                <>
-                  <Menu.Label>Morning</Menu.Label>
-                  <Menu.Item p={0} className="bg-white hover:bg-white">
-                    <Stack px={10} pb={5} spacing={1}>
-                      <Group spacing={8}>
-                        <IconClock size={16} className="text-yellow-300" />
+              <Menu.Dropdown>
+                {/* {Object.values(sheet.morning!).every((value) => value === "") ? ( */}
+                {sheet.morning?.start !== "" && (
+                  <>
+                    <Menu.Label>Morning</Menu.Label>
+                    <Menu.Item p={0} className="bg-white hover:bg-white">
+                      <Stack px={10} pb={5} spacing={1}>
+                        <Group spacing={8}>
+                          <IconClock size={16} className="text-yellow-300" />
+                          <Text c="dark" fz="xs">
+                            <span>{sheet.morning?.start}</span> -{" "}
+                            <span
+                              className={
+                                sheet.morning?.end === "" ? "text-gray-500" : ""
+                              }
+                            >
+                              {sheet.morning?.end === ""
+                                ? "recording"
+                                : sheet.morning?.end}
+                            </span>
+                          </Text>
+                        </Group>
                         <Text c="dark" fz="xs">
-                          <span>{sheet.morning?.start}</span> -{" "}
-                          <span
-                            className={
-                              sheet.morning?.end === "" ? "text-gray-500" : ""
-                            }
-                          >
-                            {sheet.morning?.end === ""
-                              ? "recording"
-                              : sheet.morning?.end}
-                          </span>
+                          Spent:{" "}
+                          {spent.morning.spent.hours !== 0 &&
+                            `${spent.morning.spent.hours}hr${
+                              spent.morning.spent.hours !== 1 ? "s" : ""
+                            }`}
+                          {spent.morning.spent.minutes !== 0 &&
+                            `${spent.morning.spent.minutes}min${
+                              spent.morning.spent.minutes !== 1 ? "s" : ""
+                            }`}
                         </Text>
-                      </Group>
-                      <Text c="dark" fz="xs">
-                        Spent:{" "}
-                        {spent.morning.spent.hours !== 0 &&
-                          `${spent.morning.spent.hours}hr${
-                            spent.morning.spent.hours !== 1 ? "s" : ""
-                          }`}
-                        {spent.morning.spent.minutes !== 0 &&
-                          `${spent.morning.spent.minutes}min${
-                            spent.morning.spent.minutes !== 1 ? "s" : ""
-                          }`}
-                      </Text>
-                    </Stack>
-                  </Menu.Item>
-                  <Menu.Divider />
-                </>
-              )}
-              {/* ) : ( */}
+                      </Stack>
+                    </Menu.Item>
+                    <Menu.Divider />
+                  </>
+                )}
+                {/* ) : ( */}
 
-              {sheet.afternoon?.start !== "" && (
-                <>
-                  <Menu.Label>Afternoon</Menu.Label>
-                  <Menu.Item p={0} className="bg-white hover:bg-white">
-                    <Stack px={10} pb={5} spacing={1}>
-                      <Group spacing={8}>
-                        <IconClock size={16} className="text-violet-400" />
+                {sheet.afternoon?.start !== "" && (
+                  <>
+                    <Menu.Label>Afternoon</Menu.Label>
+                    <Menu.Item p={0} className="bg-white hover:bg-white">
+                      <Stack px={10} pb={5} spacing={1}>
+                        <Group spacing={8}>
+                          <IconClock size={16} className="text-violet-400" />
+                          <Text c="dark" fz="xs">
+                            <span>{sheet.afternoon?.start}</span> -{" "}
+                            <span
+                              className={
+                                sheet.afternoon?.end === ""
+                                  ? "text-gray-500"
+                                  : ""
+                              }
+                            >
+                              {sheet.afternoon?.end === ""
+                                ? "recording"
+                                : sheet.afternoon?.end}
+                            </span>
+                          </Text>
+                        </Group>
                         <Text c="dark" fz="xs">
-                          <span>{sheet.afternoon?.start}</span> -{" "}
-                          <span
-                            className={
-                              sheet.afternoon?.end === "" ? "text-gray-500" : ""
-                            }
-                          >
-                            {sheet.afternoon?.end === ""
-                              ? "recording"
-                              : sheet.afternoon?.end}
-                          </span>
+                          Spent:{" "}
+                          {spent.afternoon.spent.hours !== 0 &&
+                            `${spent.afternoon.spent.hours}hr${
+                              spent.afternoon.spent.hours !== 1 ? "s" : ""
+                            }`}
+                          {spent.afternoon.spent.minutes !== 0 &&
+                            `${spent.afternoon.spent.minutes}min${
+                              spent.afternoon.spent.minutes !== 1 ? "s" : ""
+                            }`}
                         </Text>
-                      </Group>
-                      <Text c="dark" fz="xs">
-                        Spent:{" "}
-                        {spent.afternoon.spent.hours !== 0 &&
-                          `${spent.afternoon.spent.hours}hr${
-                            spent.afternoon.spent.hours !== 1 ? "s" : ""
-                          }`}
-                        {spent.afternoon.spent.minutes !== 0 &&
-                          `${spent.afternoon.spent.minutes}min${
-                            spent.afternoon.spent.minutes !== 1 ? "s" : ""
-                          }`}
-                      </Text>
-                    </Stack>
-                  </Menu.Item>
-                </>
-              )}
-            </Menu.Dropdown>
-          </Menu>
-        </td>
-      </tr>
-    );
-  });
+                      </Stack>
+                    </Menu.Item>
+                  </>
+                )}
+              </Menu.Dropdown>
+            </Menu>
+          </td>
+        </tr>
+      );
+    });
 
   const inprogress = tasks?.filter((task) => task.status === "inprogress");
   const oldtask = inprogress?.reduce((oldest, current) => {
@@ -222,7 +223,6 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
     <>
       <Flex justify="space-between" pb={6} align="center">
         <TimeSheetsLabels />
-        {/* <ManageTaskLabels /> */}
         <Group className="" fz={12}>
           <Group spacing={8} c="dark">
             {inprogress?.length !== 0 && (
@@ -230,7 +230,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
                 {/* hide if sheet not started and inprogress task is more than one */}
                 <Text fw="bold">Current task:</Text>
                 <Popover
-                  position="bottom"
+                  position="bottom-end"
                   withArrow
                   shadow="md"
                   opened={opened}
@@ -251,15 +251,27 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
                         {oldtask?.taskname}
                       </Text>
                       <Group className="text-gray-500" fz="xs" spacing={8}>
-                        <Text>Added:</Text>
-                        <Text>{formatDateTime(oldtask?.createdAt!).date}</Text>
-                      </Group>
-                      <Group className="text-gray-500" fz="xs" spacing={8}>
-                        <Text>Started:</Text>
+                        <Text c="dark">Added:</Text>
                         <Text>
-                          {formatDateTime(oldtask?.timeline?.startedAt!).date}
+                          {formatDateTime(oldtask?.createdAt!).date +
+                            " at " +
+                            formatDateTime(oldtask?.createdAt!).time}
                         </Text>
                       </Group>
+                      <Group className="text-gray-500" fz="xs" spacing={8}>
+                        <Text c="dark">Started:</Text>
+                        <Text>{oldtask?.timeline?.startedAt}</Text>
+                      </Group>
+                      <Group className="text-gray-500" fz="xs" spacing={8}>
+                        <Text c="dark">Recorded spent:</Text>
+                        <Text>{oldtask?.spent}</Text>
+                      </Group>
+                      {/* <Group className="text-gray-500" fz="xs" spacing={8}>
+                        <Text c="dark">Deliverable:</Text>
+                        <Button compact size="xs" variant="white">
+                          View
+                        </Button>
+                      </Group> */}
                     </Box>
                   </Popover.Dropdown>
                 </Popover>

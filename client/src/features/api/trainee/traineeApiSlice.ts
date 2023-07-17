@@ -43,13 +43,13 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Trainee"],
     }),
-    addDtr: builder.mutation<ITrainee, void>({
-      query: () => ({
-        url: "/trainee/dtr",
-        method: "PUT",
-      }),
-      invalidatesTags: ["Trainee"],
-    }),
+    // addDtr: builder.mutation<ITrainee, void>({
+    //   query: () => ({
+    //     url: "/trainee/dtr",
+    //     method: "PUT",
+    //   }),
+    //   invalidatesTags: ["Trainee"],
+    // }),
     updateDtr: builder.mutation<ITrainee, void>({
       query: () => ({
         url: "/trainee/dtr/inout",
@@ -65,6 +65,6 @@ export const {
   useAddTraineeMutation,
   useGetTraineeProfileQuery,
   useAddTaskTimesheetMutation,
-  useAddDtrMutation,
+  // useAddDtrMutation,
   useUpdateDtrMutation,
 } = traineeApiSlice;

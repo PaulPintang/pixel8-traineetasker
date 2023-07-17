@@ -13,9 +13,9 @@ export interface ITask {
     }
   ];
   timeline?: {
-    startedAt?: Date;
-    doneAt?: Date;
-    completedAt?: Date;
+    startedAt?: string;
+    doneAt?: string;
+    completedAt?: string;
     revisions: string[];
   };
   spent?: string;

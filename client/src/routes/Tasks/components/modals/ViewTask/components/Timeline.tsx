@@ -16,9 +16,6 @@ import { useGetAllAccountQuery } from "../../../../../../features/api/account/ac
 const TimelineComponent = ({ user, task, assign }: Props) => {
   const { data: accounts } = useGetAllAccountQuery();
   const added = formatDateTime(task?.createdAt!);
-  const started = formatDateTime(task?.timeline?.startedAt!);
-  const done = formatDateTime(task?.timeline?.doneAt!);
-  const completed = formatDateTime(task?.timeline?.completedAt!);
   const revision = task?.timeline?.revisions.length !== 0;
 
   const failedby = accounts?.find((acc) => acc.role === "QA Personnel");
@@ -37,7 +34,8 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
             You've mark this task as completed
           </Text>
           <Text size="xs" mt={4}>
-            {`${completed.date} at ${completed.time}`}
+            {/* {`${completed.date} at ${completed.time}`} */}
+            {task.timeline.completedAt}
           </Text>
         </Timeline.Item>
       ) : null}
@@ -68,41 +66,43 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
               x{task.timeline?.revisions.length}
             </Badge>
           </Group>
-          {task.timeline?.revisions.map((item, index) => {
-            const dates = formatDateTime(item);
-            const color =
-              index === 0 && task.status === "completed"
-                ? "green"
-                : index === 0 && task.status === "inprogress"
-                ? "indigo"
-                : index === 0 && task.status === "forqa"
-                ? "yellow"
-                : "red";
-            return (
-              <List
-                pt={10}
-                spacing="xs"
-                size="sm"
-                center
-                icon={
-                  <ThemeIcon color={color} size="xs" radius="xl">
-                    {index === 0 && task.status === "completed" ? (
-                      <IconCheck />
-                    ) : (
-                      <IconCircleX size="1rem" />
-                    )}
-                  </ThemeIcon>
-                }
-              >
-                <List.Item>
-                  <Text
-                    size="xs"
-                    mb={2}
-                  >{`${dates.date} at ${dates.time}`}</Text>
-                </List.Item>
-              </List>
-            );
-          })}
+          {task.timeline?.revisions
+            .slice()
+            .sort((a, b) => b.localeCompare(a))
+            .map((date, index) => {
+              const dates = formatDateTime(date);
+              const color =
+                index === 0 && task.status === "completed"
+                  ? "green"
+                  : index === 0 && task.status === "inprogress"
+                  ? "indigo"
+                  : index === 0 && task.status === "forqa"
+                  ? "yellow"
+                  : "red";
+              return (
+                <List
+                  pt={10}
+                  spacing="xs"
+                  size="sm"
+                  center
+                  icon={
+                    <ThemeIcon color={color} size="xs" radius="xl">
+                      {index === 0 && task.status === "completed" ? (
+                        <IconCheck />
+                      ) : (
+                        <IconCircleX size="1rem" />
+                      )}
+                    </ThemeIcon>
+                  }
+                >
+                  <List.Item>
+                    <Text size="xs" mb={2}>
+                      {`${dates.date} at ${dates.time}`}
+                    </Text>
+                  </List.Item>
+                </List>
+              );
+            })}
         </Timeline.Item>
       ) : null}
 
@@ -123,7 +123,8 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
             Task for-QA
           </Text>
           <Text size="xs" mt={4}>
-            {`${done.date} at ${done.time}`}
+            {/* {`${done.date} at ${done.time}`} */}
+            {task.timeline.doneAt}
           </Text>
         </Timeline.Item>
       ) : null}
@@ -149,7 +150,8 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
             </span>
           </Text>
           <Text size="xs" mt={4}>
-            {`${started.date} at ${started.time}`}
+            {/* {`${started.date} at ${started.time}`} */}
+            {task.timeline?.startedAt}
           </Text>
         </Timeline.Item>
       ) : null}

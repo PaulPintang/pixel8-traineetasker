@@ -62,11 +62,15 @@ const InProgress = ({ toggle, setViewId }: Props) => {
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Added:</Text>
-                <Text>{formatDateTime(task.createdAt!).date}</Text>
+                <Text>
+                  {formatDateTime(task.createdAt!).date +
+                    " at " +
+                    formatDateTime(task.createdAt!).time}
+                </Text>
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Started:</Text>
-                <Text>{formatDateTime(task.timeline?.startedAt!).date}</Text>
+                <Text>{task.timeline?.startedAt}</Text>
               </Group>
               {sheet?.status === "recording" && (
                 <Group className="text-gray-500" fz="xs" spacing={8}>

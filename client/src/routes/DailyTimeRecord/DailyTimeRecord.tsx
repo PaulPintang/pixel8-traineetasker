@@ -123,9 +123,21 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
         </Flex>
       </td>
       <td className="py-2  md:table-cell lg:table-cell ">
-        <Text fw="bold" fz="xs">
-          {record.status}
-        </Text>
+        {record.status === "recorded" ? (
+          <Flex align="center" gap={8} className="w-full">
+            <div className="bg-green-300 p-1"></div>
+            <Text
+              fz="sm"
+              className="text-gray-400 text-[10px] uppercase font-semibold "
+            >
+              recorded
+            </Text>
+          </Flex>
+        ) : (
+          <Text fz="xs" fw="bold">
+            {record.status}
+          </Text>
+        )}
       </td>
       <td className="py-2 table-cell  md:hidden lg:hidden ">
         <Menu
@@ -270,7 +282,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
                 <EmptyState text="No records found" />;
               </>
             ) : (
-              <tbody className="text-xs text-gray-600">{rows}</tbody>
+              <tbody className="text-sm text-gray-600">{rows}</tbody>
             )}
           </table>
         </div>
