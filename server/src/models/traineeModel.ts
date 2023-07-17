@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import { ITrainee } from "../interfaces/user.interface";
 import { ISheets, IDtr } from "../interfaces/records.interface";
+import { timeStamp } from "console";
 
 const timeSheetSchema = new Schema<ISheets>({
   trainee: String,
@@ -8,7 +9,7 @@ const timeSheetSchema = new Schema<ISheets>({
   task: String,
   ticket: String,
   status: String,
-  spent: String,
+  // spent: String,
   morning: {
     start: String,
     end: String,

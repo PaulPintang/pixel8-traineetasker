@@ -13,8 +13,8 @@ type TimeSpent = {
 };
 
 export const calculateSpentTime = (time: TimeSpent) => {
-  const date = new Date();
-  const format = formatDateTime(date.toISOString());
+  // const date = new Date();
+  const format = formatDateTime();
 
   const morningStart = new Date(
     `2000/01/01 ${time.morning?.start?.replace("APM", "")}`

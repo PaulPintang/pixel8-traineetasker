@@ -4,10 +4,9 @@ import Task from "../models/taskModel";
 import Account from "../models/accountModel";
 import { ITrainee } from "../interfaces/user.interface";
 import asyncHandler from "express-async-handler";
-import { IDtr } from "../interfaces/records.interface";
-import { formatDateTime } from "../utils/formatDateTime";
+import { formatDateTime, handleTimeCarryOver } from "../utils/formatDateTime";
 import { checkTime } from "../utils/checkTime";
-import { calculateSpentTime } from "../utils/calculateSpentTime";
+import { handleTaskSpent, handleTraineeHourSpent } from "../utils/DTRFunctions";
 
 export const allTrainee = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -49,71 +48,24 @@ export const addTrainee = asyncHandler(
   }
 );
 
-export const addTraineeDTR = asyncHandler(
+export const timeInOutDTR = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    if (res.locals.user.role === "trainee") {
-      const date = new Date();
-      const format = formatDateTime(date.toISOString());
-      // ? add check based on schedule. (ex. 8-5 sched). only proceed to this timeline
-      // ?? SCHEDULE IS BASED ON ADMIN GIVEN SCHEDULE TIMEptraineemo
-      const record: IDtr = {
-        date: format.date,
-        status: "recording",
-        morning: {
-          in: format.time,
-          out: "",
-        },
-        afternoon: {
-          in: "",
-          out: "",
-        },
-      };
-      const trainee = await Trainee.findOne({ email: res.locals.user.email });
-      const dtr = await Trainee.findByIdAndUpdate(
-        trainee._id,
-        {
-          started: trainee.started === "" ? format.date : trainee.started,
-          dtr: [...trainee.dtr, record],
-        },
-        { new: true }
-      );
-
-      res.json(dtr);
-    }
-  }
-);
-
-export const updateDtr = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const date = new Date();
-    const format = formatDateTime(date.toISOString());
+    const format = formatDateTime();
     if (res.locals.user.role === "trainee") {
       const trainee = await Trainee.findOne({ email: res.locals.user.email });
-      const taskonsheet = await Task.findOne({ status: "inprogress" });
-      const records = trainee.dtr;
-      const timesheet = trainee.timesheet;
-      const index = trainee.dtr.findIndex(
+      const taskInprogress = await Task.findOne({ status: "inprogress" });
+      const todayIndex = trainee.dtr.findIndex(
         (record) => record.date === format.date
       );
 
-      const current = trainee.timesheet.findIndex(
+      const recording = trainee.timesheet.findIndex(
         (record) => record.status === "recording"
       );
-      if (index !== -1) {
-        if (records[index].morning.out === "") {
-          records[index].morning.out = format.time;
-          const startHour = records[index].morning.in.split(":")[0];
-          const endHour = records[index].morning.out.split(":")[0];
-          const startTime = new Date();
-          const endTime = new Date();
-          startTime.setHours(parseInt(startHour, 10), 0, 0); // Set start time to 8:00 AM
-          endTime.setHours(parseInt(endHour, 10), 0, 0); // Set end time to 12:00 PM
-          const timeDiff = Math.abs(endTime.getTime() - startTime.getTime()); // Get the time difference in milliseconds
-          const hoursSpent = Math.floor(timeDiff / (1000 * 60 * 60)); // Convert milliseconds to hours
-          const hours = {
-            rendered: trainee.hours.rendered + hoursSpent,
-            pending: trainee.hours.pending - hoursSpent,
-          };
+
+      // ?? IF THERE IS TODAY RECORD
+      if (todayIndex !== -1) {
+        if (trainee.dtr[todayIndex].morning.out === "") {
+          const hours = handleTraineeHourSpent(trainee, "morning");
           await Trainee.findByIdAndUpdate(
             trainee._id,
             {
@@ -126,72 +78,37 @@ export const updateDtr = asyncHandler(
               new: true,
             }
           );
-          if (current !== -1) {
-            timesheet[current].morning.end = format.time;
-            // Extract existing hours and minutes from the existing spent time in the database
-            const hoursMatch = taskonsheet.spent.match(/(\d+)hr/);
-            const minutesMatch = taskonsheet.spent.match(/(\d+)mins?/);
+          // ?? morning timesheet end
+          if (recording !== -1) {
+            const { spent, existingHours, existingMinutes } = handleTaskSpent({
+              trainee,
+              taskInprogress,
+              recording,
+              day: "morning",
+            });
 
-            const existingHours = hoursMatch ? hoursMatch[1] : "0";
-            const existingMinutes = minutesMatch ? minutesMatch[1] : "0";
+            const totalHours = parseInt(existingHours) + spent.totalSpent.hours;
+            const totalMinutes =
+              parseInt(existingMinutes) + spent.totalSpent.minutes;
 
-            const time = {
-              status: timesheet[current].status,
-              morning: timesheet[current].morning,
-              afternoon: timesheet[current].afternoon,
-            };
-            const spent = calculateSpentTime(time);
-
-            let newSpent = "";
-            let totalHours = 0;
-            let totalMinutes = 0;
-
-            // Add the existing hours and minutes to the calculated total
-            totalHours = parseInt(existingHours) + spent.totalSpent.hours;
-            totalMinutes = parseInt(existingMinutes) + spent.totalSpent.minutes;
-
-            // Handle carry-over from minutes to hours
-            if (totalMinutes >= 60) {
-              totalHours += Math.floor(totalMinutes / 60);
-              totalMinutes %= 60;
-            }
-
-            if (totalHours !== 0) {
-              newSpent += `${totalHours}hr${totalHours !== 1 ? "s" : ""}`;
-            }
-
-            if (totalMinutes !== 0) {
-              newSpent += `${totalMinutes}min${totalMinutes !== 1 ? "s" : ""}`;
-            }
+            const newSpent = handleTimeCarryOver(totalHours, totalMinutes);
 
             await Task.findByIdAndUpdate(
-              taskonsheet._id,
+              taskInprogress._id,
               {
                 spent: newSpent,
               },
               { new: true }
             );
           }
-        } else if (records[index].afternoon.in === "") {
-          records[index].afternoon.in = format.time;
-          if (current !== -1) {
-            timesheet[current].afternoon.start = format.time;
+        } else if (trainee.dtr[todayIndex].afternoon.in === "") {
+          // trainee.dtr[todayIndex].afternoon.in = "01:00 PM";
+          trainee.dtr[todayIndex].afternoon.in = format.time;
+          if (recording !== -1) {
+            trainee.timesheet[recording].afternoon.start = format.time;
           }
-        } else if (records[index].afternoon.out === "") {
-          records[index].afternoon.out = format.time;
-          records[index].status = "recorded";
-          const startHour = records[index].afternoon.in.split(":")[0];
-          const endHour = records[index].afternoon.out.split(":")[0];
-          const startTime = new Date();
-          const endTime = new Date();
-          startTime.setHours(parseInt(startHour, 10), 0, 0); // Set start time to 8:00 AM
-          endTime.setHours(parseInt(endHour, 10), 0, 0); // Set end time to 12:00 PM
-          const timeDiff = Math.abs(endTime.getTime() - startTime.getTime()); // Get the time difference in milliseconds
-          const hoursSpent = Math.floor(timeDiff / (1000 * 60 * 60)); // Convert milliseconds to hours
-          const hours = {
-            rendered: trainee.hours.rendered + hoursSpent,
-            pending: trainee.hours.pending - hoursSpent,
-          };
+        } else if (trainee.dtr[todayIndex].afternoon.out === "") {
+          const hours = handleTraineeHourSpent(trainee, "afternoon");
           await Trainee.findByIdAndUpdate(
             trainee._id,
             {
@@ -204,47 +121,22 @@ export const updateDtr = asyncHandler(
               new: true,
             }
           );
-          if (current !== -1) {
-            timesheet[current].afternoon.end = format.time;
-            timesheet[current].status = "recorded";
-            // Extract existing hours and minutes from the existing spent time in the database
-            const hoursMatch = taskonsheet.spent.match(/(\d+)hr/);
-            const minutesMatch = taskonsheet.spent.match(/(\d+)mins?/);
+          // ?? afternoon timesheet end
+          if (recording !== -1) {
+            const { spent, existingHours, existingMinutes } = handleTaskSpent({
+              trainee,
+              taskInprogress,
+              recording,
+              day: "afternoon",
+            });
 
-            const existingHours = hoursMatch ? hoursMatch[1] : "0";
-            const existingMinutes = minutesMatch ? minutesMatch[1] : "0";
+            const totalHours = parseInt(existingHours) + spent.totalSpent.hours;
+            const totalMinutes =
+              parseInt(existingMinutes) + spent.totalSpent.minutes;
 
-            const time = {
-              status: timesheet[current].status,
-              morning: timesheet[current].morning,
-              afternoon: timesheet[current].afternoon,
-            };
-            const spent = calculateSpentTime(time);
-
-            let newSpent = "";
-            let totalHours = 0;
-            let totalMinutes = 0;
-
-            // Add the existing hours and minutes to the calculated total
-            totalHours = parseInt(existingHours) + spent.totalSpent.hours;
-            totalMinutes = parseInt(existingMinutes) + spent.totalSpent.minutes;
-
-            // Handle carry-over from minutes to hours
-            if (totalMinutes >= 60) {
-              totalHours += Math.floor(totalMinutes / 60);
-              totalMinutes %= 60;
-            }
-
-            if (totalHours !== 0) {
-              newSpent += `${totalHours}hr${totalHours !== 1 ? "s" : ""}`;
-            }
-
-            if (totalMinutes !== 0) {
-              newSpent += `${totalMinutes}min${totalMinutes !== 1 ? "s" : ""}`;
-            }
-
+            const newSpent = handleTimeCarryOver(totalHours, totalMinutes);
             await Task.findByIdAndUpdate(
-              taskonsheet._id,
+              taskInprogress._id,
               {
                 spent: newSpent,
               },
@@ -253,10 +145,12 @@ export const updateDtr = asyncHandler(
           }
         }
       } else {
-        records.push({
+        // ?? IF THERE'S NO TODAY DTR
+        trainee.dtr.push({
           date: format.date,
           status: "recording",
           morning: {
+            // in: "08:00 AM",
             in: format.time,
             out: "",
           },
@@ -265,13 +159,32 @@ export const updateDtr = asyncHandler(
             out: "",
           },
         });
-        // ** add other code here to add timesheet of current inprogress task after morning time in
+
+        // ?? IF THERE IS INPROGRESS TASK
+        // if (todayIndex === -1 && taskInprogress) {
+        //   const time = checkTime();
+        //   trainee.timesheet.push({
+        //     task: taskInprogress.taskname,
+        //     ticket: taskInprogress.ticketno,
+        //     status: "recording",
+        //     date: format.date,
+        //     morning: {
+        //       start: time === "morning" ? format.time : "",
+        //       end: "",
+        //     },
+        //     afternoon: {
+        //       start: time === "afternoon" ? format.time : "",
+        //       end: "",
+        //     },
+        //   });
+        // }
       }
       const update = await Trainee.findByIdAndUpdate(
         trainee._id,
         {
-          dtr: records,
-          timesheet: timesheet,
+          started: trainee.started === "" ? format.date : trainee.started,
+          dtr: trainee.dtr,
+          timesheet: trainee.timesheet,
         },
         {
           new: true,
@@ -281,17 +194,16 @@ export const updateDtr = asyncHandler(
     }
   }
 );
+
 export const addTaskTimeSheet = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const date = new Date();
-    const format = formatDateTime(date.toISOString());
+    const format = formatDateTime();
     const time = checkTime();
     if (res.locals.user.role === "trainee") {
       // ? add check if the trainee start the task in the morning time or afternoon
       const sheet = {
         ...req.body,
         status: "recording",
-        spent: "",
         date: format.date,
         morning: {
           start: time === "morning" ? format.time : "",

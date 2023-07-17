@@ -5,8 +5,10 @@ import Account from "../models/accountModel";
 import Trainee from "../models/traineeModel";
 import { initialTask } from "../data/task";
 import { ITask } from "../interfaces/task.interface";
-import { formatDateTime } from "../utils/formatDateTime";
+import { formatDateTime, handleTimeCarryOver } from "../utils/formatDateTime";
 import { checkTime } from "../utils/checkTime";
+import { taskTotalSpent } from "../utils/taskTotalSpent";
+import { handleTaskSpent } from "../utils/DTRFunctions";
 
 export const getAllTasks = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -50,12 +52,13 @@ export const assignTask = asyncHandler(
 export const updateTaskStatus = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const date: Date = new Date();
-    const format = formatDateTime(date.toISOString());
+    const format = formatDateTime();
     const { _id, status } = req.body;
     const role = res.locals.user.role;
     const traineeTaskStatus = ["inprogress", "forqa", "completed"];
     const QATaskStatus = ["failed", "completed"];
     const task = await Task.findById(_id);
+    const dateTime = `${format.date} at ${format.time}`;
     const updatedTask = await Task.findByIdAndUpdate(
       _id,
       {
@@ -70,17 +73,17 @@ export const updateTaskStatus = asyncHandler(
             role === "trainee" &&
             status === "inprogress" &&
             !task.timeline.startedAt
-              ? date.toISOString()
+              ? dateTime
               : task.timeline.startedAt,
           doneAt:
             role === "trainee" && status === "forqa" && !task.timeline.doneAt
-              ? date.toISOString()
+              ? dateTime
               : task.timeline.doneAt,
           completedAt:
             role === "QA Personnel" &&
             status === "completed" &&
             !task.timeline.completedAt
-              ? date.toISOString()
+              ? dateTime
               : task.timeline.completedAt,
           revisions:
             role === "QA Personnel" && status === "failed"
@@ -110,77 +113,48 @@ export const updateTaskStatus = asyncHandler(
         timesheet[sheet].afternoon.end = format.time;
       }
 
-      if (status === "inprogress") {
-      }
       // UPDATING TASK SPENT
 
-      const tasksheet = timesheet.filter((item) => item.status === "recording");
+      //  timesheet.push({
+      //    task: taskonsheet.taskname,
+      //    ticket: taskonsheet.ticketno,
+      //    status: "recording",
+      //    date: format.date,
+      //    morning: {
+      //      start: time === "morning" ? format.time : "",
+      //      end: "",
+      //    },
+      //    afternoon: {
+      //      start: time === "afternoon" ? format.time : "",
+      //      end: "",
+      //    },
+      //  });
 
-      const totalMorningSpentTime = tasksheet.reduce((total, item) => {
-        const morningStart = new Date(`2000/01/01 ${item.morning.start}`);
-        const morningEnd = new Date(`2000/01/01 ${item.morning.end}`);
-        const morningTimeDiff = Math.abs(
-          morningEnd.getTime() - morningStart.getTime()
-        );
-        const morningHours = Math.floor(morningTimeDiff / 3600000);
-        const morningMinutes = Math.floor((morningTimeDiff % 3600000) / 60000);
-        return total + morningHours * 60 + morningMinutes;
-      }, 0);
+      const { totalAfternoonSpentTime, totalMorningSpentTime } =
+        taskTotalSpent(trainee);
 
-      const totalAfternoonSpentTime = tasksheet.reduce((total, item) => {
-        const afternoonStart = new Date(`2000/01/01 ${item.afternoon.start}`);
-        const afternoonEnd = new Date(`2000/01/01 ${item.afternoon.end}`);
-        const afternoonTimeDiff = Math.abs(
-          afternoonEnd.getTime() - afternoonStart.getTime()
-        );
-        const afternoonHours = Math.floor(afternoonTimeDiff / 3600000);
-        const afternoonMinutes = Math.floor(
-          (afternoonTimeDiff % 3600000) / 60000
-        );
-        return total + afternoonHours * 60 + afternoonMinutes;
-      }, 0);
-
-      // Extract existing hours and minutes from the existing spent time in the database
       const hoursMatch = taskonsheet.spent.match(/(\d+)hr/);
       const minutesMatch = taskonsheet.spent.match(/(\d+)mins?/);
 
       const existingHours = hoursMatch ? hoursMatch[1] : "0";
       const existingMinutes = minutesMatch ? minutesMatch[1] : "0";
 
-      let spent = "";
       let totalHours = taskonsheet.spent === "" ? 0 : parseInt(existingHours);
       let totalMinutes =
         taskonsheet.spent === "" ? 0 : parseInt(existingMinutes);
 
       totalMinutes += totalMorningSpentTime + totalAfternoonSpentTime;
 
-      // Handle carry-over from minutes to hours
-      if (totalMinutes >= 60) {
-        totalHours += Math.floor(totalMinutes / 60);
-        totalMinutes %= 60;
-      }
-
-      if (totalHours !== 0) {
-        spent += `${totalHours}hr${totalHours !== 1 ? "s" : ""}`;
-      }
-
-      if (totalMinutes !== 0) {
-        spent += `${totalMinutes}min${totalMinutes !== 1 ? "s" : ""}`;
-      }
-
+      const totalSpent = handleTimeCarryOver(totalHours, totalMinutes);
       await Task.findByIdAndUpdate(
         taskonsheet._id,
         {
-          spent,
+          spent: totalSpent,
           status: status === "inprogress" ? "pending" : taskonsheet.status,
         },
         { new: true }
       );
-
       timesheet[sheet].status = "recorded";
-
-      // END
-
       await Trainee.findByIdAndUpdate(
         trainee._id,
         {

@@ -5,16 +5,14 @@ import {
   addTrainee,
   allTrainee,
   addTaskTimeSheet,
-  addTraineeDTR,
-  updateDtr,
+  timeInOutDTR,
 } from "../controllers/traineeController";
 import { isAuth } from "../middleware/authMiddleware";
 
 router.get("/:course", isAuth, allTrainee);
 router.get("/profile/:id", isAuth, getTraineeProfile);
 router.put("/timesheet", isAuth, addTaskTimeSheet);
-router.put("/dtr", isAuth, addTraineeDTR);
-router.put("/dtr/inout", isAuth, updateDtr);
+router.put("/dtr/inout", isAuth, timeInOutDTR);
 router.post("/add", isAuth, addTrainee);
 
 module.exports = router;
