@@ -94,6 +94,8 @@ export const updateTaskStatus = asyncHandler(
       { new: true }
     );
 
+    res.json(updatedTask);
+
     // ? IF THE TRAINEE MARK THE TASK AS DONE, READY FOR QA
     if (status === "forqa" || status === "inprogress") {
       const time = checkTime();
@@ -102,6 +104,7 @@ export const updateTaskStatus = asyncHandler(
       const sheet = trainee.timesheet.findIndex(
         (record) => record.status === "recording"
       );
+
       const taskonsheet = await Task.findOne({
         ticketno: timesheet[sheet].ticket,
       });
@@ -112,23 +115,6 @@ export const updateTaskStatus = asyncHandler(
       if (time === "afternoon") {
         timesheet[sheet].afternoon.end = format.time;
       }
-
-      // UPDATING TASK SPENT
-
-      //  timesheet.push({
-      //    task: taskonsheet.taskname,
-      //    ticket: taskonsheet.ticketno,
-      //    status: "recording",
-      //    date: format.date,
-      //    morning: {
-      //      start: time === "morning" ? format.time : "",
-      //      end: "",
-      //    },
-      //    afternoon: {
-      //      start: time === "afternoon" ? format.time : "",
-      //      end: "",
-      //    },
-      //  });
 
       const { totalAfternoonSpentTime, totalMorningSpentTime } =
         taskTotalSpent(trainee);
@@ -146,7 +132,7 @@ export const updateTaskStatus = asyncHandler(
       totalMinutes += totalMorningSpentTime + totalAfternoonSpentTime;
 
       const totalSpent = handleTimeCarryOver(totalHours, totalMinutes);
-      await Task.findByIdAndUpdate(
+      const updatedTask = await Task.findByIdAndUpdate(
         taskonsheet._id,
         {
           spent: totalSpent,
@@ -154,6 +140,7 @@ export const updateTaskStatus = asyncHandler(
         },
         { new: true }
       );
+
       timesheet[sheet].status = "recorded";
       await Trainee.findByIdAndUpdate(
         trainee._id,
@@ -164,9 +151,8 @@ export const updateTaskStatus = asyncHandler(
           new: true,
         }
       );
+      res.json(updatedTask);
     }
-
-    res.json(updatedTask);
   }
 );
 

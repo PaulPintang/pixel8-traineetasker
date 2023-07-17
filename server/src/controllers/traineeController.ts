@@ -78,6 +78,7 @@ export const timeInOutDTR = asyncHandler(
               new: true,
             }
           );
+
           // ?? morning timesheet end
           if (recording !== -1) {
             const { spent, existingHours, existingMinutes } = handleTaskSpent({
@@ -102,10 +103,11 @@ export const timeInOutDTR = asyncHandler(
             );
           }
         } else if (trainee.dtr[todayIndex].afternoon.in === "") {
-          // trainee.dtr[todayIndex].afternoon.in = "01:00 PM";
-          trainee.dtr[todayIndex].afternoon.in = format.time;
+          trainee.dtr[todayIndex].afternoon.in = "01:00 PM";
+          // trainee.dtr[todayIndex].afternoon.in = format.time;
           if (recording !== -1) {
-            trainee.timesheet[recording].afternoon.start = format.time;
+            trainee.timesheet[recording].afternoon.start = "01:00 PM";
+            // trainee.timesheet[recording].afternoon.start = format.time;
           }
         } else if (trainee.dtr[todayIndex].afternoon.out === "") {
           const hours = handleTraineeHourSpent(trainee, "afternoon");
@@ -121,6 +123,7 @@ export const timeInOutDTR = asyncHandler(
               new: true,
             }
           );
+
           // ?? afternoon timesheet end
           if (recording !== -1) {
             const { spent, existingHours, existingMinutes } = handleTaskSpent({
@@ -150,8 +153,8 @@ export const timeInOutDTR = asyncHandler(
           date: format.date,
           status: "recording",
           morning: {
-            // in: "08:00 AM",
-            in: format.time,
+            in: "08:00 AM",
+            // in: format.time,
             out: "",
           },
           afternoon: {
@@ -159,26 +162,8 @@ export const timeInOutDTR = asyncHandler(
             out: "",
           },
         });
-
-        // ?? IF THERE IS INPROGRESS TASK
-        // if (todayIndex === -1 && taskInprogress) {
-        //   const time = checkTime();
-        //   trainee.timesheet.push({
-        //     task: taskInprogress.taskname,
-        //     ticket: taskInprogress.ticketno,
-        //     status: "recording",
-        //     date: format.date,
-        //     morning: {
-        //       start: time === "morning" ? format.time : "",
-        //       end: "",
-        //     },
-        //     afternoon: {
-        //       start: time === "afternoon" ? format.time : "",
-        //       end: "",
-        //     },
-        //   });
-        // }
       }
+
       const update = await Trainee.findByIdAndUpdate(
         trainee._id,
         {

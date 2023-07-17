@@ -34,15 +34,12 @@ app.get("*", (req, res) => res.sendFile("index.html", { root: "dist" }));
 app.use(errorHandler);
 
 io.on("connection", (socket) => {
-  console.log("User connected with user id", socket.id);
   socket.on("courseRoom", (course: string) => {
     socket.join(course);
-    console.log(`Client joined course room: ${course}`);
   });
   socket.on("roleRoom", (role: string) => {
     socket.join(role);
   });
-
   socket.on("assign", ({ task, rooms }) => {
     rooms.forEach((room: string) => {
       socket.to(room).emit("assignTask", task);
@@ -66,6 +63,16 @@ io.on("connection", (socket) => {
   socket.on("delete", ({ _id, rooms }) => {
     rooms.forEach((room: string) => {
       socket.to(room).emit("deleteTask", _id);
+    });
+  });
+  socket.on("sheet", ({ trainee, rooms }) => {
+    rooms.forEach((room: string) => {
+      socket.to(room).emit("addTimeSheet", trainee);
+    });
+  });
+  socket.on("dtr", ({ trainee, rooms }) => {
+    rooms.forEach((room: string) => {
+      socket.to(room).emit("dailyTimeRecord", trainee);
     });
   });
 });
