@@ -9,6 +9,7 @@ import {
   Button,
   Badge,
   Menu,
+  Stack,
 } from "@mantine/core";
 import {
   IconDots,
@@ -82,7 +83,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
     };
     const spent = calculateSpentTime(time);
     return (
-      <tr>
+      <tr key={task._id}>
         <td className=" md:table-cell lg:table-cell pl-3 pt-2">
           <Text>
             <span className="hidden md:flex lg:flex">
@@ -98,7 +99,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
           <Text>
             {trainee && (
               <span>
-                {task.status === "inprogress" ? (
+                {task.status === "inprogress" && task.spent === "" ? (
                   <span>
                     {spent.totalSpent.hours === 1
                       ? spent.totalSpent.hours + "hr"
@@ -209,47 +210,41 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                 </ActionIcon>
               </Menu.Target>
 
-              <Menu.Dropdown className="flex row-a">
+              <Menu.Dropdown>
                 <Menu.Label>Manage task</Menu.Label>
 
-                <Flex direction="column" align="start">
-                  <Menu.Item p={0} className="bg-white hover:bg-white">
-                    <Button
-                      onClick={() => {
-                        view();
-                        setViewId(task._id!);
-                        // setOpened(false);
-                      }}
-                      leftIcon={<IconInfoCircle size={16} />}
-                      variant="white"
-                      color="dark"
-                      size="xs"
-                    >
+                <Stack spacing={9} py={5} align="center" className="w-full">
+                  <Menu.Item
+                    py={0}
+                    onClick={() => {
+                      view();
+                      setViewId(task._id!);
+                    }}
+                    icon={<IconInfoCircle size={16} />}
+                  >
+                    <Text fz="xs" fw="bold" c="dark">
                       View
-                    </Button>
+                    </Text>
                   </Menu.Item>
-                  {task.status === "new" && (
-                    <Menu.Item p={0} className="bg-white hover:bg-white">
-                      {user?.role === "Task manager" ||
-                      user?.role === "QA Personnel" ||
-                      pathname.includes("profile") ? (
-                        <Button
-                          onClick={() => {
-                            setTask(task);
-                            toggle();
-                          }}
-                          leftIcon={<IconUser size={16} />}
-                          variant="white"
-                          color={task.assign ? "indigo" : "cyan"}
-                          size="xs"
-                        >
+
+                  {task.status === "new" &&
+                    (user?.role === "Task manager" ||
+                    user?.role === "QA Personnel" ||
+                    pathname.includes("profile") ? (
+                      <Menu.Item
+                        py={0}
+                        onClick={() => {
+                          setTask(task);
+                          toggle();
+                        }}
+                        icon={<IconUser size={16} />}
+                        color={task.assign ? "indigo" : "cyan"}
+                      >
+                        <Text fz="xs" fw="bold">
                           {task.assign ? "Reassign" : "Assign"}
-                        </Button>
-                      ) : (
-                        ""
-                      )}
-                    </Menu.Item>
-                  )}
+                        </Text>
+                      </Menu.Item>
+                    ) : null)}
                   {/* <Menu.Item p={0} className="bg-white hover:bg-white">
                     <Button
                       onClick={() => {
@@ -273,11 +268,13 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                       color="red"
                       onClick={() => handleDelete(task._id!)}
                       loading={isLoading}
+                      compact
+                      mr={5}
                     >
                       Delete
                     </Button>
                   )}
-                </Flex>
+                </Stack>
               </Menu.Dropdown>
             </Menu>
           )}

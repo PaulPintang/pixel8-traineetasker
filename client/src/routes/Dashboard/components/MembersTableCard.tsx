@@ -58,7 +58,7 @@ const traineesTableCard = () => {
 
   const rows = items[page - 1]?.map((trainee) => {
     return (
-      <tr>
+      <tr key={trainee._id}>
         <td className=" md:table-cell lg:table-cell pl-3 pt-3">
           <Group spacing={10}>
             <Image
@@ -121,32 +121,33 @@ const traineesTableCard = () => {
 
               <Menu.Dropdown>
                 <Menu.Label>Manage intern</Menu.Label>
-                <Menu.Item p={0} className="bg-white hover:bg-white">
-                  <Flex direction="column" align="start">
-                    <Link to={`../profile/${trainee._id}`}>
-                      <Button
-                        leftIcon={<IconInfoCircle size={16} />}
-                        variant="white"
-                        color="dark"
-                        size="xs"
-                      >
-                        View
-                      </Button>
-                    </Link>
-                    <Button
-                      onClick={() => {
-                        setAssignTo(trainee.name!);
-                        toggle();
-                      }}
-                      leftIcon={<IconUser size={16} />}
-                      variant="white"
-                      color="cyan"
-                      size="xs"
+                <Stack spacing={9} py={5}>
+                  <Link to={`../profile/${trainee._id}`}>
+                    <Menu.Item
+                      className="bg-white hover:bg-white"
+                      py={0}
+                      icon={<IconInfoCircle size={16} />}
                     >
+                      <Text fz="xs" fw="bold" c="dark">
+                        View
+                      </Text>
+                    </Menu.Item>
+                  </Link>
+                  <Menu.Item
+                    className="bg-white hover:bg-white"
+                    py={0}
+                    onClick={() => {
+                      setAssignTo(trainee.name!);
+                      toggle();
+                    }}
+                    icon={<IconUser size={16} />}
+                    color="cyan"
+                  >
+                    <Text fz="xs" fw="bold">
                       Assign
-                    </Button>
-                  </Flex>
-                </Menu.Item>
+                    </Text>
+                  </Menu.Item>
+                </Stack>
               </Menu.Dropdown>
             </Menu>
           )}

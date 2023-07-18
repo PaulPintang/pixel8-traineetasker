@@ -228,7 +228,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
           </>
         )}
 
-        <>
+        {/* <>
           <Button
             color="yellow"
             size="xs"
@@ -246,7 +246,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
           >
             Time out
           </Button>
-        </>
+        </> */}
       </Flex>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-160px)]">
         <div className="h-[96%]">

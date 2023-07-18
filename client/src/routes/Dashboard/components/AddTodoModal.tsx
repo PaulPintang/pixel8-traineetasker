@@ -12,6 +12,7 @@ import { useState } from "react";
 import { ITask } from "../../../interfaces/task.interface";
 import { useTodoTaskMutation } from "../../../features/api/task/taskApiSlice";
 import { useMediaQuery } from "@mantine/hooks";
+import ToastNotify from "../../../components/ToastNotify";
 
 interface ModalProps {
   currentTask: ITask;
@@ -44,6 +45,7 @@ const AddTodoModal = ({ add, toggle, currentTask }: ModalProps) => {
     toggle();
     setTodo({ ...todo, todo: "" });
     setAddedTodos([]);
+    ToastNotify(`New todo added to your in-progress task`, "success");
   };
 
   return (
@@ -93,7 +95,7 @@ const AddTodoModal = ({ add, toggle, currentTask }: ModalProps) => {
 
       <div className="space-y-2 py-3">
         {addedTodos.map((todo, index) => (
-          <div>
+          <div key={index}>
             <div className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative">
               <Text c="dark" fz="sm" className="w-[80%]" py={4}>
                 {todo.todo}

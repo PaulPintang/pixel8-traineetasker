@@ -29,7 +29,10 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
               const index = draft.findIndex(
                 (trainee) => trainee._id === data._id
               );
-              if (index !== -1) draft[index].dtr = data.dtr;
+              if (index !== -1) {
+                draft[index].dtr = data.dtr;
+                draft[index].timesheet = data.timesheet;
+              }
             });
           });
         } catch {}

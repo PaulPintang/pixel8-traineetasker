@@ -28,7 +28,9 @@ const TaskTableCard = () => {
   const [viewId, setViewId] = useState<string | null>(null);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
-  const { data: trainee } = useGetTraineeProfileQuery();
+  const { data: trainee } = useGetTraineeProfileQuery(user?.course!, {
+    skip: user?.role !== "trainee",
+  });
 
   const sheet = trainee?.timesheet?.find((task) => task.status === "recording");
   const time = {
@@ -174,7 +176,7 @@ const TaskTableCard = () => {
               </>
             ) : data?.length === 0 ? (
               <>
-                <EmptyState text={`There are no ${filterBy!} tasks`} />;
+                <EmptyState text={`There are no ${filterBy!} tasks`} />
               </>
             ) : (
               <tbody className="text-xs text-gray-600">{rows}</tbody>

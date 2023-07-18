@@ -73,7 +73,10 @@ const TasksTodoCard = () => {
                 <ScrollArea.Autosize mah={220} scrollbarSize={8}>
                   <div className="space-y-3 ">
                     {currentTask?.todos?.map((todo, index) => (
-                      <div className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative">
+                      <div
+                        key={index}
+                        className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative"
+                      >
                         <Text c="dark" fz="xs" className="w-[80%]" py={4}>
                           <span
                             className={todo.isDone ? "line-through italic" : ""}

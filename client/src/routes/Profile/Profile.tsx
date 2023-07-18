@@ -93,39 +93,32 @@ const Profile = () => {
         </Grid.Col>
       </Grid>
 
-      <Tabs value={activeTab} onTabChange={setActiveTab} color="cyan" my={20}>
+      <Tabs
+        value={activeTab}
+        onTabChange={setActiveTab}
+        color="cyan"
+        my={20}
+        className="bg-white"
+      >
         <Tabs.List>
-          <Tabs.Tab value="tasks" p={0}>
-            <Button
-              size="xs"
-              radius={0}
-              variant="white"
-              color={activeTab === "tasks" ? "dark" : "gray"}
-            >
-              <Text c={activeTab === "tasks" ? "dark" : "gray"}>Tasks</Text>
-            </Button>
+          <Tabs.Tab value="tasks" py={8} px={15}>
+            <Text c={activeTab === "tasks" ? "dark" : "gray"} fz="xs" fw="bold">
+              Tasks
+            </Text>
           </Tabs.Tab>
-          <Tabs.Tab value="timesheet" p={0}>
-            <Button
-              size="xs"
-              radius={0}
-              variant="white"
-              color={activeTab === "tasks" ? "dark" : "gray"}
+          <Tabs.Tab value="timesheet" py={8} px={15}>
+            <Text
+              c={activeTab === "timesheet" ? "dark" : "gray"}
+              fz="xs"
+              fw="bold"
             >
-              <Text c={activeTab === "timesheet" ? "dark" : "gray"}>
-                Timesheet
-              </Text>
-            </Button>
+              Timesheet
+            </Text>
           </Tabs.Tab>
-          <Tabs.Tab value="dtr" p={0}>
-            <Button
-              size="xs"
-              radius={0}
-              variant="white"
-              color={activeTab === "tasks" ? "dark" : "gray"}
-            >
-              <Text c={activeTab === "dtr" ? "dark" : "gray"}>DTR</Text>
-            </Button>
+          <Tabs.Tab value="dtr" py={8} px={15}>
+            <Text c={activeTab === "dtr" ? "dark" : "gray"} fz="xs" fw="bold">
+              DTR
+            </Text>
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="tasks" pt="xs" pb="lg">

@@ -99,54 +99,44 @@ const Tasks = ({ trainee }: Props) => {
             onTabChange={setActiveTab}
             color="cyan"
             my={20}
-            className="md:hidden lg:hidden"
+            className="md:hidden lg:hidden bg-white"
           >
-            <Tabs.List>
-              <Tabs.Tab value="new" p={0}>
-                <Button
-                  size="xs"
-                  radius={0}
-                  variant="white"
-                  color={activeTab === "tasks" ? "dark" : "gray"}
+            <Tabs.List grow>
+              <Tabs.Tab value="new" p={5}>
+                <Text
+                  c={activeTab === "new" ? "dark" : "gray"}
+                  fw="bold"
+                  fz="xs"
                 >
-                  <Text c={activeTab === "tasks" ? "dark" : "gray"}>
-                    New Task
-                  </Text>
-                </Button>
+                  New Task
+                </Text>
               </Tabs.Tab>
               <Tabs.Tab value="inprogress" p={0}>
-                <Button
-                  size="xs"
-                  radius={0}
-                  variant="white"
-                  color={activeTab === "tasks" ? "dark" : "gray"}
+                <Text
+                  c={activeTab === "inprogress" ? "dark" : "gray"}
+                  fw="bold"
+                  fz="xs"
                 >
-                  <Text c={activeTab === "timesheet" ? "dark" : "gray"}>
-                    InProgress
-                  </Text>
-                </Button>
+                  InProgress
+                </Text>
               </Tabs.Tab>
               <Tabs.Tab value="forqa" p={0}>
-                <Button
-                  size="xs"
-                  radius={0}
-                  variant="white"
-                  color={activeTab === "tasks" ? "dark" : "gray"}
+                <Text
+                  c={activeTab === "forqa" ? "dark" : "gray"}
+                  fw="bold"
+                  fz="xs"
                 >
-                  <Text c={activeTab === "dtr" ? "dark" : "gray"}>For QA</Text>
-                </Button>
+                  For QA
+                </Text>
               </Tabs.Tab>
               <Tabs.Tab value="completed" p={0}>
-                <Button
-                  size="xs"
-                  radius={0}
-                  variant="white"
-                  color={activeTab === "tasks" ? "dark" : "gray"}
+                <Text
+                  c={activeTab === "completed" ? "dark" : "gray"}
+                  fw="bold"
+                  fz="xs"
                 >
-                  <Text c={activeTab === "dtr" ? "dark" : "gray"}>
-                    Completed
-                  </Text>
-                </Button>
+                  Completed
+                </Text>
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="new" pt="xs">

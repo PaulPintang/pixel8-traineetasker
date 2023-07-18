@@ -55,7 +55,7 @@ const AssignTaskModal = ({ assign, toggle, assignTo }: ModalProps) => {
             {tasks
               ?.filter((task) => task.status === "new" && task.assign === "")
               .map((task) => (
-                <Flex justify="space-between" align="center">
+                <Flex key={task._id} justify="space-between" align="center">
                   <Group spacing={10}>
                     <div className="-space-y-[2px]">
                       <Text size="sm">{task.taskname}</Text>

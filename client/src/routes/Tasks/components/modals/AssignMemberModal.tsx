@@ -51,7 +51,7 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
               Members
             </Text>
             {trainees?.map((account) => (
-              <Flex justify="space-between" align="center">
+              <Flex key={account._id} justify="space-between" align="center">
                 <Group spacing={10}>
                   <Image
                     src={account.picture}
