@@ -31,7 +31,6 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
               );
               if (index !== -1) draft[index].dtr = data.dtr;
             });
-            alert("pota");
           });
         } catch {}
         await cacheEntryRemoved;

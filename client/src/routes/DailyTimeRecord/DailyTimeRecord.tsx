@@ -28,6 +28,8 @@ import { useDocumentTitle } from "@mantine/hooks";
 import EmptyState from "../../components/EmptyState";
 import { checkSchedule } from "../../utils/checkSchedule";
 import { JoinRoom } from "../../utils/socketConnect";
+import ToastNotify from "../../components/ToastNotify";
+import { checkTime } from "../../utils/checkTime";
 
 interface PropsOnProfile {
   profile?: ITrainee;
@@ -55,6 +57,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const data = user?.role === "trainee" ? trainee?.dtr : profileInfo?.dtr;
 
   const items = chunk(data, 10);
+  const day = checkTime();
 
   const handleTimeInOut = async () => {
     JoinRoom(user?.course!, user?.role!);
@@ -76,6 +79,13 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
       await timesheet({ sheet, rooms: [user?.course!] });
     }
     refetch();
+
+    ToastNotify(
+      ` ${day === "morning" ? "Time in" : "Time out"} at exactly ${
+        formatDateTime(date.toISOString()).time
+      }`,
+      "success"
+    );
   };
 
   useDocumentTitle("DailyTimeRecords");
