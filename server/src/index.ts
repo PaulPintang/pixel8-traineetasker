@@ -46,6 +46,7 @@ io.on("connection", (socket) => {
     });
   });
   socket.on("add", ({ task, rooms }) => {
+    console.log("addeddddd dipota");
     rooms.forEach((room: string) => {
       socket.to(room).emit("addTask", task);
     });
@@ -71,6 +72,7 @@ io.on("connection", (socket) => {
     });
   });
   socket.on("dtr", ({ trainee, rooms }) => {
+    console.log("DIPOTA DTR NA HAYOPPPPP");
     rooms.forEach((room: string) => {
       socket.to(room).emit("dailyTimeRecord", trainee);
     });
