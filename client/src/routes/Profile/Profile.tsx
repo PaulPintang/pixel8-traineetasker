@@ -15,6 +15,7 @@ const DailyTimeRecord = lazy(
 import { useAppSelector } from "../../app/hooks";
 import { useGetAllTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
 import { useDocumentTitle } from "@mantine/hooks";
+
 const Profile = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { id } = useParams();
@@ -24,9 +25,9 @@ const Profile = () => {
 
   const trainee = trainees?.find((member) => member._id! === id);
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
 
   useDocumentTitle("Profile");
 

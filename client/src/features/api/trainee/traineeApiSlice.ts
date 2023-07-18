@@ -25,20 +25,20 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
           });
 
           socket.on("dailyTimeRecord", (data) => {
-            console.log("DATA EMITTED:", data);
             updateCachedData((draft) => {
               const index = draft.findIndex(
                 (trainee) => trainee._id === data._id
               );
               if (index !== -1) draft[index].dtr = data.dtr;
             });
+            alert("pota");
           });
         } catch {}
         await cacheEntryRemoved;
         socket.close();
       },
     }),
-    getTraineeProfile: builder.query<ITrainee, string | void>({
+    getTraineeProfile: builder.query<ITrainee, string>({
       query: (id) => ({
         url: `/trainee/profile/${id}`,
         providesTags: ["Trainee"],
@@ -80,11 +80,10 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
         url: "/trainee/dtr/inout",
         method: "PUT",
       }),
-      invalidatesTags: ["Trainee"],
+      invalidatesTags: ["Trainee", "Task"],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data: profile } = await queryFulfilled;
-          console.log("emitted", profile);
           socket.emit("dtr", {
             trainee: profile,
             rooms: arg.rooms,

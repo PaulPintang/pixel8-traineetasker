@@ -13,7 +13,6 @@ import { chunk } from "lodash";
 import { useState } from "react";
 import { TimeSheetsLabels } from "../../components/ColorLabels";
 import { IconClock, IconDots } from "@tabler/icons-react";
-import { checkTime } from "../../utils/checkTime";
 import {
   useAddTaskTimesheetMutation,
   useGetAllTraineeQuery,
@@ -27,6 +26,8 @@ import { useAppSelector } from "../../app/hooks";
 import { ITrainee } from "../../interfaces/user.interface";
 import { useDocumentTitle } from "@mantine/hooks";
 import EmptyState from "../../components/EmptyState";
+import { checkSchedule } from "../../utils/checkSchedule";
+import { JoinRoom } from "../../utils/socketConnect";
 
 interface PropsOnProfile {
   profile?: ITrainee;
@@ -34,36 +35,31 @@ interface PropsOnProfile {
 
 const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const { user } = useAppSelector((state) => state.auth);
+  const [page, setPage] = useState(1);
+  const date = new Date();
+
   const [recordDtr, { isLoading }] = useUpdateDtrMutation();
-  const { data: trainee, refetch } = useGetTraineeProfileQuery();
-  const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
-    skip: user?.role === "trainee",
+  const { data: trainee, refetch } = useGetTraineeProfileQuery(user?._id!, {
+    skip: user?.role !== "trainee",
   });
+  const { data: trainees } = useGetAllTraineeQuery(
+    profile ? profile?.course! : trainee?.course!
+  );
+
   const [timesheet] = useAddTaskTimesheetMutation();
 
   const profileInfo = trainees?.find((trainee) => trainee._id === profile?._id);
 
   const { data: tasks } = useGetAllTasksQuery();
-  const date = new Date();
-  const currentHour = date.getHours();
 
-  const time = checkTime();
-  // ?? SCHEDULE IS BASED ON ADMIN GIVEN SCHEDULE TIME
-  // * hour is not set to 12, need to fix this
-  const schedule = {
-    morning: {
-      in: 8,
-      out: 12,
-    },
-    afternoon: {
-      in: 13,
-      out: 17,
-    },
-  };
-  const [page, setPage] = useState(1);
+  const data = user?.role === "trainee" ? trainee?.dtr : profileInfo?.dtr;
+
+  const items = chunk(data, 10);
 
   const handleTimeInOut = async () => {
+    JoinRoom(user?.course!, user?.role!);
     await recordDtr({ rooms: [user?.course!] });
+
     const todaytask = trainee?.timesheet?.some(
       (record) => record.date === formatDateTime(date.toISOString()).date
     );
@@ -76,19 +72,11 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
         task: inprogress?.[0].taskname,
         ticket: inprogress?.[0].ticketno,
       };
+      JoinRoom(user?.course!, user?.role!);
       await timesheet({ sheet, rooms: [user?.course!] });
     }
-
     refetch();
   };
-
-  const data = user?.role === "trainee" ? trainee?.dtr : profileInfo?.dtr;
-
-  const items = chunk(data, 10);
-
-  const today = trainee?.dtr?.find(
-    (record) => record.date === formatDateTime(date.toISOString()).date
-  );
 
   useDocumentTitle("DailyTimeRecords");
 
@@ -188,18 +176,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
       </tr>
     ));
 
-  const isTimeIn =
-    !today && schedule.morning.in === currentHour
-      ? true
-      : today?.afternoon?.in === "" && schedule.afternoon.in === currentHour
-      ? true
-      : false;
-  const isTimeOut =
-    today?.morning?.out === "" && schedule.morning.out === currentHour
-      ? true
-      : today?.afternoon?.out === "" && schedule.afternoon.out === currentHour
-      ? true
-      : false;
+  const { isTimeIn, isTimeOut, today } = checkSchedule(trainee?.dtr!);
 
   return (
     <>

@@ -60,7 +60,10 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
   const { user } = useAppSelector((state) => state.auth);
   const task = tasks?.find((task) => task._id === viewId);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
-  const { data: trainee, refetch } = useGetTraineeProfileQuery();
+  // const { data: trainee, refetch } = useGetTraineeProfileQuery();
+  const { data: trainee, refetch } = useGetTraineeProfileQuery(user?._id!, {
+    skip: user?.role !== "trainee",
+  });
   const [taskStatus, taskState] = useTaskStatusMutation();
   const [comment, commentState] = useCommentOnTaskMutation();
   const [timesheet, sheetState] = useAddTaskTimesheetMutation();

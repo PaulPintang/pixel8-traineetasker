@@ -9,6 +9,7 @@ import StepperInfo from "../components/StepperInfo/StepperInfo";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useRefetchQuery } from "../features/api/account/accountApiSlice";
 import { setUser } from "../features/auth/authSlice";
+import { socket } from "../utils/socketConnect";
 
 const RootLayout = () => {
   const location = useLocation();
@@ -16,7 +17,7 @@ const RootLayout = () => {
   const dispatch = useAppDispatch();
   const [loadText, setLoadText] = useState("");
   const { user } = useAppSelector((state) => state.auth);
-  const { data: account, isLoading, isSuccess } = useRefetchQuery();
+  const { data: account, isLoading } = useRefetchQuery();
 
   useEffect(() => {
     const refetch = async () => {
@@ -28,6 +29,13 @@ const RootLayout = () => {
   useEffect(() => {
     setLoadText(pathname);
   }, [pathname]);
+
+  // useEffect(() => {
+  //   socket.on("dailyTimeRecord", (data) => {
+  //     // console.log("DATA EMITTED:", data);
+  //     alert(data);
+  //   });
+  // }, [socket]);
 
   if (isLoading) return <LoaderFallback text="Loading . . ." />;
 
