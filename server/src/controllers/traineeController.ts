@@ -103,11 +103,11 @@ export const timeInOutDTR = asyncHandler(
             );
           }
         } else if (trainee.dtr[todayIndex].afternoon.in === "") {
-          trainee.dtr[todayIndex].afternoon.in = "01:00 PM";
-          // trainee.dtr[todayIndex].afternoon.in = format.time;
+          // trainee.dtr[todayIndex].afternoon.in = "01:00 PM";
+          trainee.dtr[todayIndex].afternoon.in = format.time;
           if (recording !== -1) {
-            trainee.timesheet[recording].afternoon.start = "01:00 PM";
-            // trainee.timesheet[recording].afternoon.start = format.time;
+            // trainee.timesheet[recording].afternoon.start = "01:00 PM";
+            trainee.timesheet[recording].afternoon.start = format.time;
           }
         } else if (trainee.dtr[todayIndex].afternoon.out === "") {
           const hours = handleTraineeHourSpent(trainee, "afternoon");
@@ -126,6 +126,7 @@ export const timeInOutDTR = asyncHandler(
 
           // ?? afternoon timesheet end
           if (recording !== -1) {
+            trainee.timesheet[recording].status = "recorded";
             const { spent, existingHours, existingMinutes } = handleTaskSpent({
               trainee,
               taskInprogress,
