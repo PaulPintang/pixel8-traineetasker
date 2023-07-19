@@ -14,7 +14,7 @@ import {
 } from "@mantine/core";
 import { IconDots, IconUser } from "@tabler/icons-react";
 import { chunk } from "lodash";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IconInfoCircle } from "@tabler/icons-react";
 import AssignTaskModal from "./AssignTaskModal";
@@ -28,13 +28,19 @@ import EmptyState from "../../../components/EmptyState";
 const traineesTableCard = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { data: trainees, isLoading } = useGetAllTraineeQuery(user?.course!);
-  const { data: tasks } = useGetAllTasksQuery();
+  const { data: tasks, refetch, isFetching } = useGetAllTasksQuery();
   const [showNoTask, setShowNoTask] = useState(false);
   const [showWithQa, setShowWithQa] = useState(false);
 
   const [assignTo, setAssignTo] = useState("");
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    if (showNoTask || showWithQa) {
+      refetch();
+    }
+  }, [showNoTask, showWithQa]);
 
   const data = trainees?.filter((trainee) =>
     showNoTask
@@ -204,7 +210,7 @@ const traineesTableCard = () => {
                 </th>
               </tr>
             </thead>
-            {isLoading ? (
+            {isLoading || isFetching ? (
               <>
                 <GettingData />
               </>

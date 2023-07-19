@@ -11,7 +11,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { chunk } from "lodash";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
 import { useAppSelector } from "../../../app/hooks";
 import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
@@ -22,7 +22,7 @@ import GettingData from "../../../components/GettingData";
 
 const TaskTableCard = () => {
   const { user } = useAppSelector((state) => state.auth);
-  const { data: tasks, isLoading } = useGetAllTasksQuery();
+  const { data: tasks, refetch, isLoading, isFetching } = useGetAllTasksQuery();
   const [view, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [viewId, setViewId] = useState<string | null>(null);
@@ -47,6 +47,10 @@ const TaskTableCard = () => {
   );
 
   const items = chunk(data, 5);
+
+  useEffect(() => {
+    filterBy && refetch();
+  }, [filterBy]);
 
   const rows = items[page - 1]?.map((task) => {
     return (
@@ -131,7 +135,7 @@ const TaskTableCard = () => {
   return (
     <>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-375px)]">
-        <div className="h-[92%]">
+        <div className="h-[90%]">
           <table className="border-collapse border-none w-full">
             <thead>
               <tr>
@@ -168,7 +172,7 @@ const TaskTableCard = () => {
                 </th>
               </tr>
             </thead>
-            {isLoading ? (
+            {isLoading || isFetching ? (
               <>
                 <GettingData />
               </>

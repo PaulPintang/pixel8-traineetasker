@@ -18,7 +18,7 @@ import {
   IconTrash,
   IconUser,
 } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import AssignMemberModal from "./modals/AssignMemberModal";
 import { Dispatch, SetStateAction } from "react";
@@ -31,7 +31,7 @@ import { useAppSelector } from "../../../app/hooks";
 import { useLocation } from "react-router-dom";
 import { ITask } from "../../../interfaces/task.interface";
 import { ITrainee } from "../../../interfaces/user.interface";
-import { chunk } from "lodash";
+import { chunk, filter } from "lodash";
 import GettingData from "../../../components/GettingData";
 import EmptyState from "../../../components/EmptyState";
 import { calculateSpentTime } from "../../../utils/calculateSpentTime";
@@ -42,19 +42,29 @@ interface Props {
   trainee: ITrainee;
   setViewId: Dispatch<SetStateAction<string | null>>;
   view: () => void;
-  update: () => void;
 }
 
-const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
+const TaskTable = ({ trainee, view, setViewId }: Props) => {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
-  const { data: tasks } = useGetAllTasksQuery();
-  const [deleteTask, { isLoading }] = useDeleteTaskMutation();
+  const [filterBy, setFilterBy] = useState<string | null>("");
+  const [gettingData, setGettingData] = useState(false);
+  const {
+    data: tasks,
+    refetch,
+    // isFetching: gettingData,
+  } = useGetAllTasksQuery();
+  const [deleteTask, { isLoading: deleting }] = useDeleteTaskMutation();
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [task, setTask] = useState<ITask>({});
-  const [filterBy, setFilterBy] = useState<string | null>("");
+
+  useEffect(() => {
+    if (filterBy) {
+      refetch().then(() => setGettingData(false));
+    }
+  }, [filterBy]);
 
   const data = tasks?.filter((task) =>
     filterBy
@@ -221,6 +231,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
 
                   <Stack spacing={9} py={5} align="center" className="w-full">
                     <Menu.Item
+                      className="bg-white hover:bg-white"
                       py={0}
                       onClick={() => {
                         view();
@@ -238,6 +249,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                       user?.role === "QA Personnel" ||
                       pathname.includes("profile") ? (
                         <Menu.Item
+                          className="bg-white hover:bg-white"
                           py={0}
                           onClick={() => {
                             setTask(task);
@@ -273,8 +285,10 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                           variant="white"
                           size="xs"
                           color="red"
-                          onClick={() => handleDelete(task._id!)}
-                          loading={isLoading}
+                          onClick={() => {
+                            handleDelete(task._id!);
+                          }}
+                          loading={deleting}
                           compact
                           mr={5}
                         >
@@ -293,7 +307,7 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
   return (
     <>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)] mt-4">
-        <div className="h-[95%] overflow-">
+        <div className="h-[94%] overflow-">
           <table className="border-collapse border-none w-full">
             <thead>
               <tr>
@@ -343,12 +357,17 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                 ></th> */}
               </tr>
             </thead>
-            {data?.length === 0 ? (
-              <>
-                <EmptyState text={`There are no ${filterBy!} tasks`} />;
-              </>
+            {gettingData && filterBy ? (
+              // {gettingData && filterBy && !assign && !deleting ? (
+              <GettingData />
             ) : (
-              <tbody className="text-sm text-gray-600">{rows}</tbody>
+              <>
+                {data?.length === 0 ? (
+                  <EmptyState text={`There are no ${filterBy!} tasks`} />
+                ) : (
+                  <tbody className="text-sm text-gray-600">{rows}</tbody>
+                )}
+              </>
             )}
           </table>
         </div>
@@ -358,7 +377,10 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
             <Select
               size="xs"
               value={filterBy}
-              onChange={setFilterBy}
+              onChange={(val) => {
+                setGettingData(true);
+                setFilterBy(val);
+              }}
               w={150}
               placeholder="Filter"
               data={[

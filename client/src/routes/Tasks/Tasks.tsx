@@ -158,7 +158,6 @@ const Tasks = ({ trainee }: Props) => {
           trainee={trainee!}
           setViewId={setViewId}
           view={toggleView.toggle}
-          update={toggleUpdate.toggle}
         />
       )}
 

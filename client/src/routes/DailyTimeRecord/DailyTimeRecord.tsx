@@ -190,7 +190,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const { isTimeIn, isTimeOut, today } = checkSchedule(trainee?.dtr!);
 
   return (
-    <>
+    <div className="pb-3">
       <Flex justify="space-between" align="center" pb={6}>
         <TimeSheetsLabels />
         {user?.role === "trainee" && (
@@ -228,8 +228,8 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
             )}
           </>
         )}
-
-        {/* <>
+        {/* 
+        <>
           <Button
             color="yellow"
             size="xs"
@@ -249,7 +249,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
           </Button>
         </> */}
       </Flex>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-160px)]">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-160px)] ">
         <div className="h-[96%]">
           <table className="border-collapse border-none w-full">
             <thead>
@@ -309,7 +309,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
           />
         </Flex>
       </Card>
-    </>
+    </div>
   );
 };
 

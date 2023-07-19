@@ -71,6 +71,7 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
                   variant="white"
                   onClick={() => handleAssign(account.name!)}
                   loading={isLoading && assignTo === account.name}
+                  disabled={task.assign === account.name}
                 >
                   Assign
                 </Button>
