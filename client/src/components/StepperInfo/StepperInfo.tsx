@@ -33,8 +33,8 @@ const StepperInfo = () => {
   const addTraineeData = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const user = await addTrainee(traineeInfo).unwrap();
-      dispatch(setUser(user));
+      const response: any = await addTrainee(traineeInfo).unwrap();
+      dispatch(setUser(response.newAcc));
       navigate("dashboard");
     } catch (error) {}
   };
@@ -44,7 +44,7 @@ const StepperInfo = () => {
       <div className="h-[calc(100vh-100px)] ">
         <Flex justify="center" align="center" className="h-full">
           <Container size="xs">
-            <Suspense fallback={<Loader size="xs" color="gray" />}>
+            <Suspense fallback={<Loader color="gray" />}>
               {step === 1 ? (
                 <SelectField
                   traineeInfo={traineeInfo}

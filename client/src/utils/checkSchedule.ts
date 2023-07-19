@@ -21,15 +21,15 @@ export const checkSchedule = (dtr: IDtr[]) => {
   );
 
   const isTimeIn =
-    !today && schedule.morning.in === currentHour
+    !today && schedule.morning.in === 8
       ? true
-      : today?.afternoon?.in === "" && schedule.afternoon.in === currentHour
+      : today?.afternoon?.in === "" && schedule.afternoon.in === 13
       ? true
       : false;
   const isTimeOut =
-    today?.morning?.out === "" && schedule.morning.out === currentHour
+    today?.morning?.out === "" && schedule.morning.out === 12
       ? true
-      : today?.afternoon?.out === "" && schedule.afternoon.out === currentHour
+      : today?.afternoon?.out === "" && schedule.afternoon.out === 17
       ? true
       : false;
 

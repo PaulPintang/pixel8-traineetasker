@@ -14,7 +14,8 @@ const InProgress = ({ toggle, setViewId }: Props) => {
   const { user } = useAppSelector((state) => state.auth);
   const { data: tasks } = useGetAllTasksQuery();
   const inprogress = tasks?.filter((task) => task.status === "inprogress");
-  const { data: trainee } = useGetTraineeProfileQuery(user?._id!, {
+
+  const { data: trainee } = useGetTraineeProfileQuery(undefined, {
     skip: user?.role !== "trainee",
   });
 

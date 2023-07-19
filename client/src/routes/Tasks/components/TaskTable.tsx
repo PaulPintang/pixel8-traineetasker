@@ -71,181 +71,187 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
 
   const items = chunk(data, 10);
 
-  const rows = items[page - 1]?.map((task) => {
-    const format = formatDateTime(task?.createdAt!);
-    const sheet = trainee?.timesheet?.find(
-      (task) => task.status === "recording"
-    );
-    const time = {
-      status: sheet?.status!,
-      morning: sheet?.morning!,
-      afternoon: sheet?.afternoon,
-    };
-    const spent = calculateSpentTime(time);
-    return (
-      <tr key={task._id}>
-        <td className=" md:table-cell lg:table-cell pl-3 pt-2">
-          <Text>
-            <span className="hidden md:flex lg:flex">
-              {`${format.date} at ${format.time}`}
-            </span>
-            <span className="flex md:hidden lg:hidden">{format.date}</span>
-          </Text>
-        </td>
-        <td className="hidden md:table-cell lg:table-cell  pt-2">
-          <Text>{task.taskname}</Text>
-        </td>
-        <td className="hidden md:table-cell lg:table-cell  pt-2">
-          <Text>
-            {trainee && (
-              <span>
-                {task.status === "inprogress" && task.spent === "" ? (
-                  <span>
-                    {spent.totalSpent.hours === 1
-                      ? spent.totalSpent.hours + "hr"
-                      : spent.totalSpent.hours > 1
-                      ? spent.totalSpent.hours + "hrs"
-                      : spent.totalSpent.hours === 0 && ""}
-                    {spent.totalSpent.minutes === 1
-                      ? spent.totalSpent.minutes + "min"
-                      : spent.totalSpent.minutes > 1
-                      ? spent.totalSpent.minutes + "mins"
-                      : spent.totalSpent.minutes === 0 && ""}
-                  </span>
-                ) : (
-                  task.spent
-                )}
+  const rows = items[page - 1]
+    ?.slice()
+    .sort((a, b) => b.createdAt!.localeCompare(a.createdAt!))
+    .map((task) => {
+      const format = formatDateTime(task?.createdAt!);
+      const sheet = trainee?.timesheet?.find(
+        (task) => task.status === "recording"
+      );
+      const time = {
+        status: sheet?.status!,
+        morning: sheet?.morning!,
+        afternoon: sheet?.afternoon,
+      };
+      const spent = calculateSpentTime(time);
+      return (
+        <tr key={task._id}>
+          <td className=" md:table-cell lg:table-cell pl-3 pt-2">
+            <Text>
+              <span className="hidden md:flex lg:flex">
+                {`${format.date} at ${format.time}`}
               </span>
-            )}
-
-            {!trainee && task.ticketno}
-          </Text>
-        </td>
-
-        {!pathname.includes("profile") ? (
-          <td className="hidden md:table-cell lg:table-cell  pt-2">
-            {task.assign ? (
-              <Text>{task.assign}</Text>
-            ) : (
-              <Badge
-                color="teal"
-                size="md"
-                variant="dot"
-                className="text-gray-500"
-              >
-                Available Task
-              </Badge>
-            )}
-          </td>
-        ) : (
-          ""
-        )}
-
-        <td className=" md:table-cell lg:table-cell  pt-2">
-          <Flex
-            className="rounded bg-gray-50 max-w-max px-2 py-1 gap-2"
-            align="center"
-          >
-            <div>
-              <div
-                className={`p-1 ${
-                  task.status === "new"
-                    ? "bg-indigo-300"
-                    : task.status === "inprogress"
-                    ? "bg-violet-400"
-                    : task.status === "completed"
-                    ? "bg-green-300"
-                    : task.status === "forqa"
-                    ? "bg-yellow-300"
-                    : "bg-red-300"
-                }`}
-              ></div>
-            </div>
-            <Text
-              fw="bold"
-              className={`text-[11px] ${
-                task.status === "new"
-                  ? "text-indigo-300"
-                  : task.status === "inprogress"
-                  ? "text-violet-400"
-                  : task.status === "completed"
-                  ? "text-green-300"
-                  : task.status === "forqa"
-                  ? "text-yellow-300"
-                  : "text-red-300"
-              }`}
-            >
-              {task.status}
+              <span className="flex md:hidden lg:hidden">{format.date}</span>
             </Text>
-          </Flex>
-        </td>
+          </td>
+          <td className="hidden md:table-cell lg:table-cell  pt-2">
+            <Text>{task.taskname}</Text>
+          </td>
+          <td className="hidden md:table-cell lg:table-cell  pt-2">
+            <Text>
+              {trainee && (
+                <span>
+                  {task.status === "inprogress" && task.spent === "" ? (
+                    <span>
+                      {spent.totalSpent.hours === 1
+                        ? spent.totalSpent.hours + "hr"
+                        : spent.totalSpent.hours > 1
+                        ? spent.totalSpent.hours + "hrs"
+                        : spent.totalSpent.hours === 0 && ""}
+                      {spent.totalSpent.minutes === 1
+                        ? spent.totalSpent.minutes + "min"
+                        : spent.totalSpent.minutes > 1
+                        ? spent.totalSpent.minutes + "mins"
+                        : spent.totalSpent.minutes === 0 && ""}
+                    </span>
+                  ) : (
+                    task.spent
+                  )}
+                </span>
+              )}
 
-        <td className=" md:table-cell lg:table-cell  pt-2">
-          {user?.role === "supervisor" || user?.role === "admin" ? (
-            <Button
-              onClick={() => {
-                view();
-                setViewId(task._id!);
-                // setOpened(false);
-              }}
-              leftIcon={
-                <IconInfoCircle size={16} className="hidden md:flex lg:flex" />
-              }
-              variant="white"
-              color="cyan"
-              size="xs"
-            >
-              View
-            </Button>
+              {!trainee && task.ticketno}
+            </Text>
+          </td>
+
+          {!pathname.includes("profile") ? (
+            <td className="hidden md:table-cell lg:table-cell  pt-2">
+              {task.assign ? (
+                <Text>{task.assign}</Text>
+              ) : (
+                <Badge
+                  color="teal"
+                  size="md"
+                  variant="dot"
+                  className="text-gray-500"
+                >
+                  Available Task
+                </Badge>
+              )}
+            </td>
           ) : (
-            <Menu
-              shadow="md"
-              transitionProps={{ transition: "rotate-right", duration: 150 }}
-              closeOnItemClick
-              withArrow
+            ""
+          )}
+
+          <td className=" md:table-cell lg:table-cell  pt-2">
+            <Flex
+              className="rounded bg-gray-50 max-w-max px-2 py-1 gap-2"
+              align="center"
             >
-              <Menu.Target>
-                <ActionIcon variant="white" color="cyan">
-                  <IconDots size={19} />
-                </ActionIcon>
-              </Menu.Target>
+              <div>
+                <div
+                  className={`p-1 ${
+                    task.status === "new"
+                      ? "bg-indigo-300"
+                      : task.status === "inprogress"
+                      ? "bg-violet-400"
+                      : task.status === "completed"
+                      ? "bg-green-300"
+                      : task.status === "forqa"
+                      ? "bg-yellow-300"
+                      : "bg-red-300"
+                  }`}
+                ></div>
+              </div>
+              <Text
+                fw="bold"
+                className={`text-[11px] ${
+                  task.status === "new"
+                    ? "text-indigo-300"
+                    : task.status === "inprogress"
+                    ? "text-violet-400"
+                    : task.status === "completed"
+                    ? "text-green-300"
+                    : task.status === "forqa"
+                    ? "text-yellow-300"
+                    : "text-red-300"
+                }`}
+              >
+                {task.status}
+              </Text>
+            </Flex>
+          </td>
 
-              <Menu.Dropdown>
-                <Menu.Label>Manage task</Menu.Label>
+          <td className=" md:table-cell lg:table-cell  pt-2">
+            {user?.role === "supervisor" || user?.role === "admin" ? (
+              <Button
+                onClick={() => {
+                  view();
+                  setViewId(task._id!);
+                  // setOpened(false);
+                }}
+                leftIcon={
+                  <IconInfoCircle
+                    size={16}
+                    className="hidden md:flex lg:flex"
+                  />
+                }
+                variant="white"
+                color="cyan"
+                size="xs"
+              >
+                View
+              </Button>
+            ) : (
+              <Menu
+                shadow="md"
+                transitionProps={{ transition: "rotate-right", duration: 150 }}
+                closeOnItemClick
+                withArrow
+              >
+                <Menu.Target>
+                  <ActionIcon variant="white" color="cyan">
+                    <IconDots size={19} />
+                  </ActionIcon>
+                </Menu.Target>
 
-                <Stack spacing={9} py={5} align="center" className="w-full">
-                  <Menu.Item
-                    py={0}
-                    onClick={() => {
-                      view();
-                      setViewId(task._id!);
-                    }}
-                    icon={<IconInfoCircle size={16} />}
-                  >
-                    <Text fz="xs" fw="bold" c="dark">
-                      View
-                    </Text>
-                  </Menu.Item>
+                <Menu.Dropdown>
+                  <Menu.Label>Manage task</Menu.Label>
 
-                  {task.status === "new" &&
-                    (user?.role === "Task manager" ||
-                    user?.role === "QA Personnel" ||
-                    pathname.includes("profile") ? (
-                      <Menu.Item
-                        py={0}
-                        onClick={() => {
-                          setTask(task);
-                          toggle();
-                        }}
-                        icon={<IconUser size={16} />}
-                        color={task.assign ? "indigo" : "cyan"}
-                      >
-                        <Text fz="xs" fw="bold">
-                          {task.assign ? "Reassign" : "Assign"}
-                        </Text>
-                      </Menu.Item>
-                    ) : null)}
-                  {/* <Menu.Item p={0} className="bg-white hover:bg-white">
+                  <Stack spacing={9} py={5} align="center" className="w-full">
+                    <Menu.Item
+                      py={0}
+                      onClick={() => {
+                        view();
+                        setViewId(task._id!);
+                      }}
+                      icon={<IconInfoCircle size={16} />}
+                    >
+                      <Text fz="xs" fw="bold" c="dark">
+                        View
+                      </Text>
+                    </Menu.Item>
+
+                    {task.status === "new" &&
+                      (user?.role === "Task manager" ||
+                      user?.role === "QA Personnel" ||
+                      pathname.includes("profile") ? (
+                        <Menu.Item
+                          py={0}
+                          onClick={() => {
+                            setTask(task);
+                            toggle();
+                          }}
+                          icon={<IconUser size={16} />}
+                          color={task.assign ? "indigo" : "cyan"}
+                        >
+                          <Text fz="xs" fw="bold">
+                            {task.assign ? "Reassign" : "Assign"}
+                          </Text>
+                        </Menu.Item>
+                      ) : null)}
+                    {/* <Menu.Item p={0} className="bg-white hover:bg-white">
                     <Button
                       onClick={() => {
                         update();
@@ -260,28 +266,29 @@ const TaskTable = ({ trainee, view, update, setViewId }: Props) => {
                     </Button>
                   </Menu.Item> */}
 
-                  {user?.role !== "QA Personnel" && task?.status === "new" && (
-                    <Button
-                      leftIcon={<IconTrash size={16} />}
-                      variant="white"
-                      size="xs"
-                      color="red"
-                      onClick={() => handleDelete(task._id!)}
-                      loading={isLoading}
-                      compact
-                      mr={5}
-                    >
-                      Delete
-                    </Button>
-                  )}
-                </Stack>
-              </Menu.Dropdown>
-            </Menu>
-          )}
-        </td>
-      </tr>
-    );
-  });
+                    {user?.role !== "QA Personnel" &&
+                      task?.status === "new" && (
+                        <Button
+                          leftIcon={<IconTrash size={16} />}
+                          variant="white"
+                          size="xs"
+                          color="red"
+                          onClick={() => handleDelete(task._id!)}
+                          loading={isLoading}
+                          compact
+                          mr={5}
+                        >
+                          Delete
+                        </Button>
+                      )}
+                  </Stack>
+                </Menu.Dropdown>
+              </Menu>
+            )}
+          </td>
+        </tr>
+      );
+    });
 
   return (
     <>

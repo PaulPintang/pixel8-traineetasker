@@ -41,9 +41,10 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const date = new Date();
 
   const [recordDtr, { isLoading }] = useUpdateDtrMutation();
-  const { data: trainee, refetch } = useGetTraineeProfileQuery(user?._id!, {
+  const { data: trainee } = useGetTraineeProfileQuery(undefined, {
     skip: user?.role !== "trainee",
   });
+
   const { data: trainees } = useGetAllTraineeQuery(
     profile ? profile?.course! : trainee?.course!
   );
@@ -78,7 +79,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
       JoinRoom(user?.course!, user?.role!);
       await timesheet({ sheet, rooms: [user?.course!] });
     }
-    refetch();
+    // refetch();
 
     ToastNotify(
       ` ${day === "morning" ? "Time in" : "Time out"} at exactly ${

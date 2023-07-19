@@ -28,9 +28,7 @@ const TaskTableCard = () => {
   const [viewId, setViewId] = useState<string | null>(null);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
-  const { data: trainee } = useGetTraineeProfileQuery(user?.course!, {
-    skip: user?.role !== "trainee",
-  });
+  const { data: trainee } = useGetTraineeProfileQuery();
 
   const sheet = trainee?.timesheet?.find((task) => task.status === "recording");
   const time = {

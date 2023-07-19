@@ -12,6 +12,7 @@ import { useGetTraineeProfileQuery } from "../../../features/api/trainee/trainee
 import { useLocation } from "react-router-dom";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { ITrainee } from "../../../interfaces/user.interface";
+import { useEffect } from "react";
 
 interface Props {
   profile?: ITrainee;
@@ -21,10 +22,12 @@ const TaskCards = ({ profile }: Props) => {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
-  const { data: trainee } = useGetTraineeProfileQuery(user?._id!, {
+
+  const { data: trainee } = useGetTraineeProfileQuery(undefined, {
     skip: user?.role !== "trainee",
   });
   const { data: tasks, isLoading } = useGetAllTasksQuery();
+
   return (
     <Grid grow>
       <Grid.Col className="bg-re d-300" span={4}>

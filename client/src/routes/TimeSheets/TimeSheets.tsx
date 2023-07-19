@@ -46,7 +46,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   // ? test, filter should be in backend
 
   // const { data: trainee } = useGetTraineeProfileQuery();
-  const { data: trainee } = useGetTraineeProfileQuery(user?._id!, {
+  const { data: trainee } = useGetTraineeProfileQuery(undefined, {
     skip: user?.role !== "trainee",
   });
   const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {

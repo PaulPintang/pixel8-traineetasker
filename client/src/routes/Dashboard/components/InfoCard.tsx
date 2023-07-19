@@ -17,6 +17,7 @@ import { ITrainee } from "../../../interfaces/user.interface";
 import { useLocation } from "react-router-dom";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { formatDateTime } from "../../../utils/formatDateTime";
+import { useGetAllAccountQuery } from "../../../features/api/account/accountApiSlice";
 
 interface Props {
   trainee?: ITrainee;
@@ -27,7 +28,9 @@ const InfoCard = ({ trainee }: Props) => {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
-  const { data: profile, isLoading } = useGetTraineeProfileQuery(user?._id!, {
+  const { data: accounts } = useGetAllAccountQuery();
+
+  const { data: profile, isLoading } = useGetTraineeProfileQuery(undefined, {
     skip: user?.role !== "trainee",
   });
   const { data: trainees, isLoading: traineesLoading } = useGetAllTraineeQuery(
@@ -277,17 +280,17 @@ const InfoCard = ({ trainee }: Props) => {
           )}
           <Tooltip.Group openDelay={300} closeDelay={100}>
             <Avatar.Group spacing="sm">
-              {trainees?.map((trainee) => (
+              {accounts?.map((account) => (
                 <Tooltip
-                  key={trainee._id}
-                  label={trainee.name === user?.name ? "You" : trainee.name}
+                  key={account.picture}
+                  label={account.name === user?.name ? "You" : account.name}
                   withArrow
                 >
                   {isLoading || traineesLoading ? (
                     <Skeleton height={25} visible={true} circle />
                   ) : (
                     <Avatar
-                      src={trainee.picture}
+                      src={account.picture}
                       radius="xl"
                       size={27}
                       imageProps={{ referrerPolicy: "no-referrer" }}

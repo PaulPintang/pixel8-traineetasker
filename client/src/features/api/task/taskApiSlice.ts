@@ -104,7 +104,7 @@ export const taskApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: task,
       }),
-      invalidatesTags: ["Task"],
+      invalidatesTags: ["Task", "Profile"],
       async onQueryStarted({ rooms }, { dispatch, queryFulfilled }) {
         try {
           const { data: task } = await queryFulfilled;

@@ -1,5 +1,5 @@
 import { apiSlice } from "../apiSlice";
-import { ITrainee } from "../../../interfaces/user.interface";
+import { IAccount, ITrainee } from "../../../interfaces/user.interface";
 import { JoinRoom } from "../../../utils/socketConnect";
 import { socket } from "../../../utils/socketConnect";
 
@@ -14,6 +14,12 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
       ) {
         try {
           await cacheDataLoaded;
+
+          socket.on("addNewTrainee", (trainee) => {
+            updateCachedData((draft) => {
+              draft.push(trainee);
+            });
+          });
 
           socket.on("addTimeSheet", (data) => {
             updateCachedData((draft) => {
@@ -32,6 +38,7 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
               if (index !== -1) {
                 draft[index].dtr = data.dtr;
                 draft[index].timesheet = data.timesheet;
+                draft[index].hours = data.hours;
               }
             });
           });
@@ -40,23 +47,25 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
         socket.close();
       },
     }),
-    getTraineeProfile: builder.query<ITrainee, string>({
-      query: (id) => ({
-        url: `/trainee/profile/${id}`,
-        providesTags: ["Trainee"],
-      }),
+    getTraineeProfile: builder.query<ITrainee, void>({
+      query: () => "/trainee/profile/info",
+      providesTags: ["Profile"],
     }),
-    addTrainee: builder.mutation<ITrainee, ITrainee>({
+    addTrainee: builder.mutation({
       query: (data) => ({
         url: "/trainee/add",
         method: "POST",
         body: data,
       }),
       invalidatesTags: ["Trainee"],
-      async onQueryStarted(arg, api) {
+      async onQueryStarted(traineeInfo, api) {
         try {
           const { data: trainee } = await api.queryFulfilled;
           JoinRoom(trainee.course!, trainee.role!);
+          socket.emit("newTrainee", {
+            trainee: trainee.newTrainee,
+            rooms: [traineeInfo.course],
+          });
         } catch {}
       },
     }),
@@ -66,7 +75,7 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: sheet,
       }),
-      invalidatesTags: ["Trainee"],
+      invalidatesTags: ["Trainee", "Profile"],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data: profile } = await queryFulfilled;
@@ -79,10 +88,10 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
     }),
     updateDtr: builder.mutation({
       query: () => ({
-        url: "/trainee/dtr/inout",
+        url: "/trainee/dtr",
         method: "PUT",
       }),
-      invalidatesTags: ["Trainee", "Task"],
+      invalidatesTags: ["Trainee", "Task", "Profile"],
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data: profile } = await queryFulfilled;

@@ -61,9 +61,9 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
   const task = tasks?.find((task) => task._id === viewId);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   // const { data: trainee, refetch } = useGetTraineeProfileQuery();
-  const { data: trainee, refetch } = useGetTraineeProfileQuery(user?._id!, {
-    skip: user?.role !== "trainee",
-  });
+  // const { data: trainee, refetch } = useGetTraineeProfileQuery(user?._id!, {
+  //   skip: user?.role !== "trainee",
+  // });
   const [taskStatus, taskState] = useTaskStatusMutation();
   const [comment, commentState] = useCommentOnTaskMutation();
   const [timesheet, sheetState] = useAddTaskTimesheetMutation();
@@ -111,7 +111,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
       };
       await timesheet({ sheet, rooms: [user?.course!] });
     }
-    refetch();
+    // refetch();
   };
 
   // ? SUPERVISOR
@@ -121,7 +121,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     await taskStatus({ task: data, rooms: [user?.course] });
     toggleView();
     ToastNotify(`Task status changed to ${status}`, "success");
-    refetch();
+    // refetch();
   };
 
   const addComment = async () => {

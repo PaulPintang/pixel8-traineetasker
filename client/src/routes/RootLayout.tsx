@@ -30,13 +30,6 @@ const RootLayout = () => {
     setLoadText(pathname);
   }, [pathname]);
 
-  // useEffect(() => {
-  //   socket.on("dailyTimeRecord", (data) => {
-  //     // console.log("DATA EMITTED:", data);
-  //     alert(data);
-  //   });
-  // }, [socket]);
-
   if (isLoading) return <LoaderFallback text="Loading . . ." />;
 
   return (
