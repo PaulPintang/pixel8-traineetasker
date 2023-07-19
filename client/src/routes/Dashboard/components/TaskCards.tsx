@@ -8,10 +8,7 @@ import {
   IconUrgent,
 } from "@tabler/icons-react";
 import { useAppSelector } from "../../../app/hooks";
-import {
-  useGetAllTraineeQuery,
-  useGetTraineeProfileQuery,
-} from "../../../features/api/trainee/traineeApiSlice";
+import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
 import { useLocation } from "react-router-dom";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { ITrainee } from "../../../interfaces/user.interface";
@@ -24,7 +21,9 @@ const TaskCards = ({ profile }: Props) => {
   const location = useLocation();
   const { pathname } = location;
   const { user } = useAppSelector((state) => state.auth);
-  const { data: trainee } = useGetTraineeProfileQuery();
+  const { data: trainee } = useGetTraineeProfileQuery(user?._id!, {
+    skip: user?.role !== "trainee",
+  });
   const { data: tasks, isLoading } = useGetAllTasksQuery();
   return (
     <Grid grow>

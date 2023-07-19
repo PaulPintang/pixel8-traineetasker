@@ -4,17 +4,19 @@ import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { formatDateTime } from "../../../utils/formatDateTime";
 import { useGetTraineeProfileQuery } from "../../../features/api/trainee/traineeApiSlice";
 import { calculateSpentTime } from "../../../utils/calculateSpentTime";
+import { useAppSelector } from "../../../app/hooks";
 interface Props {
   setViewId: Dispatch<SetStateAction<string | null>>;
   toggle: () => void;
 }
 
 const InProgress = ({ toggle, setViewId }: Props) => {
-  const date = new Date();
-  // wahhhhhhhhh
+  const { user } = useAppSelector((state) => state.auth);
   const { data: tasks } = useGetAllTasksQuery();
   const inprogress = tasks?.filter((task) => task.status === "inprogress");
-  const { data: trainee } = useGetTraineeProfileQuery();
+  const { data: trainee } = useGetTraineeProfileQuery(user?._id!, {
+    skip: user?.role !== "trainee",
+  });
 
   const sheet = trainee?.timesheet?.find((task) => task.status === "recording");
   const time = {
