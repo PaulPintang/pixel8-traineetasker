@@ -19,10 +19,29 @@ export const getAllAccount = asyncHandler(
       const user = await Account.findOne({ email: res.locals.user.email });
       const accounts = await Account.find({
         course: user.course,
-        role: { $nin: ["trainee", "supervisor", "admin"] },
+        role: { $in: ["trainee"] },
       });
-      res.json(accounts);
+      res.json(
+        accounts.map((acc) => {
+          return {
+            name: acc.name,
+            picture: acc.picture,
+          };
+        })
+      );
     }
+    // if (res.locals.user.role === "admin") {
+    //   const roles = ["QA Personnel", "Task manager", "supervisor"];
+    //   const accounts = await Account.find({ role: { $in: roles } });
+    //   res.json(accounts);
+    // } else {
+    //   const user = await Account.findOne({ email: res.locals.user.email });
+    //   const accounts = await Account.find({
+    //     course: user.course,
+    //     role: { $nin: ["trainee", "supervisor", "admin"] },
+    //   });
+    //   res.json(accounts);
+    // }
   }
 );
 

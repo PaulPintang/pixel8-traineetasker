@@ -1,1 +1,0 @@
-import{i as e,j as r,T as s,U as t}from"./index-24d6de80.js";const a=()=>e("div",{className:"text-red-400 font-semibold",children:[r(s,{children:"ErrorPage!!!"}),r(t,{to:"/",children:"Return to home"})]});export{a as default};

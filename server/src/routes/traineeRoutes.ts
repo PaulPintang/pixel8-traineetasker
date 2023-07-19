@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 import {
-  getTraineeProfile,
+  traineeProfile,
   addTrainee,
   allTrainee,
   addTaskTimeSheet,
@@ -10,9 +10,9 @@ import {
 import { isAuth } from "../middleware/authMiddleware";
 
 router.get("/:course", isAuth, allTrainee);
-router.get("/profile/:id", isAuth, getTraineeProfile);
+router.get("/profile/info", isAuth, traineeProfile);
 router.put("/timesheet", isAuth, addTaskTimeSheet);
-router.put("/dtr/inout", isAuth, timeInOutDTR);
+router.put("/dtr", isAuth, timeInOutDTR);
 router.post("/add", isAuth, addTrainee);
 
 module.exports = router;

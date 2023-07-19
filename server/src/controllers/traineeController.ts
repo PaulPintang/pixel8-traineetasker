@@ -13,7 +13,18 @@ export const allTrainee = asyncHandler(
     const trainees = await Trainee.find({
       course: req.params.course,
     });
-    res.json(trainees);
+    if (res.locals.user.role !== "trainee") {
+      res.json(trainees);
+    } else {
+      res.json(
+        trainees.map((acc) => {
+          return {
+            name: acc.name,
+            picture: acc.picture,
+          };
+        })
+      );
+    }
   }
 );
 
@@ -25,7 +36,7 @@ export const addTrainee = asyncHandler(
   ) => {
     if (res.locals.user.role === "trainee") {
       const { name, email, picture, course } = req.body;
-      const user = await Account.create({
+      const newAcc = await Account.create({
         name,
         email,
         picture,
@@ -33,7 +44,7 @@ export const addTrainee = asyncHandler(
         role: "trainee",
         timesheet: [],
       });
-      await Trainee.create({
+      const newTrainee = await Trainee.create({
         ...req.body,
         hours: {
           ...req.body.hours,
@@ -41,7 +52,7 @@ export const addTrainee = asyncHandler(
         },
         started: "",
       });
-      res.json(user);
+      res.json({ newTrainee, newAcc });
     } else {
       res.json(401);
     }
@@ -154,8 +165,8 @@ export const timeInOutDTR = asyncHandler(
           date: format.date,
           status: "recording",
           morning: {
-            in: "08:00 AM",
-            // in: format.time,
+            // in: "08:00 AM",
+            in: format.time,
             out: "",
           },
           afternoon: {
@@ -213,22 +224,17 @@ export const addTaskTimeSheet = asyncHandler(
   }
 );
 
-export const getTraineeProfile = asyncHandler(
-  async (
-    req: Request<{ id: string }, {}, {}, {}>,
-    res: Response,
-    next: NextFunction
-  ) => {
-    const { role } = res.locals.user;
-    if (role === "supervisor" || role === "admin") {
-      const trainee = await Trainee.findById(req.params.id);
-      res.json(trainee);
-    } else {
-      const account = await Account.findOne({
-        email: res.locals.user.email,
-      });
-      const trainee = await Trainee.findOne({ email: account.email });
-      res.json(trainee);
-    }
+// export const getTraineeProfile = asyncHandler(
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const trainee = await Trainee.findOne({ email: res.locals.user.email });
+//     res.json(trainee);
+//   }
+// );
+
+export const traineeProfile = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log(res.locals.user.email);
+    const trainee = await Trainee.findOne({ email: res.locals.user.email });
+    res.json(trainee);
   }
 );

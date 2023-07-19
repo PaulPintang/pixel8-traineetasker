@@ -1,20 +1,29 @@
 import { Request, Response, NextFunction } from "express";
-import Account from "../models/accountModel";
+import jwt from "jsonwebtoken";
 import asyncHandler from "express-async-handler";
 
-import jwt from "jsonwebtoken";
-import { IAccount } from "../interfaces/user.interface";
+export const isAuth = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.cookies.jwt;
 
-export const isAuth = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.cookies.jwt;
+    if (!token) {
+      res.status(401).send("Access Denied");
+    } else {
+      try {
+        const verified: any = jwt.verify(token, process.env.TOKEN_SECRET!);
+        res.locals.user = verified;
+        next();
+      } catch (error) {
+        next(error);
+      }
+    }
 
-  if (!token) return res.status(401).send("Access Denied");
-
-  try {
-    const verified: any = jwt.verify(token, process.env.TOKEN_SECRET!);
-    res.locals.user = verified;
-    next();
-  } catch (error) {
-    next(error);
+    // try {
+    //   const verified: any = jwt.verify(token, process.env.TOKEN_SECRET!);
+    //   res.locals.user = verified;
+    //   next();
+    // } catch (error) {
+    //   next(error);
+    // }
   }
-};
+);
