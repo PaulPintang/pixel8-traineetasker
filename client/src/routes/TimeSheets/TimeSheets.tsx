@@ -43,15 +43,13 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   const [opened, { close, open }] = useDisclosure(false);
   const { data: tasks } = useGetAllTasksQuery();
   const date = new Date();
-  // ? test, filter should be in backend
 
-  // const { data: trainee } = useGetTraineeProfileQuery();
   const { data: trainee } = useGetTraineeProfileQuery(undefined, {
     skip: user?.role !== "trainee",
   });
-  const { data: trainees } = useGetAllTraineeQuery(profile?.course!, {
-    skip: user?.role === "trainee",
-  });
+  const { data: trainees } = useGetAllTraineeQuery(
+    profile ? profile?.course! : trainee?.course!
+  );
   const profileInfo = trainees?.find((trainee) => trainee._id === profile?._id);
 
   const items = chunk(

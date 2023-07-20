@@ -130,13 +130,13 @@ export function addTimeStrings(time1: string, time2: string) {
     }
     if (hrs > 0) {
       if (timeString) {
-        timeString += " ";
+        timeString += "";
       }
       timeString += `${hrs}hr${hrs > 1 ? "s" : ""}`;
     }
     if (mins > 0) {
       if (timeString) {
-        timeString += " ";
+        timeString += "";
       }
       timeString += `${mins}min${mins > 1 ? "s" : ""}`;
     }

@@ -224,13 +224,6 @@ export const addTaskTimeSheet = asyncHandler(
   }
 );
 
-// export const getTraineeProfile = asyncHandler(
-//   async (req: Request, res: Response, next: NextFunction) => {
-//     const trainee = await Trainee.findOne({ email: res.locals.user.email });
-//     res.json(trainee);
-//   }
-// );
-
 export const traineeProfile = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     console.log(res.locals.user.email);

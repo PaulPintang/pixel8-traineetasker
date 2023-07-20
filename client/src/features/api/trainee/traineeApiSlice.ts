@@ -21,24 +21,25 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
             });
           });
 
-          socket.on("addTimeSheet", (data) => {
-            updateCachedData((draft) => {
-              const index = draft.findIndex(
-                (trainee) => trainee._id === data._id
-              );
-              if (index !== -1) draft[index].timesheet = data.timesheet;
-            });
-          });
+          // socket.on("addTimeSheet", (data) => {
+          //   updateCachedData((draft) => {
+          //     const index = draft.findIndex(
+          //       (trainee) => trainee._id === data._id
+          //     );
+          //     if (index !== -1) draft[index].timesheet = data.timesheet;
+          //   });
+          // });
 
-          socket.on("dailyTimeRecord", (data) => {
+          socket.on("profileUpdate", (profile) => {
+            console.log("PROFILE POTA", profile);
             updateCachedData((draft) => {
               const index = draft.findIndex(
-                (trainee) => trainee._id === data._id
+                (trainee) => trainee._id === profile._id
               );
               if (index !== -1) {
-                draft[index].dtr = data.dtr;
-                draft[index].timesheet = data.timesheet;
-                draft[index].hours = data.hours;
+                draft[index].dtr = profile.dtr;
+                draft[index].timesheet = profile.timesheet;
+                draft[index].hours = profile.hours;
               }
             });
           });
@@ -79,7 +80,7 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data: profile } = await queryFulfilled;
-          socket.emit("sheet", {
+          socket.emit("profile", {
             trainee: profile,
             rooms: arg.rooms,
           });
@@ -95,7 +96,7 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data: profile } = await queryFulfilled;
-          socket.emit("dtr", {
+          socket.emit("profile", {
             trainee: profile,
             rooms: arg.rooms,
           });

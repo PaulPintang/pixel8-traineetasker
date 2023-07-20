@@ -70,16 +70,21 @@ io.on("connection", (socket) => {
       socket.to(room).emit("addNewTrainee", trainee);
     });
   });
-  socket.on("sheet", ({ trainee, rooms }) => {
+  socket.on("profile", ({ trainee, rooms }) => {
     rooms.forEach((room: string) => {
-      socket.to(room).emit("addTimeSheet", trainee);
+      socket.to(room).emit("profileUpdate", trainee);
     });
   });
-  socket.on("dtr", ({ trainee, rooms }) => {
-    rooms.forEach((room: string) => {
-      socket.to(room).emit("dailyTimeRecord", trainee);
-    });
-  });
+  // socket.on("sheet", ({ trainee, rooms }) => {
+  //   rooms.forEach((room: string) => {
+  //     socket.to(room).emit("addTimeSheet", trainee);
+  //   });
+  // });
+  // socket.on("dtr", ({ trainee, rooms }) => {
+  //   rooms.forEach((room: string) => {
+  //     socket.to(room).emit("dailyTimeRecord", trainee);
+  //   });
+  // });
 });
 
 server.listen(port, () => console.log(`Server started on port ${port}`));

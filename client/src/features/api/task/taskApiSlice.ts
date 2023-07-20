@@ -107,11 +107,20 @@ export const taskApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Task", "Profile"],
       async onQueryStarted({ rooms }, { dispatch, queryFulfilled }) {
         try {
-          const { data: task } = await queryFulfilled;
+          const { data: response } = await queryFulfilled;
+
+          console.log("THE RESPONSE", response);
           socket.emit("status", {
-            task,
+            task: response.updatedTask,
             rooms,
           });
+          if (response.updatedProfile) {
+            console.log("updatedProfile", response.updatedProfile);
+            socket.emit("profile", {
+              trainee: response.updatedProfile,
+              rooms,
+            });
+          }
         } catch {}
       },
     }),

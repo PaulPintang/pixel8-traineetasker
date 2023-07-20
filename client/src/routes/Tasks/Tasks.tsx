@@ -18,7 +18,6 @@ import { ITrainee } from "../../interfaces/user.interface";
 import { useLocation } from "react-router-dom";
 import AssignTaskModal from "../Dashboard/components/AssignTaskModal";
 import AddTaskModal from "./components/modals/AddTaskModal";
-import toast from "react-hot-toast";
 
 interface Props {
   trainee?: ITrainee;
@@ -49,21 +48,21 @@ const Tasks = ({ trainee }: Props) => {
             toggle={toggleView.toggle}
           />
         )}
-        {user?.role === "Task manager" && (
-          <Button
-            color="cyan"
-            size="xs"
-            onClick={
-              user?.role === "Task manager" && !pathname.includes("profile")
-                ? toggleAdd.toggle
-                : toggleAssign.toggle
-            }
-          >
-            {user?.role === "Task manager" && !pathname.includes("profile")
-              ? "Add task"
-              : "Assign task"}
-          </Button>
-        )}
+
+        {user?.role === "Task manager" || user?.role === "QA Personnel" ? (
+          <>
+            {user.role === "Task manager" && !pathname.includes("profile") && (
+              <Button color="cyan" size="xs" onClick={toggleAdd.toggle}>
+                Add task
+              </Button>
+            )}
+            {pathname.includes("profile") && (
+              <Button color="cyan" size="xs" onClick={toggleAssign.toggle}>
+                Assign task
+              </Button>
+            )}
+          </>
+        ) : null}
       </Flex>
 
       {user?.role === "trainee" ? (
