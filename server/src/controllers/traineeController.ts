@@ -7,6 +7,8 @@ import asyncHandler from "express-async-handler";
 import { formatDateTime, handleTimeCarryOver } from "../utils/formatDateTime";
 import { checkTime } from "../utils/checkTime";
 import { handleTaskSpent, handleTraineeHourSpent } from "../utils/DTRFunctions";
+import { ISheets } from "../interfaces/records.interface";
+import { addTimeStrings } from "../utils/calculateSpentTime";
 
 export const allTrainee = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -99,16 +101,22 @@ export const timeInOutDTR = asyncHandler(
               day: "morning",
             });
 
-            const totalHours = parseInt(existingHours) + spent.totalSpent.hours;
-            const totalMinutes =
-              parseInt(existingMinutes) + spent.totalSpent.minutes;
+            const totalHours = spent.totalSpent.hours;
+            const totalMinutes = spent.totalSpent.minutes;
+
+            // const totalHours = parseInt(existingHours) + spent.totalSpent.hours;
+            // const totalMinutes =
+            //   parseInt(existingMinutes) + spent.totalSpent.minutes;
 
             const newSpent = handleTimeCarryOver(totalHours, totalMinutes);
 
             await Task.findByIdAndUpdate(
               taskInprogress._id,
               {
-                spent: newSpent,
+                spent:
+                  taskInprogress.spent === ""
+                    ? newSpent
+                    : addTimeStrings(taskInprogress.spent, newSpent),
               },
               { new: true }
             );
@@ -145,15 +153,20 @@ export const timeInOutDTR = asyncHandler(
               day: "afternoon",
             });
 
-            const totalHours = parseInt(existingHours) + spent.totalSpent.hours;
-            const totalMinutes =
-              parseInt(existingMinutes) + spent.totalSpent.minutes;
+            const totalHours = spent.totalSpent.hours;
+            const totalMinutes = spent.totalSpent.minutes;
+            // const totalHours = parseInt(existingHours) + spent.totalSpent.hours;
+            // const totalMinutes =
+            //   parseInt(existingMinutes) + spent.totalSpent.minutes;
 
             const newSpent = handleTimeCarryOver(totalHours, totalMinutes);
             await Task.findByIdAndUpdate(
               taskInprogress._id,
               {
-                spent: newSpent,
+                spent:
+                  taskInprogress.spent === ""
+                    ? newSpent
+                    : addTimeStrings(taskInprogress.spent, newSpent),
               },
               { new: true }
             );
@@ -174,6 +187,24 @@ export const timeInOutDTR = asyncHandler(
             out: "",
           },
         });
+
+        if (taskInprogress) {
+          const sheet: ISheets = {
+            task: taskInprogress.taskname,
+            ticket: taskInprogress.ticketno,
+            status: "recording",
+            date: format.date,
+            morning: {
+              start: format.time,
+              end: "",
+            },
+            afternoon: {
+              start: "",
+              end: "",
+            },
+          };
+          trainee.timesheet.push(sheet);
+        }
       }
 
       const update = await Trainee.findByIdAndUpdate(

@@ -11,6 +11,7 @@ import { taskTotalSpent } from "../utils/taskTotalSpent";
 import { handleTaskSpent } from "../utils/DTRFunctions";
 import { addTimeStrings } from "../utils/calculateSpentTime";
 import { ISheets } from "../interfaces/records.interface";
+import { ITrainee } from "../interfaces/user.interface";
 
 export const getAllTasks = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -53,179 +54,180 @@ export const assignTask = asyncHandler(
 );
 export const updateTaskStatus = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const date: Date = new Date();
     const format = formatDateTime();
     const { _id, status } = req.body;
     const role = res.locals.user.role;
     const traineeTaskStatus = ["inprogress", "forqa"];
     const QATaskStatus = ["failed", "completed"];
+    const spentTimeFormat = `${format.date} at ${format.time}`;
+
+    // *** Trainee functions
+    let updatedTask: ITask | null = null;
+    // let updatedProfile: ITrainee | null = null;
     const task = await Task.findById(_id);
-    const trainee = await Trainee.findOne({
-      name: task.assign,
-    });
+    const trainee = await Trainee.findOne({ email: res.locals.user.email });
 
-    // const taskonsheet = await Task.findOne({
-    //   ticketno: trainee.timesheet[sheet].ticket,
-    // });
-
-    const sheet = trainee.timesheet.findIndex(
-      (record) => record.status === "recording"
-    );
-
-    const dateTime = `${format.date} at ${format.time}`;
-
-    let totalHours = 0;
-    let totalMinutes = 0;
-    let timesheet: ISheets[] = [];
-    // let taskonsheet: ITask | null = null;
-
-    // console.log("pota", taskonsheet);
-    // ** IF the trainee mark tha task as forqa then update the task timesheet.
-    if (status === "forqa" && role === "trainee") {
-      // ****
-
-      timesheet = trainee.timesheet;
-      // ****
-
+    if (traineeTaskStatus.includes(status) && role === "trainee") {
       const time = checkTime();
-      const sheet = trainee.timesheet.findIndex(
-        (record) => record.status === "recording"
+      const timesheet = trainee.timesheet;
+      const taskonsheet = trainee.timesheet.findIndex(
+        (task) => task.status === "recording"
+      );
+      // ** findIndex return -1 if not found
+      const isThereExistingInProgress = taskonsheet !== -1;
+
+      //*** mark as done,new inprogress, and revise failed task (computing time spent) and stop current recording timesheet
+      if (status === "forqa") {
+        let totalHours = 0;
+        let totalMinutes = 0;
+        let totalSpent = "";
+        // ** handling timesheet
+        if (time === "morning") {
+          timesheet[taskonsheet].morning.end = format.time;
+        }
+        if (time === "afternoon") {
+          timesheet[taskonsheet].afternoon.end = format.time;
+        }
+        // *** enddddd
+
+        // *** handling totalspent
+        const { totalAfternoonSpentTime, totalMorningSpentTime } =
+          taskTotalSpent(trainee);
+        totalMinutes += totalMorningSpentTime + totalAfternoonSpentTime;
+        totalSpent = handleTimeCarryOver(totalHours, totalMinutes);
+        // *** end
+        timesheet[taskonsheet].status = "recorded";
+
+        updatedTask = await Task.findByIdAndUpdate(
+          task._id,
+          {
+            status: "forqa",
+            timeline: {
+              ...task.timeline,
+              doneAt: !task.timeline.doneAt
+                ? spentTimeFormat
+                : task.timeline.doneAt,
+            },
+            spent:
+              task.spent === ""
+                ? totalSpent
+                : addTimeStrings(task.spent, totalSpent),
+          },
+          { new: true }
+        );
+      }
+
+      // ** a task new inprogress, create new timesheet
+      if (status === "inprogress") {
+        updatedTask = await Task.findByIdAndUpdate(
+          task._id,
+          {
+            status: "inprogress",
+            timeline: {
+              ...task.timeline,
+              startedAt: !task.timeline.startedAt
+                ? spentTimeFormat
+                : task.timeline.startedAt,
+            },
+          },
+          { new: true }
+        );
+
+        if (isThereExistingInProgress) {
+          let totalHours = 0;
+          let totalMinutes = 0;
+          let totalSpent = "";
+
+          if (time === "morning") {
+            timesheet[taskonsheet].morning.end = format.time;
+          }
+          if (time === "afternoon") {
+            timesheet[taskonsheet].afternoon.end = format.time;
+          }
+          const { totalAfternoonSpentTime, totalMorningSpentTime } =
+            taskTotalSpent(trainee);
+          totalMinutes += totalMorningSpentTime + totalAfternoonSpentTime;
+          totalSpent = handleTimeCarryOver(totalHours, totalMinutes);
+
+          timesheet[taskonsheet].status = "recorded";
+
+          const toPendingTask = await Task.findOne({
+            ticketno: timesheet[taskonsheet].ticket,
+          });
+
+          updatedTask = await Task.findByIdAndUpdate(
+            toPendingTask._id,
+            {
+              status: "pending",
+              spent:
+                toPendingTask.spent === ""
+                  ? totalSpent
+                  : addTimeStrings(toPendingTask.spent, totalSpent),
+            },
+            { new: true }
+          );
+        }
+        const sheet: ISheets = {
+          task: task.taskname,
+          ticket: task.ticketno,
+          status: "recording",
+          date: format.date,
+          morning: {
+            start: time === "morning" ? format.time : "",
+            // start: "08:00 AM",
+            end: "",
+          },
+          afternoon: {
+            start: time === "afternoon" ? format.time : "",
+            // start: "",
+            end: "",
+          },
+        };
+        timesheet.push(sheet);
+      }
+      const updatedProfile = await Trainee.findByIdAndUpdate(
+        trainee._id,
+        {
+          timesheet,
+        },
+        {
+          new: true,
+        }
       );
 
-      // taskonsheet = await Task.findOne({
-      //   ticketno: timesheet[sheet].ticket,
-      // });
-
-      // console.log(taskonsheet);
-      if (time === "morning") {
-        timesheet[sheet].morning.end = format.time;
-      }
-      if (time === "afternoon") {
-        timesheet[sheet].afternoon.end = format.time;
-      }
-
-      const { totalAfternoonSpentTime, totalMorningSpentTime } =
-        taskTotalSpent(trainee);
-
-      totalMinutes += totalMorningSpentTime + totalAfternoonSpentTime;
-      timesheet[sheet].status = "recorded";
+      res.json({ updatedTask, updatedProfile });
     }
-    // *** END
 
-    const totalSpent = handleTimeCarryOver(totalHours, totalMinutes);
-
-    const updatedTask = await Task.findByIdAndUpdate(
-      _id,
-      {
-        status:
-          role === "QA Personnel" && QATaskStatus.includes(status)
-            ? status
-            : role === "trainee" &&
-              traineeTaskStatus.includes(status) &&
-              status,
-        timeline: {
-          startedAt:
-            role === "trainee" &&
-            status === "inprogress" &&
-            !task.timeline.startedAt
-              ? dateTime
-              : task.timeline.startedAt,
-          doneAt:
-            role === "trainee" && status === "forqa" && !task.timeline.doneAt
-              ? dateTime
-              : task.timeline.doneAt,
-          completedAt:
-            role === "QA Personnel" &&
-            status === "completed" &&
-            !task.timeline.completedAt
-              ? dateTime
-              : task.timeline.completedAt,
-          revisions:
-            role === "QA Personnel" && status === "failed"
-              ? [...task.timeline.revisions, date.toISOString()]
-              : task.timeline.revisions,
-        },
-        spent:
-          task.spent === ""
-            ? totalSpent
-            : addTimeStrings(task.spent, totalSpent),
-      },
-      { new: true }
-    );
-
-    const updatedProfile = await Trainee.findByIdAndUpdate(
-      trainee._id,
-      {
-        timesheet: status === "forqa" ? timesheet : trainee.timesheet,
-      },
-      {
-        new: true,
+    if (QATaskStatus.includes(status) && role !== "trainee") {
+      if (status === "completed") {
+        updatedTask = await Task.findByIdAndUpdate(
+          task._id,
+          {
+            status: "completed",
+            timeline: {
+              ...task.timeline,
+              completedAt: spentTimeFormat,
+            },
+          },
+          { new: true }
+        );
+      } else {
+        const date = new Date();
+        updatedTask = await Task.findByIdAndUpdate(
+          task._id,
+          {
+            status: "failed",
+            timeline: {
+              ...task.timeline,
+              revisions: [...task.timeline.revisions, date.toISOString()],
+            },
+          },
+          { new: true }
+        );
       }
-    );
-    res.json({ updatedTask, updatedProfile });
-    // } else {
-    //   res.json({ updateTask });
-    // }
+    }
 
-    // ? IF THE TRAINEE MARK THE TASK AS DONE, READY FOR QA
-    // if (status === "forqa" || status === "inprogress") {
-    //   const time = checkTime();
-    //   const trainee = await Trainee.findOne({ email: res.locals.user.email });
-    //   const timesheet = trainee.timesheet;
-    //   const sheet = trainee.timesheet.findIndex(
-    //     (record) => record.status === "recording"
-    //   );
-
-    //   const taskonsheet = await Task.findOne({
-    //     ticketno: timesheet[sheet].ticket,
-    //   });
-
-    //   if (time === "morning") {
-    //     timesheet[sheet].morning.end = format.time;
-    //   }
-    //   if (time === "afternoon") {
-    //     timesheet[sheet].afternoon.end = format.time;
-    //   }
-
-    //   // ** GETTING THE TOTAL SPENT TIME OF MORNING AND AFTERNOON SPENT TIME
-    //   // *** morning and afternoon calculate time, for example: 08:00 to 12:00 = 4hrs
-    //   const { totalAfternoonSpentTime, totalMorningSpentTime } =
-    //     taskTotalSpent(trainee);
-
-    //   let totalHours = 0;
-    //   let totalMinutes = 0;
-
-    //   totalMinutes += totalMorningSpentTime + totalAfternoonSpentTime;
-
-    //   const totalSpent = handleTimeCarryOver(totalHours, totalMinutes);
-
-    //   // *** SET THE CURRENT IN PROGRESS TASK AS PENDING (Task should only have 1 inprogress task)
-    //   const updatedTask = await Task.findByIdAndUpdate(
-    //     taskonsheet._id,
-    //     {
-    //       spent:
-    //         taskonsheet.spent === ""
-    //           ? totalSpent
-    //           : addTimeStrings(taskonsheet.spent, totalSpent),
-
-    //       status: status === "inprogress" ? "pending" : taskonsheet.status,
-    //     },
-    //     { new: true }
-    //   );
-    //   // *** END
-
-    //   timesheet[sheet].status = "recorded";
-    //   const updatedProfile = await Trainee.findByIdAndUpdate(
-    //     trainee._id,
-    //     {
-    //       timesheet: timesheet,
-    //     },
-    //     {
-    //       new: true,
-    //     }
-    //   );
-    //   res.json({ updatedTask, updatedProfile });
-    // }
+    res.json({ updatedTask });
   }
 );
 
