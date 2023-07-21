@@ -82,13 +82,13 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                   ) : (
                     <Text>On timesheet: </Text>
                   )}
-                  <Text fw="bold" className="animate-searching">
+                  <Text fw="bold" className="animate-recording">
                     {task.timeline?.revisions.length !== 0 ? (
                       <span>+ </span>
                     ) : (
                       ""
                     )}
-                    {spent.totalSpent.hours === 1
+                    {/* {spent.totalSpent.hours === 1
                       ? spent.totalSpent.hours + "hr"
                       : spent.totalSpent.hours > 1
                       ? spent.totalSpent.hours + "hrs"
@@ -97,7 +97,54 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                       ? spent.totalSpent.minutes + "min"
                       : spent.totalSpent.minutes > 1
                       ? spent.totalSpent.minutes + "mins"
-                      : spent.totalSpent.minutes === 0 && ""}
+                      : spent.totalSpent.minutes === 0 && ""} */}
+                    {
+                      sheet.morning?.start !== "" &&
+                      sheet.morning?.end !== "" &&
+                      sheet.status === "recording" ? (
+                        <span>
+                          {spent.afternoon.spent.hours === 1
+                            ? spent.afternoon.spent.hours + "hr"
+                            : spent.afternoon.spent.hours > 1
+                            ? spent.afternoon.spent.hours + "hrs"
+                            : spent.afternoon.spent.hours === 0 && ""}
+                          {spent.afternoon.spent.minutes === 1
+                            ? spent.afternoon.spent.minutes + "min"
+                            : spent.afternoon.spent.minutes > 1
+                            ? spent.afternoon.spent.minutes + "mins"
+                            : spent.afternoon.spent.minutes === 0 && ""}
+                        </span>
+                      ) : sheet.afternoon?.start !== "" &&
+                        sheet.afternoon?.end !== "" &&
+                        sheet.status === "recording" ? (
+                        <span>
+                          {spent.morning.spent.hours === 1
+                            ? spent.morning.spent.hours + "hr"
+                            : spent.morning.spent.hours > 1
+                            ? spent.morning.spent.hours + "hrs"
+                            : spent.morning.spent.hours === 0 && ""}
+                          {spent.morning.spent.minutes === 1
+                            ? spent.morning.spent.minutes + "min"
+                            : spent.morning.spent.minutes > 1
+                            ? spent.morning.spent.minutes + "mins"
+                            : spent.morning.spent.minutes === 0 && ""}
+                        </span>
+                      ) : (
+                        ""
+                      )
+                      // <span>
+                      //   {spent.totalSpent.hours === 1
+                      //     ? spent.totalSpent.hours + "hr"
+                      //     : spent.totalSpent.hours > 1
+                      //     ? spent.totalSpent.hours + "hrs"
+                      //     : spent.totalSpent.hours === 0 && ""}
+                      //   {spent.totalSpent.minutes === 1
+                      //     ? spent.totalSpent.minutes + "min"
+                      //     : spent.totalSpent.minutes > 1
+                      //     ? spent.totalSpent.minutes + "mins"
+                      //     : spent.totalSpent.minutes === 0 && ""}
+                      // </span>
+                    }
                   </Text>
                 </Group>
               )}

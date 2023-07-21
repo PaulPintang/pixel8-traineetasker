@@ -96,17 +96,77 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
             <Text>{sheet.ticket}</Text>
           </td>
           <td className="py-2 hidden md:table-cell lg:table-cell ">
-            <Text>
-              {spent.totalSpent.hours === 1
-                ? spent.totalSpent.hours + "hr"
-                : spent.totalSpent.hours > 1
-                ? spent.totalSpent.hours + "hrs"
-                : spent.totalSpent.hours === 0 && ""}
-              {spent.totalSpent.minutes === 1
-                ? spent.totalSpent.minutes + "min"
-                : spent.totalSpent.minutes > 1
-                ? spent.totalSpent.minutes + "mins"
-                : spent.totalSpent.minutes === 0 && ""}
+            {/* {spent.totalSpent.hours === 1
+              ? spent.totalSpent.hours + "hr"
+              : spent.totalSpent.hours > 1
+              ? spent.totalSpent.hours + "hrs"
+              : spent.totalSpent.hours === 0 && ""}
+            {spent.totalSpent.minutes === 1
+              ? spent.totalSpent.minutes + "min"
+              : spent.totalSpent.minutes > 1
+              ? spent.totalSpent.minutes + "mins"
+              : spent.totalSpent.minutes === 0 && ""} */}
+            <Text
+              className={
+                sheet.status === "recording" ? "animate-recording" : ""
+              }
+            >
+              {sheet.status === "recording" && (
+                <>
+                  {sheet.morning?.start !== "" &&
+                  sheet.morning?.end !== "" &&
+                  sheet.status === "recording" ? (
+                    <span className="text-indigo-400 font-medium">+ </span>
+                  ) : (
+                    <span className="text-yellow-400 font-medium">+ </span>
+                  )}
+                </>
+              )}
+              {sheet.morning?.start !== "" &&
+              sheet.morning?.end !== "" &&
+              sheet.status === "recording" ? (
+                <span>
+                  {spent.afternoon.spent.hours === 1
+                    ? spent.afternoon.spent.hours + "hr"
+                    : spent.afternoon.spent.hours > 1
+                    ? spent.afternoon.spent.hours + "hrs"
+                    : spent.afternoon.spent.hours === 0 && ""}
+                  {spent.afternoon.spent.minutes === 1
+                    ? spent.afternoon.spent.minutes + "min"
+                    : spent.afternoon.spent.minutes > 1
+                    ? spent.afternoon.spent.minutes + "mins"
+                    : spent.afternoon.spent.minutes === 0 && ""}
+                </span>
+              ) : sheet.afternoon?.start !== "" &&
+                sheet.afternoon?.end !== "" &&
+                sheet.status === "recording" ? (
+                <span>
+                  {/* {spent.morning.spent.hours === 1
+                    ? spent.morning.spent.hours + "hr"
+                    : spent.morning.spent.hours > 1
+                    ? spent.morning.spent.hours + "hrs"
+                    : spent.morning.spent.hours === 0 && ""}
+                  {spent.morning.spent.minutes === 1
+                    ? spent.morning.spent.minutes + "min"
+                    : spent.morning.spent.minutes > 1
+                    ? spent.morning.spent.minutes + "mins"
+                    : spent.morning.spent.minutes === 0 && ""} */}
+                  {}
+                </span>
+              ) : (
+                <span>
+                  {spent.totalSpent.hours === 1
+                    ? spent.totalSpent.hours + "hr"
+                    : spent.totalSpent.hours > 1
+                    ? spent.totalSpent.hours + "hrs"
+                    : spent.totalSpent.hours === 0 && ""}
+                  {spent.totalSpent.minutes === 1
+                    ? spent.totalSpent.minutes + "min"
+                    : spent.totalSpent.minutes > 1
+                    ? spent.totalSpent.minutes + "mins"
+                    : spent.totalSpent.minutes === 0 && ""}
+                </span>
+              )}
             </Text>
           </td>
           <td className="py-2 hidden md:table-cell lg:table-cell ">
