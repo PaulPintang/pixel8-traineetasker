@@ -63,7 +63,6 @@ export const updateTaskStatus = asyncHandler(
 
     // *** Trainee functions
     let updatedTask: ITask | null = null;
-    // let updatedProfile: ITrainee | null = null;
     const task = await Task.findById(_id);
     const trainee = await Trainee.findOne({ email: res.locals.user.email });
 
@@ -173,8 +172,8 @@ export const updateTaskStatus = asyncHandler(
           status: "recording",
           date: format.date,
           morning: {
-            start: time === "morning" ? format.time : "",
-            // start: "08:00 AM",
+            // start: time === "morning" ? format.time : "",
+            start: "08:00 AM",
             end: "",
           },
           afternoon: {

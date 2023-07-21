@@ -101,8 +101,8 @@ export const timeInOutDTR = asyncHandler(
               day: "morning",
             });
 
-            const totalHours = spent.totalSpent.hours;
-            const totalMinutes = spent.totalSpent.minutes;
+            const totalHours = spent.morning.spent.hours;
+            const totalMinutes = spent.morning.spent.minutes;
 
             // const totalHours = parseInt(existingHours) + spent.totalSpent.hours;
             // const totalMinutes =
@@ -113,20 +113,22 @@ export const timeInOutDTR = asyncHandler(
             await Task.findByIdAndUpdate(
               taskInprogress._id,
               {
-                spent:
-                  taskInprogress.spent === ""
-                    ? newSpent
-                    : addTimeStrings(taskInprogress.spent, newSpent),
+                // spent: newSpent,
+                spent: addTimeStrings(taskInprogress.spent, newSpent),
+                // spent:
+                //   taskInprogress.spent === ""
+                //     ? newSpent
+                //     : addTimeStrings(taskInprogress.spent, newSpent),
               },
               { new: true }
             );
           }
         } else if (trainee.dtr[todayIndex].afternoon.in === "") {
-          // trainee.dtr[todayIndex].afternoon.in = "01:00 PM";
-          trainee.dtr[todayIndex].afternoon.in = format.time;
+          trainee.dtr[todayIndex].afternoon.in = "01:00 PM";
+          // trainee.dtr[todayIndex].afternoon.in = format.time;
           if (recording !== -1) {
-            // trainee.timesheet[recording].afternoon.start = "01:00 PM";
-            trainee.timesheet[recording].afternoon.start = format.time;
+            trainee.timesheet[recording].afternoon.start = "01:00 PM";
+            // trainee.timesheet[recording].afternoon.start = format.time;
           }
         } else if (trainee.dtr[todayIndex].afternoon.out === "") {
           const hours = handleTraineeHourSpent(trainee, "afternoon");
@@ -153,8 +155,8 @@ export const timeInOutDTR = asyncHandler(
               day: "afternoon",
             });
 
-            const totalHours = spent.totalSpent.hours;
-            const totalMinutes = spent.totalSpent.minutes;
+            const totalHours = spent.afternoon.spent.hours;
+            const totalMinutes = spent.afternoon.spent.minutes;
             // const totalHours = parseInt(existingHours) + spent.totalSpent.hours;
             // const totalMinutes =
             //   parseInt(existingMinutes) + spent.totalSpent.minutes;
@@ -163,10 +165,12 @@ export const timeInOutDTR = asyncHandler(
             await Task.findByIdAndUpdate(
               taskInprogress._id,
               {
-                spent:
-                  taskInprogress.spent === ""
-                    ? newSpent
-                    : addTimeStrings(taskInprogress.spent, newSpent),
+                // spent: newSpent,
+                spent: addTimeStrings(taskInprogress.spent, newSpent),
+                // spent:
+                //   taskInprogress.spent === ""
+                //     ? newSpent
+                //     : addTimeStrings(taskInprogress.spent, newSpent),
               },
               { new: true }
             );
@@ -178,8 +182,8 @@ export const timeInOutDTR = asyncHandler(
           date: format.date,
           status: "recording",
           morning: {
-            // in: "08:00 AM",
-            in: format.time,
+            in: "08:00 AM",
+            // in: format.time,
             out: "",
           },
           afternoon: {
@@ -195,7 +199,8 @@ export const timeInOutDTR = asyncHandler(
             status: "recording",
             date: format.date,
             morning: {
-              start: format.time,
+              // start: format.time,
+              start: "8:00 AM",
               end: "",
             },
             afternoon: {
