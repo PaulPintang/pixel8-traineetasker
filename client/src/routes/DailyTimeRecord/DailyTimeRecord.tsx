@@ -285,7 +285,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
             onChange={(e) => setQuery(e.currentTarget.value)}
           />
           <Group>
-            <Text c="dimmed" fz="xs">
+            <Text c="dimmed" fz="xs" className="hidden lg:flex md:flex">
               Page {page} of {items.length}
             </Text>
             <Pagination
@@ -294,7 +294,6 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
               onChange={setPage}
               size="xs"
               color="teal"
-              withEdges
             />
           </Group>
         </Flex>

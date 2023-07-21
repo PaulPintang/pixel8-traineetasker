@@ -302,7 +302,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   // }, inprogress?.[0]);
 
   return (
-    <div>
+    <div className="pb-5 lg:pb-0 md:pb-0">
       <Flex justify="space-between" pb={6} align="center">
         <TimeSheetsLabels />
         <Group className="" fz={12}>
@@ -449,7 +449,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
             onChange={(e) => setQuery(e.currentTarget.value)}
           />
           <Group>
-            <Text c="dimmed" fz="xs">
+            <Text c="dimmed" fz="xs" className="hidden lg:flex md:flex">
               Page {page} of {items.length}
             </Text>
             <Pagination
@@ -458,7 +458,6 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
               onChange={setPage}
               size="xs"
               color="teal"
-              withEdges
             />
           </Group>
         </Flex>

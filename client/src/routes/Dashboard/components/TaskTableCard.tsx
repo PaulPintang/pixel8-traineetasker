@@ -12,7 +12,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconInfoCircle, IconX } from "@tabler/icons-react";
-import { chunk } from "lodash";
+import { chunk, filter } from "lodash";
 import { useEffect, useState } from "react";
 import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
 import { useAppSelector } from "../../../app/hooks";
@@ -31,6 +31,7 @@ const TaskTableCard = () => {
   const [query, setQuery] = useState("");
   const [viewId, setViewId] = useState<string | null>(null);
   const [filterBy, setFilterBy] = useState<string | null>("");
+  const [gettingData, setGettingData] = useState(false);
 
   const { data: trainee } = useGetTraineeProfileQuery();
 
@@ -40,7 +41,7 @@ const TaskTableCard = () => {
     morning: sheet?.morning!,
     afternoon: sheet?.afternoon,
   };
-  const spent = calculateSpentTime(time);
+  const { spent, totalSpentString } = calculateSpentTime(time);
 
   const alltask = tasks?.filter((search) =>
     search.taskname?.toLowerCase().includes(query.toLowerCase())
@@ -57,7 +58,9 @@ const TaskTableCard = () => {
   const items = chunk(data, 5);
 
   useEffect(() => {
-    filterBy && refetch();
+    if (filterBy) {
+      refetch().then(() => setGettingData(false));
+    }
   }, [filterBy]);
 
   const rows = items[page - 1]?.map((task) => {
@@ -79,7 +82,7 @@ const TaskTableCard = () => {
               task.spent
             ) : (
               <span>
-                {spent.totalSpent.hours === 1
+                {/* {spent.totalSpent.hours === 1
                   ? spent.totalSpent.hours + "hr"
                   : spent.totalSpent.hours > 1
                   ? spent.totalSpent.hours + "hrs"
@@ -88,7 +91,8 @@ const TaskTableCard = () => {
                   ? spent.totalSpent.minutes + "min"
                   : spent.totalSpent.minutes > 1
                   ? spent.totalSpent.minutes + "mins"
-                  : spent.totalSpent.minutes === 0 && ""}
+                  : spent.totalSpent.minutes === 0 && ""} */}
+                {totalSpentString}
               </span>
             )}
           </Text>
@@ -147,8 +151,9 @@ const TaskTableCard = () => {
   return (
     <>
       {/* <Card className="bg-opacity-60 rounded-md shadow-md h-full"> */}
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-365px)]">
-        <div className="h-[90%]">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-100px)] lg:h-[calc(100vh-365px)] md:h-[calc(100vh-365px)]">
+        <div className="h-[95%] lg:h-[90%] md:h-[90%]">
+          {/* <div className="h-[90%]"> */}
           <table className="border-collapse border-none w-full">
             <thead>
               <tr>
@@ -185,10 +190,8 @@ const TaskTableCard = () => {
                 </th>
               </tr>
             </thead>
-            {isLoading || isFetching ? (
-              <>
-                <GettingData />
-              </>
+            {gettingData && filterBy ? (
+              <GettingData />
             ) : data?.length === 0 ? (
               <>
                 <EmptyState
@@ -203,9 +206,10 @@ const TaskTableCard = () => {
           </table>
         </div>
 
-        <Flex justify="space-between">
+        <Flex justify="space-between" className="overflow-hidden">
           <Group align="center" spacing={10}>
             <TextInput
+              className="hidden lg:flex md:flex"
               rightSection={
                 query ? (
                   <IconX
@@ -225,7 +229,10 @@ const TaskTableCard = () => {
             <Select
               size="xs"
               value={filterBy}
-              onChange={setFilterBy}
+              onChange={(val) => {
+                setGettingData(true);
+                setFilterBy(val);
+              }}
               w={150}
               placeholder="Filter"
               data={[
@@ -239,7 +246,7 @@ const TaskTableCard = () => {
             />
           </Group>
           <Group>
-            <Group spacing={3}>
+            <Group spacing={3} className="hidden">
               <Text fz="xs" className="uppercase font-semibold text-gray-700">
                 Total:
               </Text>
@@ -253,7 +260,6 @@ const TaskTableCard = () => {
               onChange={setPage}
               size="xs"
               color="cyan"
-              withEdges
             />
           </Group>
         </Flex>

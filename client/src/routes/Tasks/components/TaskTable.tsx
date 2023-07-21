@@ -103,7 +103,7 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
         morning: sheet?.morning!,
         afternoon: sheet?.afternoon,
       };
-      const spent = calculateSpentTime(time);
+      const { spent, totalSpentString } = calculateSpentTime(time);
       return (
         <tr key={task._id}>
           <td className=" md:table-cell lg:table-cell pl-3 pt-2">
@@ -127,7 +127,7 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
                 <span>
                   {task.status === "inprogress" && task.spent === "" ? (
                     <span>
-                      {spent.totalSpent.hours === 1
+                      {/* {spent.totalSpent.hours === 1
                         ? spent.totalSpent.hours + "hr"
                         : spent.totalSpent.hours > 1
                         ? spent.totalSpent.hours + "hrs"
@@ -136,7 +136,8 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
                         ? spent.totalSpent.minutes + "min"
                         : spent.totalSpent.minutes > 1
                         ? spent.totalSpent.minutes + "mins"
-                        : spent.totalSpent.minutes === 0 && ""}
+                        : spent.totalSpent.minutes === 0 && ""} */}
+                      {totalSpentString}
                     </span>
                   ) : (
                     task.spent

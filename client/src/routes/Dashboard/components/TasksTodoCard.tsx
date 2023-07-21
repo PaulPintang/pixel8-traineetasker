@@ -71,40 +71,45 @@ const TasksTodoCard = () => {
                   </Button>
                 </Flex>
 
-                <ScrollArea.Autosize mah={220} scrollbarSize={8}>
-                  <div className="space-y-3 ">
-                    {currentTask?.todos?.map((todo, index) => (
-                      <div
-                        key={index}
-                        className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative"
-                      >
-                        <Text c="dark" fz="xs" className="w-[80%]" py={4}>
-                          <span
-                            className={todo.isDone ? "line-through italic" : ""}
-                          >
-                            {todo.todo}
-                          </span>
-                        </Text>
-                        <div className="absolute top-2 right-3">
-                          <Group spacing={6}>
-                            <Checkbox
-                              checked={todo.isDone}
-                              size="xs"
-                              color="cyan"
-                              onChange={() => isTodoDone(index)}
-                            />
-                            <ActionIcon
-                              color="red"
-                              variant="light"
-                              radius="xl"
-                              onClick={() => removeTodo(index)}
+                <ScrollArea.Autosize mah={175} scrollbarSize={8}>
+                  <div className="space-y-3">
+                    {currentTask?.todos
+                      ?.slice()
+                      .reverse()
+                      .map((todo, index) => (
+                        <div
+                          key={index}
+                          className="bg-slate-50 opacity-70 px-3 py-2 rounded-md relative"
+                        >
+                          <Text c="dark" fz="xs" className="w-[80%]" py={4}>
+                            <span
+                              className={
+                                todo.isDone ? "line-through italic" : ""
+                              }
                             >
-                              <IconX size={15} />
-                            </ActionIcon>
-                          </Group>
+                              {todo.todo}
+                            </span>
+                          </Text>
+                          <div className="absolute top-2 right-3">
+                            <Group spacing={6}>
+                              <Checkbox
+                                checked={todo.isDone}
+                                size="xs"
+                                color="cyan"
+                                onChange={() => isTodoDone(index)}
+                              />
+                              <ActionIcon
+                                color="red"
+                                variant="light"
+                                radius="xl"
+                                onClick={() => removeTodo(index)}
+                              >
+                                <IconX size={15} />
+                              </ActionIcon>
+                            </Group>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </ScrollArea.Autosize>
               </>
