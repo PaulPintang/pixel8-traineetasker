@@ -172,8 +172,8 @@ export const updateTaskStatus = asyncHandler(
           status: "recording",
           date: format.date,
           morning: {
-            // start: time === "morning" ? format.time : "",
-            start: "08:00 AM",
+            start: time === "morning" ? format.time : "",
+            // start: "08:00 AM",
             end: "",
           },
           afternoon: {

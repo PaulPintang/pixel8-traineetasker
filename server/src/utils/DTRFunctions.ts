@@ -20,11 +20,11 @@ export const handleTaskSpent = ({
   const format = formatDateTime();
 
   if (day === "morning") {
-    trainee.timesheet[recording].morning.end = "12:00 PM";
-    // trainee.timesheet[recording].morning.end = format.time;
+    // trainee.timesheet[recording].morning.end = "12:00 PM";
+    trainee.timesheet[recording].morning.end = format.time;
   } else {
-    trainee.timesheet[recording].afternoon.end = "05:00 PM";
-    // trainee.timesheet[recording].afternoon.end = format.time;
+    // trainee.timesheet[recording].afternoon.end = "05:00 PM";
+    trainee.timesheet[recording].afternoon.end = format.time;
     trainee.timesheet[recording].status = "recorded";
   }
   // Extract existing hours and minutes from the existing spent time in the database
@@ -57,11 +57,11 @@ export const handleTraineeHourSpent = (
   const index = trainee.dtr.findIndex((record) => record.date === format.date);
 
   if (day === "morning") {
-    trainee.dtr[index].morning.out = "12:00 PM";
-    // trainee.dtr[index].morning.out = format.time;
+    // trainee.dtr[index].morning.out = "12:00 PM";
+    trainee.dtr[index].morning.out = format.time;
   } else {
-    // trainee.dtr[index].afternoon.out = format.time;
-    trainee.dtr[index].afternoon.out = "05:00 PM";
+    trainee.dtr[index].afternoon.out = format.time;
+    // trainee.dtr[index].afternoon.out = "05:00 PM";
     trainee.dtr[index].status = "recorded";
   }
   const startHour = trainee.dtr[index].morning.in.split(":")[0];

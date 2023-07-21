@@ -23,6 +23,7 @@ export const allTrainee = asyncHandler(
           return {
             name: acc.name,
             picture: acc.picture,
+            hours: { pending: acc.hours.pending },
           };
         })
       );

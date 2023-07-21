@@ -15,7 +15,7 @@ export const getAllAccount = asyncHandler(
       const roles = ["QA Personnel", "Task manager", "supervisor"];
       const accounts = await Account.find({ role: { $in: roles } });
       res.json(accounts);
-    } else {
+    } else if (res.locals.user.role === "trainee") {
       const user = await Account.findOne({ email: res.locals.user.email });
       const accounts = await Account.find({
         course: user.course,
@@ -29,6 +29,13 @@ export const getAllAccount = asyncHandler(
           };
         })
       );
+    } else {
+      const user = await Account.findOne({ email: res.locals.user.email });
+      const accounts = await Account.find({
+        course: user.course,
+        role: { $nin: ["trainee", "supervisor", "admin"] },
+      });
+      res.json(accounts);
     }
     // if (res.locals.user.role === "admin") {
     //   const roles = ["QA Personnel", "Task manager", "supervisor"];
