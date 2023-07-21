@@ -3,7 +3,7 @@ import { IconUsers } from "@tabler/icons-react";
 import { useAppSelector } from "../../../app/hooks";
 import { lazy } from "react";
 
-import AccountsDropdown from "./AccountsDropdown";
+import ModalManageAccounts from "./ModalManageAccounts";
 const AccordionDropdown = lazy(() => import("./AccordionDropdown"));
 
 const MenuManageAccounts = () => {
@@ -24,7 +24,7 @@ const MenuManageAccounts = () => {
           </Menu.Dropdown>
         </Menu>
       ) : (
-        <AccountsDropdown />
+        <ModalManageAccounts />
       )}
     </div>
   );

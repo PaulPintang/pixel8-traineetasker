@@ -123,7 +123,6 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                         )
                       : null;
 
-                  console.log(latest);
                   return (
                     <Menu.Item p={0} className="bg-white hover:bg-white">
                       <Flex

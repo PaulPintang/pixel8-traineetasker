@@ -81,6 +81,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
                   : "red";
               return (
                 <List
+                  key={index}
                   pt={10}
                   spacing="xs"
                   size="sm"

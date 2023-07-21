@@ -10,13 +10,17 @@ import {
   Badge,
   Menu,
   Stack,
+  Highlight,
+  TextInput,
 } from "@mantine/core";
 import {
   IconDots,
   IconEdit,
   IconInfoCircle,
+  IconSearch,
   IconTrash,
   IconUser,
+  IconX,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
@@ -59,6 +63,7 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [task, setTask] = useState<ITask>({});
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     if (filterBy) {
@@ -66,7 +71,11 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
     }
   }, [filterBy]);
 
-  const data = tasks?.filter((task) =>
+  const alltask = tasks?.filter((search) =>
+    search.taskname?.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const data = alltask?.filter((task) =>
     filterBy
       ? task.status === filterBy
       : trainee
@@ -106,7 +115,11 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
             </Text>
           </td>
           <td className="hidden md:table-cell lg:table-cell  pt-2">
-            <Text>{task.taskname}</Text>
+            <Text>
+              <Highlight highlightColor="cyan" highlight={query}>
+                {task.taskname!}
+              </Highlight>
+            </Text>
           </td>
           <td className="hidden md:table-cell lg:table-cell  pt-2">
             <Text>
@@ -306,7 +319,7 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
 
   return (
     <>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-190px)] mt-4">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-170px)] mt-4">
         <div className="h-[94%] overflow-">
           <table className="border-collapse border-none w-full">
             <thead>
@@ -363,7 +376,13 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
             ) : (
               <>
                 {data?.length === 0 ? (
-                  <EmptyState text={`There are no ${filterBy!} tasks`} />
+                  <EmptyState
+                    text={
+                      query === ""
+                        ? `There are no ${filterBy!} tasks`
+                        : "Task not found"
+                    }
+                  />
                 ) : (
                   <tbody className="text-sm text-gray-600">{rows}</tbody>
                 )}
@@ -373,7 +392,24 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
         </div>
 
         <Flex justify="space-between">
-          <Group align="center">
+          <Group align="center" spacing={10}>
+            <TextInput
+              rightSection={
+                query ? (
+                  <IconX
+                    onClick={() => setQuery("")}
+                    size={14}
+                    className="hover:cursor-pointer text-gray-500 hover:text-gray-800 transition-all"
+                  />
+                ) : (
+                  <IconSearch size={14} className="text-gray-500" />
+                )
+              }
+              size="xs"
+              placeholder="Search"
+              value={query}
+              onChange={(e) => setQuery(e.currentTarget.value)}
+            />
             <Select
               size="xs"
               value={filterBy}
@@ -392,25 +428,25 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
                 { value: "completed", label: "Completed" },
               ]}
             />
-            <Flex>
-              <Group spacing={3}>
-                <Text fz="xs" className="uppercase font-semibold text-gray-700">
-                  Total:
-                </Text>
-                <Text fz="xs">
-                  {data?.length} task{data?.length! >= 2 && "s"}
-                </Text>
-              </Group>
-            </Flex>
           </Group>
-          <Pagination
-            total={items.length}
-            value={page}
-            onChange={setPage}
-            size="xs"
-            color="cyan"
-            withEdges
-          />
+          <Group>
+            <Group spacing={3}>
+              <Text fz="xs" className="uppercase font-semibold text-gray-700">
+                Total:
+              </Text>
+              <Text fz="xs">
+                {data?.length} task{data?.length! >= 2 && "s"}
+              </Text>
+            </Group>
+            <Pagination
+              total={items.length}
+              value={page}
+              onChange={setPage}
+              size="xs"
+              color="cyan"
+              withEdges
+            />
+          </Group>
         </Flex>
       </Card>
       <AssignMemberModal

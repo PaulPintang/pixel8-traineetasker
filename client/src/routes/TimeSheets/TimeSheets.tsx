@@ -11,11 +11,14 @@ import {
   Box,
   Select,
   Button,
+  Badge,
+  TextInput,
+  Highlight,
 } from "@mantine/core";
 import { chunk } from "lodash";
 import { useEffect, useState } from "react";
 import { TimeSheetsLabels } from "../../components/ColorLabels";
-import { IconClock, IconDots } from "@tabler/icons-react";
+import { IconClock, IconDots, IconX } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 import {
   useGetAllTraineeQuery,
@@ -28,6 +31,7 @@ import { ITrainee } from "../../interfaces/user.interface";
 import { useAppSelector } from "../../app/hooks";
 import { useDocumentTitle } from "@mantine/hooks";
 import EmptyState from "../../components/EmptyState";
+import { IconSearch } from "@tabler/icons-react";
 
 // ? if trainee time out in dtr, task hour will automatically stop if time is the trainee out time.
 // ? (ex. 12:00 PM and 5:00 PM, dtr time out and stop the timesheet)
@@ -40,6 +44,7 @@ interface PropsOnProfile {
 const TimeSheets = ({ profile }: PropsOnProfile) => {
   const { user } = useAppSelector((state) => state.auth);
   const [page, setPage] = useState(1);
+  const [query, setQuery] = useState("");
   const [opened, { close, open }] = useDisclosure(false);
   const { data: tasks } = useGetAllTasksQuery();
   const date = new Date();
@@ -52,10 +57,13 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   );
   const profileInfo = trainees?.find((trainee) => trainee._id === profile?._id);
 
-  const items = chunk(
-    user?.role === "trainee" ? trainee?.timesheet : profileInfo?.timesheet,
-    10
+  const data =
+    user?.role === "trainee" ? trainee?.timesheet : profileInfo?.timesheet;
+  const allTimeSheets = data?.filter((search) =>
+    search.date?.toLowerCase().includes(query.toLowerCase())
   );
+
+  const items = chunk(allTimeSheets, 10);
 
   useDocumentTitle("Timesheet");
   const rows = items[page - 1]
@@ -76,7 +84,9 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
         <tr key={index}>
           <td className="md:table-cell lg:table-cell pl-3">
             <Text>
-              {format.date === date.toDateString() ? "Today" : format.date}
+              <Highlight highlightColor="cyan" highlight={query}>
+                {format.date === date.toDateString() ? "Today" : format.date}
+              </Highlight>
             </Text>
           </td>
           <td className="md:table-cell lg:table-cell">
@@ -212,21 +222,25 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
       );
     });
 
-  const inprogress = tasks?.filter((task) => task.status === "inprogress");
-  const oldtask = inprogress?.reduce((oldest, current) => {
-    if (current.timeline?.startedAt! < oldest?.timeline?.startedAt!) {
-      return current;
-    }
-    return oldest;
-  }, inprogress?.[0]);
+  const inprogress = tasks?.find((task) =>
+    task.status === "inprogress" && user?.role === "trainee"
+      ? task.assign === trainee?.name
+      : task.assign === profile?.name
+  );
+  // const oldtask = inprogress?.reduce((oldest, current) => {
+  //   if (current.timeline?.startedAt! < oldest?.timeline?.startedAt!) {
+  //     return current;
+  //   }
+  //   return oldest;
+  // }, inprogress?.[0]);
 
   return (
-    <>
+    <div>
       <Flex justify="space-between" pb={6} align="center">
         <TimeSheetsLabels />
         <Group className="" fz={12}>
           <Group spacing={8} c="dark">
-            {inprogress?.length !== 0 && (
+            {inprogress && (
               <>
                 {/* hide if sheet not started and inprogress task is more than one */}
                 <Text fw="bold">Current task:</Text>
@@ -243,29 +257,42 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
                       onMouseEnter={open}
                       onMouseLeave={close}
                     >
-                      {oldtask?.ticketno}
+                      {inprogress?.ticketno}
                     </Text>
                   </Popover.Target>
                   <Popover.Dropdown sx={{ pointerEvents: "none" }}>
                     <Box component="div">
                       <Text fw="bold" c="dark" fz="sm" pb={5}>
-                        {oldtask?.taskname}
+                        {inprogress?.taskname}
                       </Text>
+                      {inprogress.timeline?.revisions.length !== 0 && (
+                        <Group className="text-gray-500 py-1" spacing={10}>
+                          <Text size="xs">Revisions</Text>
+                          <Badge
+                            size="sm"
+                            color="red"
+                            variant="light"
+                            className="lowercase"
+                          >
+                            x{inprogress.timeline?.revisions.length}
+                          </Badge>
+                        </Group>
+                      )}
                       <Group className="text-gray-500" fz="xs" spacing={8}>
                         <Text c="dark">Added:</Text>
                         <Text>
-                          {formatDateTime(oldtask?.createdAt!).date +
+                          {formatDateTime(inprogress?.createdAt!).date +
                             " at " +
-                            formatDateTime(oldtask?.createdAt!).time}
+                            formatDateTime(inprogress?.createdAt!).time}
                         </Text>
                       </Group>
                       <Group className="text-gray-500" fz="xs" spacing={8}>
                         <Text c="dark">Started:</Text>
-                        <Text>{oldtask?.timeline?.startedAt}</Text>
+                        <Text>{inprogress?.timeline?.startedAt}</Text>
                       </Group>
                       <Group className="text-gray-500" fz="xs" spacing={8}>
                         <Text c="dark">Recorded spent:</Text>
-                        <Text>{oldtask?.spent}</Text>
+                        <Text>{inprogress?.spent}</Text>
                       </Group>
                       {/* <Group className="text-gray-500" fz="xs" spacing={8}>
                         <Text c="dark">Deliverable:</Text>
@@ -281,8 +308,8 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
           </Group>
         </Group>
       </Flex>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-160px)]">
-        <div className="h-[96%]">
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-163px)]">
+        <div className="h-[95%]">
           <table className="border-collapse border-none w-full">
             <thead>
               <tr>
@@ -326,10 +353,9 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
               </tr>
             </thead>
 
-            {trainee?.timesheet?.length === 0 ||
-            profileInfo?.timesheet?.length === 0 ? (
+            {allTimeSheets?.length === 0 ? (
               <>
-                <EmptyState text="No records found" />;
+                <EmptyState text="No records found" />
               </>
             ) : (
               <tbody className="text-sm text-gray-600">{rows}</tbody>
@@ -338,20 +364,39 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
         </div>
 
         <Flex justify="space-between">
-          <Text c="dimmed" fz="xs">
-            Page {page} of {items.length}
-          </Text>
-          <Pagination
-            total={items.length}
-            value={page}
-            onChange={setPage}
+          <TextInput
+            rightSection={
+              query ? (
+                <IconX
+                  onClick={() => setQuery("")}
+                  size={14}
+                  className="hover:cursor-pointer text-gray-500 hover:text-gray-800 transition-all"
+                />
+              ) : (
+                <IconSearch size={14} className="text-gray-500" />
+              )
+            }
             size="xs"
-            color="teal"
-            withEdges
+            placeholder="Search date, ex. May 9"
+            value={query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
           />
+          <Group>
+            <Text c="dimmed" fz="xs">
+              Page {page} of {items.length}
+            </Text>
+            <Pagination
+              total={items.length}
+              value={page}
+              onChange={setPage}
+              size="xs"
+              color="teal"
+              withEdges
+            />
+          </Group>
         </Flex>
       </Card>
-    </>
+    </div>
   );
 };
 

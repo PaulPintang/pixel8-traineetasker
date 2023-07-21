@@ -11,8 +11,10 @@ import {
   Checkbox,
   Stack,
   Select,
+  TextInput,
+  Highlight,
 } from "@mantine/core";
-import { IconDots, IconUser } from "@tabler/icons-react";
+import { IconDots, IconSearch, IconUser, IconX } from "@tabler/icons-react";
 import { chunk } from "lodash";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -35,6 +37,7 @@ const traineesTableCard = () => {
   const [assignTo, setAssignTo] = useState("");
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
+  const [name, setName] = useState("");
 
   useEffect(() => {
     if (showNoTask || showWithQa) {
@@ -42,7 +45,11 @@ const traineesTableCard = () => {
     }
   }, [showNoTask, showWithQa]);
 
-  const data = trainees?.filter((trainee) =>
+  const allTrainees = trainees?.filter((search) =>
+    search.name?.toLowerCase().includes(name.toLowerCase())
+  );
+
+  const data = allTrainees?.filter((trainee) =>
     showNoTask
       ? !tasks?.some(
           (task) => task.assign === trainee.name && task.status === "inprogress"
@@ -75,7 +82,11 @@ const traineesTableCard = () => {
               className="hidden md:flex lg:flex"
             />
             <div className="-space-y-[2px]">
-              <Text className="font-semibold">{trainee.name}</Text>
+              <Text className="font-semibold">
+                <Highlight highlightColor="cyan" highlight={name}>
+                  {trainee.name!}
+                </Highlight>
+              </Text>
               <Text c="dimmed">{trainee.email}</Text>
             </div>
           </Group>
@@ -166,7 +177,7 @@ const traineesTableCard = () => {
     <>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-100px)] w-full">
         {/* <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-365px)] w-full"> */}
-        <div className="h-[97%]">
+        <div className="h-[96%]">
           {/* <div className="h-[93%]"> */}
           <table className="border-collapse border-none w-full">
             <thead>
@@ -222,7 +233,9 @@ const traineesTableCard = () => {
                       ? "No members with no task!"
                       : showWithQa
                       ? "No members with forQA task"
-                      : "No members yet"
+                      : name === ""
+                      ? "No members yet"
+                      : name && "Member not found"
                   }
                 />
                 ;
@@ -235,14 +248,24 @@ const traineesTableCard = () => {
 
         <Flex justify="space-between" className="relative">
           <Group align="center">
-            <Group spacing={3}>
-              <Text fz="xs" className="uppercase font-semibold text-gray-700">
-                Total:
-              </Text>
-              <Text fz="xs">
-                {data?.length} trainee{data?.length! >= 2 && "s"}
-              </Text>
-            </Group>
+            <TextInput
+              size="xs"
+              placeholder="Search"
+              value={name}
+              onChange={(e) => setName(e.currentTarget.value)}
+              rightSection={
+                name ? (
+                  <IconX
+                    onClick={() => setName("")}
+                    size={14}
+                    className="hover:cursor-pointer text-gray-500 hover:text-gray-800 transition-all"
+                  />
+                ) : (
+                  <IconSearch size={14} className="text-gray-500" />
+                )
+              }
+            />
+
             <Checkbox
               checked={showNoTask}
               onChange={(event) => setShowNoTask(event.currentTarget.checked)}
@@ -258,14 +281,24 @@ const traineesTableCard = () => {
               label="With for-QA task"
             />
           </Group>
-          <Pagination
-            total={items.length}
-            value={page}
-            onChange={setPage}
-            size="xs"
-            color="cyan"
-            withEdges
-          />
+          <Group>
+            <Group spacing={3}>
+              <Text fz="xs" className="uppercase font-semibold text-gray-700">
+                Total:
+              </Text>
+              <Text fz="xs">
+                {data?.length} trainee{data?.length! >= 2 && "s"}
+              </Text>
+            </Group>
+            <Pagination
+              total={items.length}
+              value={page}
+              onChange={setPage}
+              size="xs"
+              color="cyan"
+              withEdges
+            />
+          </Group>
         </Flex>
       </Card>
       <AssignTaskModal assignTo={assignTo} assign={assign} toggle={toggle} />

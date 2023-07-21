@@ -40,6 +40,7 @@ export const taskApiSlice = apiSlice.injectEndpoints({
             });
           });
           socket.on("taskStatus", (data: ITask) => {
+            console.log("yahh", data);
             updateCachedData((draft) => {
               const index = draft.findIndex((task) => task._id === data._id);
               if (index !== -1) draft[index] = data;
@@ -108,14 +109,11 @@ export const taskApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted({ rooms }, { dispatch, queryFulfilled }) {
         try {
           const { data: response } = await queryFulfilled;
-
-          console.log("THE RESPONSE", response);
           socket.emit("status", {
             task: response.updatedTask,
             rooms,
           });
           if (response.updatedProfile) {
-            console.log("updatedProfile", response.updatedProfile);
             socket.emit("profile", {
               trainee: response.updatedProfile,
               rooms,

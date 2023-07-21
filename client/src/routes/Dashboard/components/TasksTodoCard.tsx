@@ -48,7 +48,8 @@ const TasksTodoCard = () => {
 
   return (
     <>
-      <Card className="h-full rounded-md shadow-md ">
+      <Card className="rounded-md shadow-md h-[calc(100vh-365px)]">
+        {/* <Card className="h-full rounded-md shadow-md "> */}
         {currentTask ? (
           <>
             {currentTask?.todos?.length ?? 0 !== 0 ? (

@@ -14,10 +14,15 @@ const Comments = ({ task, user, assign }: Props) => {
   const { data: accounts } = useGetAllAccountQuery();
   return (
     <section className="space-y-3">
-      {task?.comments?.map((item) => {
+      {task?.comments?.map((item, index) => {
         const commentBy = accounts?.find((acc) => acc.name === item.by);
         return (
-          <Paper component="div" className="bg-slate-50 space-y-2" p={11}>
+          <Paper
+            key={index}
+            component="div"
+            className="bg-slate-50 space-y-2"
+            p={11}
+          >
             <Text fz="xs" c="dark">
               {item.msg}
             </Text>

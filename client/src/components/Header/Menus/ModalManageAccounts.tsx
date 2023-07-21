@@ -34,7 +34,7 @@ import {
 } from "../../../features/api/account/accountApiSlice";
 import { useAppSelector } from "../../../app/hooks";
 
-const AccountsDropdown = () => {
+const ModalManageAccounts = () => {
   const { user } = useAppSelector((state) => state.auth);
   const [collapse, collapseView] = useDisclosure(false);
   const [modal, modalView] = useDisclosure(false);
@@ -103,10 +103,10 @@ const AccountsDropdown = () => {
                 Members
               </Text>
               {members?.map((account) => (
-                <Flex justify="space-between" align="center">
+                <Flex key={account._id} justify="space-between" align="center">
                   <Group spacing={10}>
                     <Image
-                      src={avatar}
+                      src={account.picture}
                       width={35}
                       radius="xl"
                       imageProps={{ referrerPolicy: "no-referrer" }}
@@ -350,4 +350,4 @@ const AccountsDropdown = () => {
   );
 };
 
-export default AccountsDropdown;
+export default ModalManageAccounts;

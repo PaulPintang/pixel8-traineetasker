@@ -82,7 +82,7 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                   ) : (
                     <Text>On timesheet: </Text>
                   )}
-                  <Text fw="bold">
+                  <Text fw="bold" className="animate-searching">
                     {task.timeline?.revisions.length !== 0 ? (
                       <span>+ </span>
                     ) : (

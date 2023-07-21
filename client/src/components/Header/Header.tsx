@@ -8,6 +8,7 @@ import {
   Text,
   Menu,
   Badge,
+  ScrollArea,
 } from "@mantine/core";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -24,16 +25,18 @@ import { useState } from "react";
 import { useUpdateCourseViewMutation } from "../../features/api/account/accountApiSlice";
 import MenuSelectCourse from "./Menus/MenuSelectCourse";
 import MenuManageAccounts from "./Menus/MenuManageAccounts";
+import { useGetAllTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
 
 const Header = () => {
+  const { user } = useAppSelector((state) => state.auth);
   const location = useLocation();
   const navigate = useNavigate();
   const { pathname } = location;
   const [loginUser, loginState] = useLoginMutation();
   const [logoutUser, logoutState] = useLogoutUserMutation();
+  const { data: members } = useGetAllTraineeQuery(user?.course!);
 
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.auth);
 
   const GoogleUseAuth = useGoogleLogin({
     onSuccess: (res) => {
@@ -64,67 +67,6 @@ const Header = () => {
         navigate("/");
       });
   };
-
-  // function addTimeStrings(time1, time2) {
-  //   const timeToMinutes = (time) => {
-  //     const regex = /^((\d+)day(s)?)? ?((\d+)hr(s)?)? ?((\d+)min(s)?)?$/;
-  //     const match = time.match(regex);
-
-  //     if (match) {
-  //       const days = match[2] ? parseInt(match[2]) : 0;
-  //       const hrs = match[5] ? parseInt(match[5]) : 0;
-  //       const mins = match[8] ? parseInt(match[8]) : 0;
-  //       return days * 24 * 60 + hrs * 60 + mins;
-  //     } else {
-  //       throw new Error(
-  //         `Invalid time format: ${time}. Expected format: "XXdays XXhrs XXmins".`
-  //       );
-  //     }
-  //   };
-
-  //   const minutesToTime = (minutes) => {
-  //     const days = Math.floor(minutes / (24 * 60));
-  //     minutes %= 24 * 60;
-  //     const hrs = Math.floor(minutes / 60);
-  //     const mins = minutes % 60;
-
-  //     let timeString = "";
-  //     if (days > 0) {
-  //       timeString += `${days}day${days > 1 ? "s" : ""}`;
-  //     }
-  //     if (hrs > 0) {
-  //       if (timeString) {
-  //         timeString += " ";
-  //       }
-  //       timeString += `${hrs}hr${hrs > 1 ? "s" : ""}`;
-  //     }
-  //     if (mins > 0) {
-  //       if (timeString) {
-  //         timeString += " ";
-  //       }
-  //       timeString += `${mins}min${mins > 1 ? "s" : ""}`;
-  //     }
-
-  //     return timeString;
-  //   };
-
-  //   try {
-  //     const minutes1 = timeToMinutes(time1);
-  //     const minutes2 = timeToMinutes(time2);
-  //     const totalMinutes = minutes1 + minutes2;
-
-  //     console.log(minutesToTime(totalMinutes));
-  //   } catch (error) {
-  //     console.error(error.message);
-  //     return ""; // Return an empty string or appropriate value if there's an error.
-  //   }
-  // }
-
-  // Example usage:
-  // const time1 = "20mins";
-  // const time2 = "1day20mins";
-  // const totalTime = addTimeStrings(time1, time2);
-  // console.log(totalTime);
 
   return (
     <Flex justify="space-between" align="center">
@@ -177,9 +119,56 @@ const Header = () => {
 
             <Menu.Dropdown className="">
               <Menu.Label>
-                <Text fw="bold">{user.name}</Text>
+                <Text c="dark" fz="sm">
+                  {user.name}
+                </Text>
                 <Text>{user.email}</Text>
               </Menu.Label>
+              {user.role === "trainee" && (
+                <>
+                  <Menu.Divider />
+                  <div className="px-3">
+                    <Flex justify="space-between" align="center">
+                      <Text fz="xs" c="dimmed" pb={2}>
+                        Members
+                      </Text>
+                      <Badge
+                        size="sm"
+                        color="indigo"
+                        variant="light"
+                        className="lowercase"
+                      >
+                        {members?.length!}
+                      </Badge>
+                    </Flex>
+
+                    <ScrollArea scrollbarSize={7}>
+                      <div className="max-h-[200px]">
+                        {members?.map((member) => (
+                          <Group key={member.name} spacing={10} pb={5}>
+                            <Image
+                              src={member.picture}
+                              width={30}
+                              radius="xl"
+                              imageProps={{ referrerPolicy: "no-referrer" }}
+                              className="hidden md:flex lg:flex"
+                            />
+                            <div className="-space-y-[2px]">
+                              <Text fz="xs">
+                                {member.name}{" "}
+                                {member.name === user.name && <>(You)</>}
+                              </Text>
+                              <Text c="dimmed" fz="xs">
+                                {member.hours!.pending} hours pending
+                              </Text>
+                            </div>
+                          </Group>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  </div>
+                </>
+              )}
               <Menu.Divider />
               <div onClick={handleOnLogout} className="hover:cursor-pointer">
                 <Button

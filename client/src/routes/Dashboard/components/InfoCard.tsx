@@ -280,7 +280,7 @@ const InfoCard = ({ trainee }: Props) => {
           )}
           <Tooltip.Group openDelay={300} closeDelay={100}>
             <Avatar.Group spacing="sm">
-              {accounts?.map((account) => (
+              {trainees?.slice(0, 5)?.map((account) => (
                 <Tooltip
                   key={account.picture}
                   label={account.name === user?.name ? "You" : account.name}
@@ -298,6 +298,11 @@ const InfoCard = ({ trainee }: Props) => {
                   )}
                 </Tooltip>
               ))}
+              {trainees?.length! > 5 && (
+                <Avatar radius="xl" size={27}>
+                  +{5 - trainees?.length!}
+                </Avatar>
+              )}
             </Avatar.Group>
           </Tooltip.Group>
         </Group>

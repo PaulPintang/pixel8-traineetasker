@@ -8,11 +8,13 @@ import {
   ActionIcon,
   Menu,
   Stack,
+  TextInput,
+  Highlight,
 } from "@mantine/core";
 import { chunk } from "lodash";
 import { useState } from "react";
 import { TimeSheetsLabels } from "../../components/ColorLabels";
-import { IconClock, IconDots } from "@tabler/icons-react";
+import { IconClock, IconDots, IconSearch, IconX } from "@tabler/icons-react";
 import {
   useAddTaskTimesheetMutation,
   useGetAllTraineeQuery,
@@ -38,6 +40,7 @@ interface PropsOnProfile {
 const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const { user } = useAppSelector((state) => state.auth);
   const [page, setPage] = useState(1);
+  const [query, setQuery] = useState("");
   const date = new Date();
 
   const [recordDtr, { isLoading }] = useUpdateDtrMutation();
@@ -57,30 +60,16 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
 
   const data = user?.role === "trainee" ? trainee?.dtr : profileInfo?.dtr;
 
-  const items = chunk(data, 10);
+  const allRecords = data?.filter((search) =>
+    search.date?.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const items = chunk(allRecords, 10);
   const day = checkTime();
 
   const handleTimeInOut = async () => {
     JoinRoom(user?.course!, user?.role!);
     await recordDtr({ rooms: [user?.course!] });
-
-    const todaytask = trainee?.timesheet?.some(
-      (record) => record.date === formatDateTime(date.toISOString()).date
-    );
-    const isThereInProgress = tasks?.some(
-      (task) => task.status === "inprogress"
-    );
-    if (!todaytask && isThereInProgress) {
-      const inprogress = tasks?.filter((task) => task.status === "inprogress");
-      const sheet = {
-        task: inprogress?.[0].taskname,
-        ticket: inprogress?.[0].ticketno,
-      };
-      JoinRoom(user?.course!, user?.role!);
-      await timesheet({ sheet, rooms: [user?.course!] });
-    }
-    // refetch();
-
     ToastNotify(
       ` ${day === "morning" ? "Time in" : "Time out"} at exactly ${
         formatDateTime(date.toISOString()).time
@@ -98,9 +87,11 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
       <tr key={index} className="border-none ">
         <td className=" md:table-cell lg:table-cell pl-3">
           <Text>
-            {formatDateTime(record.date!).date === date.toDateString()
-              ? "Today"
-              : formatDateTime(record.date!).date}
+            <Highlight highlightColor="cyan" highlight={query}>
+              {formatDateTime(record.date!).date === date.toDateString()
+                ? "Today"
+                : formatDateTime(record.date!).date}
+            </Highlight>
           </Text>
         </td>
         <td className="hidden md:table-cell lg:table-cell">
@@ -228,29 +219,9 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
             )}
           </>
         )}
-        {/* 
-        <>
-          <Button
-            color="yellow"
-            size="xs"
-            onClick={handleTimeInOut}
-            loading={isLoading}
-          >
-            Time in
-          </Button>
-
-          <Button
-            color="indigo"
-            size="xs"
-            onClick={handleTimeInOut}
-            loading={isLoading}
-          >
-            Time out
-          </Button>
-        </> */}
       </Flex>
       <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-160px)] ">
-        <div className="h-[96%]">
+        <div className="h-[95%]">
           <table className="border-collapse border-none w-full">
             <thead>
               <tr>
@@ -285,9 +256,9 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
               </tr>
             </thead>
 
-            {data?.length === 0 ? (
+            {allRecords?.length === 0 ? (
               <>
-                <EmptyState text="No records found" />;
+                <EmptyState text="No records found" />
               </>
             ) : (
               <tbody className="text-sm text-gray-600">{rows}</tbody>
@@ -296,17 +267,36 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
         </div>
 
         <Flex justify="space-between">
-          <Text c="dimmed" fz="xs">
-            Page {page} of {items.length}
-          </Text>
-          <Pagination
-            total={items.length}
-            value={page}
-            onChange={setPage}
+          <TextInput
+            rightSection={
+              query ? (
+                <IconX
+                  onClick={() => setQuery("")}
+                  size={14}
+                  className="hover:cursor-pointer text-gray-500 hover:text-gray-800 transition-all"
+                />
+              ) : (
+                <IconSearch size={14} className="text-gray-500" />
+              )
+            }
             size="xs"
-            color="teal"
-            withEdges
+            placeholder="Search date, ex. May 9"
+            value={query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
           />
+          <Group>
+            <Text c="dimmed" fz="xs">
+              Page {page} of {items.length}
+            </Text>
+            <Pagination
+              total={items.length}
+              value={page}
+              onChange={setPage}
+              size="xs"
+              color="teal"
+              withEdges
+            />
+          </Group>
         </Flex>
       </Card>
     </div>

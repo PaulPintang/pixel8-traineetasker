@@ -7,9 +7,11 @@ import {
   Text,
   Select,
   Image,
+  TextInput,
+  Highlight,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { IconInfoCircle, IconX } from "@tabler/icons-react";
 import { chunk } from "lodash";
 import { useEffect, useState } from "react";
 import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
@@ -19,12 +21,14 @@ import { calculateSpentTime } from "../../../utils/calculateSpentTime";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import EmptyState from "../../../components/EmptyState";
 import GettingData from "../../../components/GettingData";
+import { IconSearch } from "@tabler/icons-react";
 
 const TaskTableCard = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { data: tasks, refetch, isLoading, isFetching } = useGetAllTasksQuery();
   const [view, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
+  const [query, setQuery] = useState("");
   const [viewId, setViewId] = useState<string | null>(null);
   const [filterBy, setFilterBy] = useState<string | null>("");
 
@@ -38,7 +42,11 @@ const TaskTableCard = () => {
   };
   const spent = calculateSpentTime(time);
 
-  const data = tasks?.filter((task) =>
+  const alltask = tasks?.filter((search) =>
+    search.taskname?.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const data = alltask?.filter((task) =>
     filterBy
       ? task.status === filterBy
       : user?.role === "trainee"
@@ -56,7 +64,11 @@ const TaskTableCard = () => {
     return (
       <tr key={task._id}>
         <td className=" md:table-cell lg:table-cell pl-3">
-          <Text>{task.taskname}</Text>
+          <Text>
+            <Highlight highlightColor="cyan" highlight={query}>
+              {task.taskname!}
+            </Highlight>
+          </Text>
         </td>
         <td className="hidden md:table-cell lg:table-cell">
           <Text>{task.ticketno}</Text>
@@ -134,7 +146,8 @@ const TaskTableCard = () => {
 
   return (
     <>
-      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-375px)]">
+      {/* <Card className="bg-opacity-60 rounded-md shadow-md h-full"> */}
+      <Card className="bg-opacity-60 rounded-md shadow-md h-[calc(100vh-365px)]">
         <div className="h-[90%]">
           <table className="border-collapse border-none w-full">
             <thead>
@@ -178,7 +191,11 @@ const TaskTableCard = () => {
               </>
             ) : data?.length === 0 ? (
               <>
-                <EmptyState text={`There are no ${filterBy!} tasks`} />
+                <EmptyState
+                  text={
+                    query ? "Task not found" : `There are no ${filterBy!} tasks`
+                  }
+                />
               </>
             ) : (
               <tbody className="text-xs text-gray-600">{rows}</tbody>
@@ -187,7 +204,24 @@ const TaskTableCard = () => {
         </div>
 
         <Flex justify="space-between">
-          <Group align="center">
+          <Group align="center" spacing={10}>
+            <TextInput
+              rightSection={
+                query ? (
+                  <IconX
+                    onClick={() => setQuery("")}
+                    size={14}
+                    className="hover:cursor-pointer text-gray-500 hover:text-gray-800 transition-all"
+                  />
+                ) : (
+                  <IconSearch size={14} className="text-gray-500" />
+                )
+              }
+              size="xs"
+              placeholder="Search"
+              value={query}
+              onChange={(e) => setQuery(e.currentTarget.value)}
+            />
             <Select
               size="xs"
               value={filterBy}
@@ -203,25 +237,25 @@ const TaskTableCard = () => {
                 { value: "completed", label: "Completed" },
               ]}
             />
-            <Flex>
-              <Group spacing={3}>
-                <Text fz="xs" className="uppercase font-semibold text-gray-700">
-                  Total:
-                </Text>
-                <Text fz="xs">
-                  {data?.length} task{data?.length! >= 2 && "s"}
-                </Text>
-              </Group>
-            </Flex>
           </Group>
-          <Pagination
-            total={items.length}
-            value={page}
-            onChange={setPage}
-            size="xs"
-            color="cyan"
-            withEdges
-          />
+          <Group>
+            <Group spacing={3}>
+              <Text fz="xs" className="uppercase font-semibold text-gray-700">
+                Total:
+              </Text>
+              <Text fz="xs">
+                {data?.length} task{data?.length! >= 2 && "s"}
+              </Text>
+            </Group>
+            <Pagination
+              total={items.length}
+              value={page}
+              onChange={setPage}
+              size="xs"
+              color="cyan"
+              withEdges
+            />
+          </Group>
         </Flex>
       </Card>
       <ViewTaskModal
