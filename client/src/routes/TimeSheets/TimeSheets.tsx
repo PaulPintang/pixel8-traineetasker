@@ -78,7 +78,12 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
         morning: sheet.morning,
         afternoon: sheet.afternoon,
       };
-      const spent = calculateSpentTime(time);
+      const {
+        spent,
+        afternoonSpentString,
+        morningSpentString,
+        totalSpentString,
+      } = calculateSpentTime(time);
 
       return (
         <tr key={index}>
@@ -126,7 +131,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
               sheet.morning?.end !== "" &&
               sheet.status === "recording" ? (
                 <span>
-                  {spent.afternoon.spent.hours === 1
+                  {/* {spent.afternoon.spent.hours === 1
                     ? spent.afternoon.spent.hours + "hr"
                     : spent.afternoon.spent.hours > 1
                     ? spent.afternoon.spent.hours + "hrs"
@@ -135,7 +140,8 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
                     ? spent.afternoon.spent.minutes + "min"
                     : spent.afternoon.spent.minutes > 1
                     ? spent.afternoon.spent.minutes + "mins"
-                    : spent.afternoon.spent.minutes === 0 && ""}
+                    : spent.afternoon.spent.minutes === 0 && ""} */}
+                  {afternoonSpentString}
                 </span>
               ) : sheet.afternoon?.start !== "" &&
                 sheet.afternoon?.end !== "" &&
@@ -151,11 +157,11 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
                     : spent.morning.spent.minutes > 1
                     ? spent.morning.spent.minutes + "mins"
                     : spent.morning.spent.minutes === 0 && ""} */}
-                  {}
+                  {morningSpentString}
                 </span>
               ) : (
                 <span>
-                  {spent.totalSpent.hours === 1
+                  {/* {spent.totalSpent.hours === 1
                     ? spent.totalSpent.hours + "hr"
                     : spent.totalSpent.hours > 1
                     ? spent.totalSpent.hours + "hrs"
@@ -164,7 +170,8 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
                     ? spent.totalSpent.minutes + "min"
                     : spent.totalSpent.minutes > 1
                     ? spent.totalSpent.minutes + "mins"
-                    : spent.totalSpent.minutes === 0 && ""}
+                    : spent.totalSpent.minutes === 0 && ""} */}
+                  {totalSpentString}
                 </span>
               )}
             </Text>

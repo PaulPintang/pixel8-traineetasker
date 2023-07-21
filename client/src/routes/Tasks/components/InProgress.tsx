@@ -25,7 +25,8 @@ const InProgress = ({ toggle, setViewId }: Props) => {
     morning: sheet?.morning,
     afternoon: sheet?.afternoon,
   };
-  const spent = calculateSpentTime(time);
+  const { spent, afternoonSpentString, morningSpentString } =
+    calculateSpentTime(time);
   return (
     <div className="space-y-3">
       {inprogress?.map((task) => (
@@ -103,7 +104,7 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                       sheet.morning?.end !== "" &&
                       sheet.status === "recording" ? (
                         <span>
-                          {spent.afternoon.spent.hours === 1
+                          {/* {spent.afternoon.spent.hours === 1
                             ? spent.afternoon.spent.hours + "hr"
                             : spent.afternoon.spent.hours > 1
                             ? spent.afternoon.spent.hours + "hrs"
@@ -112,13 +113,14 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                             ? spent.afternoon.spent.minutes + "min"
                             : spent.afternoon.spent.minutes > 1
                             ? spent.afternoon.spent.minutes + "mins"
-                            : spent.afternoon.spent.minutes === 0 && ""}
+                            : spent.afternoon.spent.minutes === 0 && ""} */}
+                          {afternoonSpentString}
                         </span>
                       ) : sheet.afternoon?.start !== "" &&
                         sheet.afternoon?.end !== "" &&
                         sheet.status === "recording" ? (
                         <span>
-                          {spent.morning.spent.hours === 1
+                          {/* {spent.morning.spent.hours === 1
                             ? spent.morning.spent.hours + "hr"
                             : spent.morning.spent.hours > 1
                             ? spent.morning.spent.hours + "hrs"
@@ -127,7 +129,8 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                             ? spent.morning.spent.minutes + "min"
                             : spent.morning.spent.minutes > 1
                             ? spent.morning.spent.minutes + "mins"
-                            : spent.morning.spent.minutes === 0 && ""}
+                            : spent.morning.spent.minutes === 0 && ""} */}
+                          {morningSpentString}
                         </span>
                       ) : (
                         ""

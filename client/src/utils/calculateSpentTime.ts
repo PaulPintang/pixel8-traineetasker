@@ -87,5 +87,43 @@ export const calculateSpentTime = (time: ISheets) => {
     },
   };
 
-  return spent;
+  let afternoonSpentString = "";
+  if (spent.afternoon.spent.hours === 1) {
+    afternoonSpentString = `${spent.afternoon.spent.hours}hr`;
+  } else if (spent.afternoon.spent.hours > 1) {
+    afternoonSpentString = `${spent.afternoon.spent.hours}hrs`;
+  }
+
+  if (spent.afternoon.spent.minutes === 1) {
+    afternoonSpentString += `${spent.afternoon.spent.minutes}min`;
+  } else if (spent.afternoon.spent.minutes > 1) {
+    afternoonSpentString += `${spent.afternoon.spent.minutes}mins`;
+  }
+
+  let morningSpentString = "";
+  if (spent.morning.spent.hours === 1) {
+    morningSpentString = `${spent.morning.spent.hours}hr`;
+  } else if (spent.morning.spent.hours > 1) {
+    morningSpentString = `${spent.morning.spent.hours}hrs`;
+  }
+  if (spent.morning.spent.minutes === 1) {
+    morningSpentString += `${spent.morning.spent.minutes}min`;
+  } else if (spent.morning.spent.minutes > 1) {
+    morningSpentString += `${spent.morning.spent.minutes}mins`;
+  }
+
+  let totalSpentString = "";
+  if (spent.totalSpent.hours === 1) {
+    totalSpentString = `${spent.totalSpent.hours}hr`;
+  } else if (spent.totalSpent.hours > 1) {
+    totalSpentString = `${spent.totalSpent.hours}hrs`;
+  }
+
+  if (spent.totalSpent.minutes === 1) {
+    totalSpentString += `${spent.totalSpent.minutes}min`;
+  } else if (spent.totalSpent.minutes > 1) {
+    totalSpentString += `${spent.totalSpent.minutes}mins`;
+  }
+
+  return { spent, afternoonSpentString, morningSpentString, totalSpentString };
 };
