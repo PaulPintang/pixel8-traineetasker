@@ -10,6 +10,7 @@ import {
   Stack,
   TextInput,
   Highlight,
+  Indicator,
 } from "@mantine/core";
 import { chunk } from "lodash";
 import { useState } from "react";
@@ -113,7 +114,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
           </Flex>
         </td>
         <td className="py-2  md:table-cell lg:table-cell ">
-          {record.status === "recorded" ? (
+          {/* {record.status === "recorded" ? (
             <Flex align="center" gap={8} className="w-full">
               <div className="bg-green-300 p-1"></div>
               <Text
@@ -127,6 +128,65 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
             <Text fz="xs" fw="bold">
               {record.status}
             </Text>
+          )} */}
+          {record.status === "recorded" ? (
+            <Flex
+              align="center"
+              gap={6}
+              className="bg-gray-100 px-2 py-1 rounded w-max"
+            >
+              <div className={`w-2 h-2 bg-green-300`}></div>
+              <Text
+                fw="bold"
+                className={`text-[10px] text-green-300 uppercase`}
+              >
+                {record.status}
+              </Text>
+            </Flex>
+          ) : (
+            <Flex
+              align="center"
+              gap={6}
+              className="bg-gray-50 px-2 py-1 rounded w-max"
+            >
+              {record.afternoon?.in !== "" && record.afternoon?.out === "" && (
+                <Indicator
+                  processing
+                  size={7}
+                  radius={0}
+                  color="indigo"
+                  ml={2}
+                  mr={5}
+                  mb={1}
+                >
+                  <span></span>
+                </Indicator>
+              )}
+              {record.morning?.in !== "" && record.morning?.out === "" && (
+                <Indicator
+                  processing
+                  size={7}
+                  radius={0}
+                  color="yellow"
+                  className="opacity-70"
+                  ml={2}
+                  mr={5}
+                  mb={1}
+                >
+                  <span></span>
+                </Indicator>
+              )}
+              <Text
+                fw="bold"
+                className={`text-[10px] uppercase ${
+                  record.morning?.in !== "" && record.morning?.out === ""
+                    ? "text-yellow-300"
+                    : "text-indigo-300"
+                }`}
+              >
+                {record.status}
+              </Text>
+            </Flex>
           )}
         </td>
         <td className="py-2 table-cell  md:hidden lg:hidden ">

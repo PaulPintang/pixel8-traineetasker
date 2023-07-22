@@ -25,7 +25,7 @@ const InProgress = ({ toggle, setViewId }: Props) => {
     morning: sheet?.morning,
     afternoon: sheet?.afternoon,
   };
-  const { spent, afternoonSpentString, morningSpentString } =
+  const { spent, totalSpentString, afternoonSpentString, morningSpentString } =
     calculateSpentTime(time);
   return (
     <div className="space-y-3">
@@ -133,8 +133,9 @@ const InProgress = ({ toggle, setViewId }: Props) => {
                           {morningSpentString}
                         </span>
                       ) : (
-                        ""
+                        totalSpentString
                       )
+
                       // <span>
                       //   {spent.totalSpent.hours === 1
                       //     ? spent.totalSpent.hours + "hr"

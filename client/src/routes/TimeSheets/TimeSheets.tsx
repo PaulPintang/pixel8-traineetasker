@@ -14,6 +14,7 @@ import {
   Badge,
   TextInput,
   Highlight,
+  Indicator,
 } from "@mantine/core";
 import { chunk } from "lodash";
 import { useEffect, useState } from "react";
@@ -101,16 +102,6 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
             <Text>{sheet.ticket}</Text>
           </td>
           <td className="py-2 hidden md:table-cell lg:table-cell ">
-            {/* {spent.totalSpent.hours === 1
-              ? spent.totalSpent.hours + "hr"
-              : spent.totalSpent.hours > 1
-              ? spent.totalSpent.hours + "hrs"
-              : spent.totalSpent.hours === 0 && ""}
-            {spent.totalSpent.minutes === 1
-              ? spent.totalSpent.minutes + "min"
-              : spent.totalSpent.minutes > 1
-              ? spent.totalSpent.minutes + "mins"
-              : spent.totalSpent.minutes === 0 && ""} */}
             <Text
               className={
                 sheet.status === "recording" ? "animate-recording" : ""
@@ -119,78 +110,87 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
               {sheet.status === "recording" && (
                 <>
                   {sheet.morning?.start !== "" &&
-                  sheet.morning?.end !== "" &&
+                  sheet.morning?.end === "" &&
                   sheet.status === "recording" ? (
-                    <span className="text-indigo-400 font-medium">+ </span>
-                  ) : (
                     <span className="text-yellow-400 font-medium">+ </span>
+                  ) : (
+                    <span className="text-indigo-400 font-medium">+ </span>
                   )}
                 </>
               )}
               {sheet.morning?.start !== "" &&
-              sheet.morning?.end !== "" &&
+              sheet.morning?.end === "" &&
               sheet.status === "recording" ? (
-                <span>
-                  {/* {spent.afternoon.spent.hours === 1
-                    ? spent.afternoon.spent.hours + "hr"
-                    : spent.afternoon.spent.hours > 1
-                    ? spent.afternoon.spent.hours + "hrs"
-                    : spent.afternoon.spent.hours === 0 && ""}
-                  {spent.afternoon.spent.minutes === 1
-                    ? spent.afternoon.spent.minutes + "min"
-                    : spent.afternoon.spent.minutes > 1
-                    ? spent.afternoon.spent.minutes + "mins"
-                    : spent.afternoon.spent.minutes === 0 && ""} */}
-                  {afternoonSpentString}
-                </span>
+                <span>{morningSpentString}</span>
               ) : sheet.afternoon?.start !== "" &&
-                sheet.afternoon?.end !== "" &&
+                sheet.afternoon?.end === "" &&
                 sheet.status === "recording" ? (
-                <span>
-                  {/* {spent.morning.spent.hours === 1
-                    ? spent.morning.spent.hours + "hr"
-                    : spent.morning.spent.hours > 1
-                    ? spent.morning.spent.hours + "hrs"
-                    : spent.morning.spent.hours === 0 && ""}
-                  {spent.morning.spent.minutes === 1
-                    ? spent.morning.spent.minutes + "min"
-                    : spent.morning.spent.minutes > 1
-                    ? spent.morning.spent.minutes + "mins"
-                    : spent.morning.spent.minutes === 0 && ""} */}
-                  {morningSpentString}
-                </span>
+                <span>{afternoonSpentString}</span>
               ) : (
-                <span>
-                  {/* {spent.totalSpent.hours === 1
-                    ? spent.totalSpent.hours + "hr"
-                    : spent.totalSpent.hours > 1
-                    ? spent.totalSpent.hours + "hrs"
-                    : spent.totalSpent.hours === 0 && ""}
-                  {spent.totalSpent.minutes === 1
-                    ? spent.totalSpent.minutes + "min"
-                    : spent.totalSpent.minutes > 1
-                    ? spent.totalSpent.minutes + "mins"
-                    : spent.totalSpent.minutes === 0 && ""} */}
-                  {totalSpentString}
-                </span>
+                <span>{totalSpentString}</span>
               )}
             </Text>
           </td>
           <td className="py-2 hidden md:table-cell lg:table-cell ">
             {sheet.status === "recorded" ? (
-              <Flex align="center" gap={8}>
-                <div className="bg-green-300 p-1"></div>
+              <Flex
+                align="center"
+                gap={6}
+                className="bg-gray-100 px-2 py-1 rounded w-max"
+              >
+                <div className={`w-2 h-2 bg-green-300`}></div>
                 <Text
-                  fz="sm"
-                  className="text-gray-400  text-[10px] uppercase font-semibold "
+                  fw="bold"
+                  className={`text-[10px] text-green-300 uppercase`}
                 >
-                  recorded
+                  {sheet.status}
                 </Text>
               </Flex>
             ) : (
-              <Text fz="xs" fw="bold">
-                {sheet.status}
-              </Text>
+              <Flex
+                align="center"
+                gap={6}
+                className="bg-gray-100 px-2 py-1 rounded w-max"
+              >
+                {sheet.afternoon?.start !== "" &&
+                  sheet.afternoon?.end === "" && (
+                    <Indicator
+                      processing
+                      size={7}
+                      radius={0}
+                      color="indigo"
+                      ml={2}
+                      mr={5}
+                      mb={1}
+                    >
+                      <span></span>
+                    </Indicator>
+                  )}
+                {sheet.morning?.start !== "" && sheet.morning?.end === "" && (
+                  <Indicator
+                    processing
+                    size={7}
+                    radius={0}
+                    color="yellow"
+                    className="opacity-70"
+                    ml={2}
+                    mr={5}
+                    mb={1}
+                  >
+                    <span></span>
+                  </Indicator>
+                )}
+                <Text
+                  fw="bold"
+                  className={`text-[10px] uppercase ${
+                    sheet.morning?.start !== "" && sheet.morning?.end === ""
+                      ? "text-yellow-300"
+                      : "text-indigo-300"
+                  }`}
+                >
+                  {sheet.status}
+                </Text>
+              </Flex>
             )}
           </td>
           <td className="dark:text-gray-400 md:table-cell lg:table-cell">
