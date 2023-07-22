@@ -81,7 +81,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     afternoon: taskSpent?.afternoon,
   };
 
-  const spent = calculateSpentTime(time);
+  const { totalSpentString } = calculateSpentTime(time);
 
   // ? TRAINEE
   const handleTaskStatus = async () => {
@@ -307,7 +307,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
                 On timesheet
               </Text>
               <Text fz="sm">
-                {spent.totalSpent.hours === 1
+                {/* {spent.totalSpent.hours === 1
                   ? spent.totalSpent.hours + "hr"
                   : spent.totalSpent.hours > 1
                   ? spent.totalSpent.hours + "hrs"
@@ -316,7 +316,8 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
                   ? spent.totalSpent.minutes + "min"
                   : spent.totalSpent.minutes > 1
                   ? spent.totalSpent.minutes + "mins"
-                  : spent.totalSpent.minutes === 0 && ""}
+                  : spent.totalSpent.minutes === 0 && ""} */}
+                {totalSpentString}
               </Text>
             </Group>
           )}
