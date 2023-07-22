@@ -22,8 +22,8 @@ const StepTwoProvideDetails = ({
       <Text c="dimmed">2/2</Text>
       <Title>Provide your information</Title>
       <Text c="dimmed">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem eveniet
-        magnam atque illo quam nobis obcaecati iusto animi, magni culpa!
+        We kindly request your OJT needed hours and school/university name.
+        Thank you for considering us as a part of your professional development!
       </Text>
       <Box pt={16}>
         <Stack spacing={10}>

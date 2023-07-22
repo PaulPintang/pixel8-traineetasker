@@ -133,7 +133,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
             <Flex
               align="center"
               gap={6}
-              className="bg-gray-100 px-2 py-1 rounded w-max"
+              className="bg-gray-50 px-2 py-1 rounded w-max"
             >
               <div className={`w-2 h-2 bg-green-300`}></div>
               <Text
@@ -149,33 +149,22 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
               gap={6}
               className="bg-gray-50 px-2 py-1 rounded w-max"
             >
-              {record.afternoon?.in !== "" && record.afternoon?.out === "" && (
-                <Indicator
-                  processing
-                  size={7}
-                  radius={0}
-                  color="indigo"
-                  ml={2}
-                  mr={5}
-                  mb={1}
-                >
-                  <span></span>
-                </Indicator>
-              )}
-              {record.morning?.in !== "" && record.morning?.out === "" && (
-                <Indicator
-                  processing
-                  size={7}
-                  radius={0}
-                  color="yellow"
-                  className="opacity-70"
-                  ml={2}
-                  mr={5}
-                  mb={1}
-                >
-                  <span></span>
-                </Indicator>
-              )}
+              <Indicator
+                processing
+                size={7}
+                radius={0}
+                color={
+                  record.morning?.in !== "" && record.morning?.out === ""
+                    ? "yellow"
+                    : "indigo"
+                }
+                className="opacity-70"
+                ml={2}
+                mr={5}
+                mb={1}
+              >
+                <span></span>
+              </Indicator>
               <Text
                 fw="bold"
                 className={`text-[10px] uppercase ${

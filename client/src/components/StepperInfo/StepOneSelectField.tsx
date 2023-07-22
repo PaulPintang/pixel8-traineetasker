@@ -11,8 +11,8 @@ const StepOneSelectField = ({
       <Text c="dimmed">1/2</Text>
       <Title>Select field internship</Title>
       <Text c="dimmed">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem eveniet
-        magnam atque illo quam nobis obcaecati iusto animi, magni culpa!
+        Our internship program offers best opportunity to immerse yourself in
+        real-world challenges and make a meaningful impact.
       </Text>
       <Box pt={16}>
         <Text c="dark" pb={10}>

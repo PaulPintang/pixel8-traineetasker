@@ -69,7 +69,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   useDocumentTitle("Timesheet");
   const rows = items[page - 1]
     ?.slice()
-    .sort((a, b) => b.task!.localeCompare(a.task!))
+    .sort((a, b) => b.date!.localeCompare(a.date!))
     .sort((a, b) => b.status!.localeCompare(a.status!))
     .map((sheet, index) => {
       const format = formatDateTime(sheet.date!);
@@ -104,20 +104,34 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
           <td className="py-2 hidden md:table-cell lg:table-cell ">
             <Text
               className={
-                sheet.status === "recording" ? "animate-recording" : ""
+                (sheet.status === "recording" &&
+                  sheet.afternoon?.start !== "") ||
+                sheet.morning?.end === ""
+                  ? "animate-recording"
+                  : ""
               }
             >
-              {sheet.status === "recording" && (
-                <>
-                  {sheet.morning?.start !== "" &&
-                  sheet.morning?.end === "" &&
-                  sheet.status === "recording" ? (
-                    <span className="text-yellow-400 font-medium">+ </span>
-                  ) : (
-                    <span className="text-indigo-400 font-medium">+ </span>
-                  )}
-                </>
-              )}
+              <>
+                {sheet.status === "recording" && (
+                  <>
+                    {sheet.morning?.start !== "" &&
+                    sheet.morning?.end === "" &&
+                    sheet.status === "recording" ? (
+                      <span className="text-yellow-400 font-medium">+ </span>
+                    ) : (
+                      <>
+                        {sheet.afternoon?.start === "" ||
+                          (sheet.afternoon?.end === "" && (
+                            <span className="text-indigo-400 font-medium">
+                              +{" "}
+                            </span>
+                          ))}
+                      </>
+                    )}
+                  </>
+                )}
+              </>
+
               {sheet.morning?.start !== "" &&
               sheet.morning?.end === "" &&
               sheet.status === "recording" ? (
@@ -136,7 +150,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
               <Flex
                 align="center"
                 gap={6}
-                className="bg-gray-100 px-2 py-1 rounded w-max"
+                className="bg-gray-50 px-2 py-1 rounded w-max"
               >
                 <div className={`w-2 h-2 bg-green-300`}></div>
                 <Text
@@ -150,36 +164,24 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
               <Flex
                 align="center"
                 gap={6}
-                className="bg-gray-100 px-2 py-1 rounded w-max"
+                className="bg-gray-50 px-2 py-1 rounded w-max"
               >
-                {sheet.afternoon?.start !== "" &&
-                  sheet.afternoon?.end === "" && (
-                    <Indicator
-                      processing
-                      size={7}
-                      radius={0}
-                      color="indigo"
-                      ml={2}
-                      mr={5}
-                      mb={1}
-                    >
-                      <span></span>
-                    </Indicator>
-                  )}
-                {sheet.morning?.start !== "" && sheet.morning?.end === "" && (
-                  <Indicator
-                    processing
-                    size={7}
-                    radius={0}
-                    color="yellow"
-                    className="opacity-70"
-                    ml={2}
-                    mr={5}
-                    mb={1}
-                  >
-                    <span></span>
-                  </Indicator>
-                )}
+                <Indicator
+                  processing
+                  size={7}
+                  radius={0}
+                  color={
+                    sheet.morning?.start !== "" && sheet.morning?.end === ""
+                      ? "yellow"
+                      : "indigo"
+                  }
+                  className="opacity-70"
+                  ml={2}
+                  mr={5}
+                  mb={1}
+                >
+                  <span></span>
+                </Indicator>
                 <Text
                   fw="bold"
                   className={`text-[10px] uppercase ${

@@ -89,7 +89,7 @@ const Header = () => {
           </Badge>
         )}
 
-        {user && user?.role !== "trainee" && (
+        {user && user?.role !== "trainee" && pathname !== "/" && (
           <>
             {user?.role === "admin" && <MenuSelectCourse />}
             {/* <Group spacing={8}> */}
