@@ -34,11 +34,8 @@ app.get("*", (req, res) => res.sendFile("index.html", { root: "dist" }));
 app.use(errorHandler);
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.connected);
-
   socket.on("courseRoom", (course: string) => {
     socket.join(course);
-    console.log("User join to room", course);
   });
   socket.on("roleRoom", (role: string) => {
     socket.join(role);
@@ -79,9 +76,7 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("disconnect", () => {
-    console.log("User Disconnected", socket.id);
-  });
+  socket.on("disconnect", () => {});
 });
 
 server.listen(port, () => console.log(`Server started on port ${port}`));

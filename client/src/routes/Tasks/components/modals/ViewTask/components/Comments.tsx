@@ -3,6 +3,7 @@ import { ITask } from "../../../../../../interfaces/task.interface";
 import { Paper, Text, Group, Flex, Image } from "@mantine/core";
 import { IAccount } from "../../../../../../interfaces/user.interface";
 import { useGetAllAccountQuery } from "../../../../../../features/api/account/accountApiSlice";
+import TimeAgo from "./TimeAgo";
 
 export interface Props {
   assign: string;
@@ -45,6 +46,7 @@ const Comments = ({ task, user, assign }: Props) => {
               {/* <Text c="dimmed" fz="xs">
                 2 min ago
               </Text> */}
+              <TimeAgo timestamp={item.date} />
             </Flex>
           </Paper>
         );

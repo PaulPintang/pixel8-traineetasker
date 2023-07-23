@@ -10,6 +10,7 @@ export interface ITask {
     {
       by: string;
       msg: string;
+      date: string;
     }
   ];
   timeline?: {

@@ -98,18 +98,6 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     await taskStatus({ task: data, rooms: [user?.course] });
     toggleView();
     ToastNotify(`Task status changed to ${status}`, "success");
-
-    // if (
-    //   task?.status === "new" ||
-    //   task?.status === "failed" ||
-    //   task?.status === "pending"
-    // ) {
-    //   const sheet: ISheets = {
-    //     task: task.taskname!,
-    //     ticket: task.ticketno!,
-    //   };
-    //   await timesheet({ sheet, rooms: [user?.course!] });
-    // }
     refetch();
   };
 
@@ -129,6 +117,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
       _id: task?._id,
       msg: msg.current?.value,
       by: user?.name,
+      date: new Date().toISOString(),
     };
     await comment({ msg: message, rooms: [user?.course] });
     msg.current!.value = "";

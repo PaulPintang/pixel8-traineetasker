@@ -274,6 +274,7 @@ export const taskComment = asyncHandler(
         {
           by: req.body.by,
           msg: req.body.msg,
+          date: req.body.date,
         },
       ],
     });

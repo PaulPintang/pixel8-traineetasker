@@ -36,7 +36,7 @@ const taskSchema = new Schema<ITask>(
       {
         by: String,
         msg: String,
-        date: Date,
+        date: String,
       },
     ],
     timeline: {
