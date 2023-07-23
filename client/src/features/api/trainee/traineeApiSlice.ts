@@ -21,17 +21,7 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
             });
           });
 
-          // socket.on("addTimeSheet", (data) => {
-          //   updateCachedData((draft) => {
-          //     const index = draft.findIndex(
-          //       (trainee) => trainee._id === data._id
-          //     );
-          //     if (index !== -1) draft[index].timesheet = data.timesheet;
-          //   });
-          // });
-
           socket.on("profileUpdate", (profile) => {
-            console.log("PROFILE POTA", profile);
             updateCachedData((draft) => {
               const index = draft.findIndex(
                 (trainee) => trainee._id === profile._id

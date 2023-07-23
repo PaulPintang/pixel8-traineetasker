@@ -1,11 +1,10 @@
+import { format } from "date-fns";
+
 export const formatDateTime = () => {
-  const datetime = new Date(new Date().toISOString());
-  const formattedDate = datetime.toDateString();
-  const formattedTime = datetime.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
+  const currentDateTime = new Date();
+
+  const formattedDate = format(currentDateTime, "EEE MMM d yyyy");
+  const formattedTime = format(currentDateTime, "hh:mm a");
 
   return { date: formattedDate, time: formattedTime };
 };
