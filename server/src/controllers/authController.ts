@@ -25,12 +25,7 @@ export const login = asyncHandler(
       res.json({ ...req.body, role: "trainee", course: "" });
     } else {
       const user = await Account.findById(account._id);
-      if (
-        user.picture === "" ||
-        user.picture !== picture ||
-        user.name === "" ||
-        user.name !== name
-      ) {
+      if (user.picture === "" || user.picture !== picture || user.name === "") {
         res.json(updateAccountInfo(user, picture, name));
       } else {
         res.json(user);
