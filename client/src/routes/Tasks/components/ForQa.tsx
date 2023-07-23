@@ -1,7 +1,6 @@
 import { Card, Group, Text, Box, Badge } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
-import { formatDateTime } from "../../../utils/formatDateTime";
 interface Props {
   setViewId: Dispatch<SetStateAction<string | null>>;
   toggle: () => void;
@@ -49,11 +48,7 @@ const ForQa = ({ toggle, setViewId }: Props) => {
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Added:</Text>
-                <Text>
-                  {formatDateTime(task.createdAt!).date +
-                    " at " +
-                    formatDateTime(task.createdAt!).time}
-                </Text>
+                <Text>{task.timeline?.createdAt}</Text>
               </Group>
               <Group className="text-gray-500" fz="xs" spacing={8}>
                 <Text>Started:</Text>

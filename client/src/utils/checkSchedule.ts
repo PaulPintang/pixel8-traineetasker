@@ -16,9 +16,7 @@ const schedule = {
 export const checkSchedule = (dtr: IDtr[]) => {
   const date = new Date();
   const currentHour = date.getHours();
-  const today = dtr?.find(
-    (record) => record.date === formatDateTime(date.toISOString()).date
-  );
+  const today = dtr?.find((record) => record.date === formatDateTime().date);
 
   const isTimeIn =
     !today && schedule.morning.in === currentHour

@@ -40,12 +40,8 @@ const InfoCard = ({ trainee }: Props) => {
 
   const sheet =
     user?.role === "trainee"
-      ? profile?.timesheet?.find(
-          (task) => task.date === formatDateTime(date.toISOString()).date
-        )
-      : trainee?.timesheet?.find(
-          (task) => task.date === formatDateTime(date.toISOString()).date
-        );
+      ? profile?.timesheet?.find((task) => task.date === formatDateTime().date)
+      : trainee?.timesheet?.find((task) => task.date === formatDateTime().date);
 
   return (
     <Card className="h- rounded-md shadow-md space-y-[6px]">
@@ -154,14 +150,10 @@ const InfoCard = ({ trainee }: Props) => {
                     <Text fz={12} c="dimmed">
                       {user?.role === "trainee"
                         ? profile?.timesheet?.filter(
-                            (sheet) =>
-                              sheet.date ===
-                              formatDateTime(date.toISOString()).date
+                            (sheet) => sheet.date === formatDateTime().date
                           ).length
                         : trainee?.timesheet?.filter(
-                            (sheet) =>
-                              sheet.date ===
-                              formatDateTime(date.toISOString()).date
+                            (sheet) => sheet.date === formatDateTime().date
                           ).length}
                     </Text>
                   )}
@@ -233,8 +225,8 @@ const InfoCard = ({ trainee }: Props) => {
                         tasks?.filter(
                           (task) =>
                             task.status === "completed" &&
-                            formatDateTime(task.timeline?.completedAt!).date ===
-                              formatDateTime(date.toISOString()).date
+                            task.timeline?.completedAt! ===
+                              formatDateTime().date
                         ).length
                       }{" "}
                       task

@@ -2,8 +2,7 @@ import { formatDateTime } from "./formatDateTime";
 import { ISheets } from "../interfaces/records.interface";
 
 export const calculateSpentTime = (time: ISheets) => {
-  const date = new Date();
-  const format = formatDateTime(date.toISOString());
+  const format = formatDateTime();
 
   const morningStart = new Date(
     `2000/01/01 ${time.morning?.start?.replace("APM", "")}`

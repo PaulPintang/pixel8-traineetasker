@@ -1,7 +1,6 @@
 import { Card, Group, Text, Box } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
-import { formatDateTime } from "../../../utils/formatDateTime";
 import { useAppSelector } from "../../../app/hooks";
 interface Props {
   setViewId: Dispatch<SetStateAction<string | null>>;
@@ -17,7 +16,6 @@ const NewTask = ({ toggle, setViewId }: Props) => {
   return (
     <div className="space-y-3">
       {newTasks?.map((task) => {
-        const format = formatDateTime(task.createdAt!);
         return (
           <Card
             key={task._id}
@@ -39,7 +37,7 @@ const NewTask = ({ toggle, setViewId }: Props) => {
                 </Group>
                 <Group className="text-gray-500" fz="xs" spacing={8}>
                   <Text>Added:</Text>
-                  <Text>{format.date}</Text>
+                  <Text>{task.timeline?.createdAt}</Text>
                 </Group>
               </div>
             </Box>
