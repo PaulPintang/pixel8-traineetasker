@@ -9,7 +9,7 @@ import StepperInfo from "../components/StepperInfo/StepperInfo";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { useRefetchQuery } from "../features/api/account/accountApiSlice";
 import { setUser } from "../features/auth/authSlice";
-import { socket } from "../utils/socketConnect";
+import { JoinRoom, socket } from "../utils/socketConnect";
 
 const RootLayout = () => {
   const location = useLocation();
@@ -24,11 +24,21 @@ const RootLayout = () => {
       dispatch(setUser(account));
     };
     refetch().catch((err) => console.log(err));
+
+    if (account) {
+      JoinRoom(account?.course!, account?.role!);
+    }
   }, [account]);
 
   useEffect(() => {
     setLoadText(pathname);
   }, [pathname]);
+
+  socket.on("disconnect", () => {
+    if (account) {
+      JoinRoom(account?.course!, account?.role!);
+    }
+  });
 
   if (isLoading) return <LoaderFallback text="Loading . . ." />;
 

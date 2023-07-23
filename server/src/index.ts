@@ -34,8 +34,11 @@ app.get("*", (req, res) => res.sendFile("index.html", { root: "dist" }));
 app.use(errorHandler);
 
 io.on("connection", (socket) => {
+  console.log("User connected:", socket.connected);
+
   socket.on("courseRoom", (course: string) => {
     socket.join(course);
+    console.log("User join to room", course);
   });
   socket.on("roleRoom", (role: string) => {
     socket.join(role);
@@ -75,16 +78,10 @@ io.on("connection", (socket) => {
       socket.to(room).emit("profileUpdate", trainee);
     });
   });
-  // socket.on("sheet", ({ trainee, rooms }) => {
-  //   rooms.forEach((room: string) => {
-  //     socket.to(room).emit("addTimeSheet", trainee);
-  //   });
-  // });
-  // socket.on("dtr", ({ trainee, rooms }) => {
-  //   rooms.forEach((room: string) => {
-  //     socket.to(room).emit("dailyTimeRecord", trainee);
-  //   });
-  // });
+
+  socket.on("disconnect", () => {
+    console.log("User Disconnected", socket.id);
+  });
 });
 
 server.listen(port, () => console.log(`Server started on port ${port}`));

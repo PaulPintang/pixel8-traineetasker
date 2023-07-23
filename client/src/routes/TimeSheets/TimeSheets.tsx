@@ -67,8 +67,9 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   useDocumentTitle("Timesheet");
   const rows = items[page - 1]
     ?.slice()
-    .sort((a, b) => b.date!.localeCompare(a.date!))
-    .sort((a, b) => b.status!.localeCompare(a.status!))
+    // .sort((a, b) => b.date!.localeCompare(a.date!))
+    // .sort((a, b) => b.status!.localeCompare(a.status!))
+    .reverse()
     .map((sheet, index) => {
       const time = {
         status: sheet.status,

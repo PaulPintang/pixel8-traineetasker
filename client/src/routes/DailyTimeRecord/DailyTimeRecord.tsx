@@ -65,7 +65,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
   const day = checkTime();
 
   const handleTimeInOut = async () => {
-    JoinRoom(user?.course!, user?.role!);
+    // JoinRoom(user?.course!, user?.role!);
     await recordDtr({ rooms: [user?.course!] });
     ToastNotify(
       ` ${day === "morning" ? "Time in" : "Time out"} at exactly ${

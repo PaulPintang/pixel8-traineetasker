@@ -49,13 +49,12 @@ export const accountApiSlice = apiSlice.injectEndpoints({
     refetch: builder.query<IAccount, void>({
       query: () => "/account",
       providesTags: ["Account"],
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data: account } = await queryFulfilled;
-          // this execute after login and page refresh
-          JoinRoom(account.course!, account.role!);
-        } catch {}
-      },
+      // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+      //   try {
+      //     const { data: account } = await queryFulfilled;
+      //     JoinRoom(account.course!, account.role!);
+      //   } catch {}
+      // },
     }),
   }),
 });

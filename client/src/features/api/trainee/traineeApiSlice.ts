@@ -52,7 +52,7 @@ export const traineeApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(traineeInfo, api) {
         try {
           const { data: trainee } = await api.queryFulfilled;
-          JoinRoom(trainee.course!, trainee.role!);
+          // JoinRoom(trainee.course!, trainee.role!);
           socket.emit("newTrainee", {
             trainee: trainee.newTrainee,
             rooms: [traineeInfo.course],

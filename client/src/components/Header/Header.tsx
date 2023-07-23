@@ -26,6 +26,7 @@ import { useUpdateCourseViewMutation } from "../../features/api/account/accountA
 import MenuSelectCourse from "./Menus/MenuSelectCourse";
 import MenuManageAccounts from "./Menus/MenuManageAccounts";
 import { useGetAllTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
+import { JoinRoom } from "../../utils/socketConnect";
 
 const Header = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -53,6 +54,7 @@ const Header = () => {
         const user = await loginUser({ name, email, picture }).unwrap();
         dispatch(setUser(user));
         navigate("dashboard");
+        // JoinRoom(user.course!, user.role!);
       };
 
       OAuth().catch((err) => console.log(err));

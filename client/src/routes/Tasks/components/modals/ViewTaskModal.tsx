@@ -66,7 +66,6 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
   // });
   const [taskStatus, taskState] = useTaskStatusMutation();
   const [comment, commentState] = useCommentOnTaskMutation();
-  const [timesheet] = useAddTaskTimesheetMutation();
   const assign = trainees?.find((trainee) => trainee.name === task?.assign);
 
   const sheet = trainees?.map((trainee) =>
@@ -85,7 +84,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
 
   // ? TRAINEE
   const handleTaskStatus = async () => {
-    JoinRoom(user?.course!, user?.role!);
+    // JoinRoom(user?.course!, user?.role!);
     const status =
       task?.status === "new" || task?.status === "pending"
         ? "inprogress"
@@ -116,7 +115,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
 
   // ? SUPERVISOR
   const handleCheckTask = async (status: "completed" | "failed") => {
-    JoinRoom(user?.course!, user?.role!);
+    // JoinRoom(user?.course!, user?.role!);
     const data = { _id: task?._id, status };
     await taskStatus({ task: data, rooms: [user?.course] });
     toggleView();
@@ -125,7 +124,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
   };
 
   const addComment = async () => {
-    JoinRoom(user?.course!, user?.role!);
+    // JoinRoom(user?.course!, user?.role!);
     const message = {
       _id: task?._id,
       msg: msg.current?.value,

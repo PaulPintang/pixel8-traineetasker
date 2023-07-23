@@ -21,7 +21,7 @@ const AddTaskModal = ({ add, toggle }: ModalProps) => {
   });
 
   const handleAddTask = async () => {
-    JoinRoom(user?.course!, user?.role!);
+    // JoinRoom(user?.course!, user?.role!);
     try {
       const res: any = await addTask(toAddTask);
       if (res.error) {
