@@ -17,7 +17,7 @@ import {
   Indicator,
 } from "@mantine/core";
 import { chunk } from "lodash";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TimeSheetsLabels } from "../../components/ColorLabels";
 import { IconClock, IconDots, IconX } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
@@ -48,8 +48,6 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
   const [query, setQuery] = useState("");
   const [opened, { close, open }] = useDisclosure(false);
   const { data: tasks } = useGetAllTasksQuery();
-  const date = new Date();
-
   const { data: trainee } = useGetTraineeProfileQuery(undefined, {
     skip: user?.role !== "trainee",
   });
@@ -72,8 +70,6 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
     .sort((a, b) => b.date!.localeCompare(a.date!))
     .sort((a, b) => b.status!.localeCompare(a.status!))
     .map((sheet, index) => {
-      const format = formatDateTime(sheet.date!);
-
       const time = {
         status: sheet.status,
         morning: sheet.morning,
@@ -91,7 +87,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
           <td className="md:table-cell lg:table-cell pl-3">
             <Text>
               <Highlight highlightColor="cyan" highlight={query}>
-                {format.date === date.toDateString() ? "Today" : format.date}
+                {sheet.date === formatDateTime().date ? "Today" : sheet.date!}
               </Highlight>
             </Text>
           </td>
@@ -350,9 +346,11 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
                       <Group className="text-gray-500" fz="xs" spacing={8}>
                         <Text c="dark">Added:</Text>
                         <Text>
-                          {formatDateTime(inprogress?.createdAt!).date +
+                          {/* {formatDateTime(inprogress?.createdAt!).date +
                             " at " +
-                            formatDateTime(inprogress?.createdAt!).time}
+                            formatDateTime(inprogress?.createdAt!).time} */}
+
+                          {inprogress.timeline?.createdAt}
                         </Text>
                       </Group>
                       <Group className="text-gray-500" fz="xs" spacing={8}>

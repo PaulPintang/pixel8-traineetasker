@@ -53,11 +53,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
     profile ? profile?.course! : trainee?.course!
   );
 
-  const [timesheet] = useAddTaskTimesheetMutation();
-
   const profileInfo = trainees?.find((trainee) => trainee._id === profile?._id);
-
-  const { data: tasks } = useGetAllTasksQuery();
 
   const data = user?.role === "trainee" ? trainee?.dtr : profileInfo?.dtr;
 
@@ -73,7 +69,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
     await recordDtr({ rooms: [user?.course!] });
     ToastNotify(
       ` ${day === "morning" ? "Time in" : "Time out"} at exactly ${
-        formatDateTime(date.toISOString()).time
+        formatDateTime().time
       }`,
       "success"
     );
@@ -89,9 +85,7 @@ const DailyTimeRecord = ({ profile }: PropsOnProfile) => {
         <td className=" md:table-cell lg:table-cell pl-3">
           <Text>
             <Highlight highlightColor="cyan" highlight={query}>
-              {formatDateTime(record.date!).date === date.toDateString()
-                ? "Today"
-                : formatDateTime(record.date!).date}
+              {formatDateTime().date === record.date ? "Today" : record.date!}
             </Highlight>
           </Text>
         </td>

@@ -8,14 +8,11 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import { Props } from "./Comments";
-import { IconCheck, IconCircleDashed, IconCircleX } from "@tabler/icons-react";
-import { IconCircleCheck } from "@tabler/icons-react";
-import { formatDateTime } from "../../../../../../utils/formatDateTime";
+import { IconCheck, IconCircleX } from "@tabler/icons-react";
 import { useGetAllAccountQuery } from "../../../../../../features/api/account/accountApiSlice";
 
 const TimelineComponent = ({ user, task, assign }: Props) => {
   const { data: accounts } = useGetAllAccountQuery();
-  const added = formatDateTime(task?.createdAt!);
   const revision = task?.timeline?.revisions.length !== 0;
 
   const failedby = accounts?.find((acc) => acc.role === "QA Personnel");
@@ -34,7 +31,6 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
             You've mark this task as completed
           </Text>
           <Text size="xs" mt={4}>
-            {/* {`${completed.date} at ${completed.time}`} */}
             {task.timeline.completedAt}
           </Text>
         </Timeline.Item>
@@ -70,7 +66,6 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
             .slice()
             .sort((a, b) => b.localeCompare(a))
             .map((date, index) => {
-              const dates = formatDateTime(date);
               const color =
                 index === 0 && task.status === "completed"
                   ? "green"
@@ -98,7 +93,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
                 >
                   <List.Item>
                     <Text size="xs" mb={2}>
-                      {`${dates.date} at ${dates.time}`}
+                      {date}
                     </Text>
                   </List.Item>
                 </List>
@@ -124,7 +119,6 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
             Task for-QA
           </Text>
           <Text size="xs" mt={4}>
-            {/* {`${done.date} at ${done.time}`} */}
             {task.timeline.doneAt}
           </Text>
         </Timeline.Item>
@@ -151,7 +145,6 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
             </span>
           </Text>
           <Text size="xs" mt={4}>
-            {/* {`${started.date} at ${started.time}`} */}
             {task.timeline?.startedAt}
           </Text>
         </Timeline.Item>
@@ -175,7 +168,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
           </span>
         </Text>
         <Text size="xs" mt={4}>
-          {`${added.date} at ${added.time}`}
+          {task.timeline?.createdAt}
         </Text>
       </Timeline.Item>
     </Timeline>

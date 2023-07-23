@@ -8,24 +8,12 @@ import {
 import { NavLink, useLocation } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { formatDateTime } from "../utils/formatDateTime";
-import { format as wahh } from "date-fns";
 
 const Navigation = () => {
   const date = new Date();
-  const format = formatDateTime(date);
   const { user } = useAppSelector((state) => state.auth);
   const location = useLocation();
   const { pathname } = location;
-
-  const formatDate = () => {
-    const currentDateTime = new Date();
-
-    const formattedDate = wahh(currentDateTime, "EEE MMM d yyyy");
-    const formattedTime = wahh(currentDateTime, "hh:mm a");
-
-    console.log(formattedTime, formattedDate);
-    return { date: formattedDate, time: formattedTime };
-  };
 
   return (
     <Flex justify="space-between" align="center">
@@ -44,9 +32,6 @@ const Navigation = () => {
             <Text c={pathname === "/dashboard" ? "dark" : "gray"}>
               Dashboard
             </Text>
-          </Button>
-          <Button onClick={() => formatDate()}>
-            <Text c={pathname === "/dashboard" ? "dark" : "gray"}>wahh</Text>
           </Button>
         </NavLink>
 
@@ -118,7 +103,7 @@ const Navigation = () => {
             Today:
           </Text>
           <Text fz="xs" c="dimmed">
-            {format.date}
+            {formatDateTime().date}
           </Text>
         </Group>
       </Group>

@@ -218,7 +218,7 @@ export const updateTaskStatus = asyncHandler(
             status: "failed",
             timeline: {
               ...task.timeline,
-              revisions: [...task.timeline.revisions, date.toISOString()],
+              revisions: [...task.timeline.revisions, spentTimeFormat],
             },
           },
           { new: true }
@@ -251,6 +251,10 @@ export const addTask = asyncHandler(
         course: supervisor.course,
         comments: [],
         todos: [],
+        timeline: {
+          createdAt: `${formatDateTime().date} at ${formatDateTime().time}`,
+        },
+        // createdAt: `${formatDateTime().date} at ${formatDateTime().time}`,
       });
       res.status(200).json(task);
     } else {

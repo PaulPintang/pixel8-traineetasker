@@ -1,10 +1,13 @@
 import { format } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
 
 export const formatDateTime = () => {
   const currentDateTime = new Date();
+  const timezone = "Asia/Manila";
+  const zonedDateTime = utcToZonedTime(currentDateTime, timezone);
 
-  const formattedDate = format(currentDateTime, "EEE MMM d yyyy");
-  const formattedTime = format(currentDateTime, "hh:mm a");
+  const formattedDate = format(zonedDateTime, "EEE MMM d yyyy");
+  const formattedTime = format(zonedDateTime, "hh:mm a");
 
   return { date: formattedDate, time: formattedTime };
 };

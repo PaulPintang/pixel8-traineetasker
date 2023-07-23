@@ -113,16 +113,6 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
               {tasks
                 ?.filter((task) => task.status === "failed")
                 .map((task) => {
-                  const dates = task.timeline?.revisions.map(
-                    (dateStr) => new Date(dateStr)
-                  );
-                  const latest =
-                    dates && dates.length > 0
-                      ? new Date(
-                          Math.max(...dates.map((date) => date.getTime()))
-                        )
-                      : null;
-
                   return (
                     <Menu.Item p={0} className="bg-white hover:bg-white">
                       <Flex
@@ -150,9 +140,11 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                             </Text>
                           </Group>
                           <Text className="text-gray-500  text-[11px]">
-                            {formatDateTime(latest!).date +
-                              " at " +
-                              formatDateTime(latest!).time}
+                            {
+                              task.timeline?.revisions[
+                                task.timeline.revisions.length - 1
+                              ]
+                            }
                           </Text>
                         </div>
                       </Flex>

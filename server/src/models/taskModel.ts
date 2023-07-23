@@ -40,15 +40,17 @@ const taskSchema = new Schema<ITask>(
       },
     ],
     timeline: {
+      createdAt: String,
       startedAt: String,
       doneAt: String,
       completedAt: String,
       revisions: [String],
     },
-  },
-  {
-    timestamps: true,
+    // createdAt: String,
   }
+  // {
+  //   timestamps: true,
+  // }
 );
 
 export default model<ITask>("Task", taskSchema);

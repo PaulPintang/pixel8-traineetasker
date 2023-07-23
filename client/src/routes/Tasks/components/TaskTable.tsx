@@ -54,11 +54,7 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
   const { user } = useAppSelector((state) => state.auth);
   const [filterBy, setFilterBy] = useState<string | null>("");
   const [gettingData, setGettingData] = useState(false);
-  const {
-    data: tasks,
-    refetch,
-    // isFetching: gettingData,
-  } = useGetAllTasksQuery();
+  const { data: tasks, refetch } = useGetAllTasksQuery();
   const [deleteTask, { isLoading: deleting }] = useDeleteTaskMutation();
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
@@ -92,9 +88,10 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
 
   const rows = items[page - 1]
     ?.slice()
-    .sort((a, b) => b.createdAt!.localeCompare(a.createdAt!))
+    .sort((a, b) =>
+      b.timeline!.createdAt!.localeCompare(a.timeline!.createdAt!)
+    )
     .map((task) => {
-      const format = formatDateTime(task?.createdAt!);
       const sheet = trainee?.timesheet?.find(
         (task) => task.status === "recording"
       );
@@ -109,9 +106,11 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
           <td className=" md:table-cell lg:table-cell pl-3 pt-2">
             <Text>
               <span className="hidden md:flex lg:flex">
-                {`${format.date} at ${format.time}`}
+                {task.timeline?.createdAt}
               </span>
-              <span className="flex md:hidden lg:hidden">{format.date}</span>
+              <span className="flex md:hidden lg:hidden">
+                {task.timeline?.createdAt}
+              </span>
             </Text>
           </td>
           <td className="hidden md:table-cell lg:table-cell  pt-2">
@@ -126,19 +125,7 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
               {trainee && (
                 <span>
                   {task.status === "inprogress" && task.spent === "" ? (
-                    <span>
-                      {/* {spent.totalSpent.hours === 1
-                        ? spent.totalSpent.hours + "hr"
-                        : spent.totalSpent.hours > 1
-                        ? spent.totalSpent.hours + "hrs"
-                        : spent.totalSpent.hours === 0 && ""}
-                      {spent.totalSpent.minutes === 1
-                        ? spent.totalSpent.minutes + "min"
-                        : spent.totalSpent.minutes > 1
-                        ? spent.totalSpent.minutes + "mins"
-                        : spent.totalSpent.minutes === 0 && ""} */}
-                      {totalSpentString}
-                    </span>
+                    <span>{totalSpentString}</span>
                   ) : (
                     task.spent
                   )}
@@ -213,7 +200,6 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
                 onClick={() => {
                   view();
                   setViewId(task._id!);
-                  // setOpened(false);
                 }}
                 leftIcon={
                   <IconInfoCircle

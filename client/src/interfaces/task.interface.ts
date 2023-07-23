@@ -13,6 +13,7 @@ export interface ITask {
     }
   ];
   timeline?: {
+    createdAt?: string;
     startedAt?: string;
     doneAt?: string;
     completedAt?: string;
@@ -25,6 +26,6 @@ export interface ITask {
       todo: string;
     }
   ];
-  createdAt?: string;
-  updatedAt?: string;
+  // createdAt?: string;
+  // updatedAt?: string;
 }

@@ -1,5 +1,6 @@
 import { format } from "date-fns";
-export const formatDateTime = (added: string | Date) => {
+
+export const formatDateTime = () => {
   const currentDateTime = new Date();
 
   const formattedDate = format(currentDateTime, "EEE MMM d yyyy");
