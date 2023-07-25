@@ -1,4 +1,3 @@
-import React from "react";
 import { ITask } from "../../../../../../interfaces/task.interface";
 import { Paper, Text, Group, Flex, Image } from "@mantine/core";
 import { IAccount } from "../../../../../../interfaces/user.interface";
@@ -43,9 +42,6 @@ const Comments = ({ task, user, assign }: Props) => {
                   {item.by}
                 </Text>
               </Group>
-              {/* <Text c="dimmed" fz="xs">
-                2 min ago
-              </Text> */}
               <TimeAgo timestamp={item.date} />
             </Flex>
           </Paper>

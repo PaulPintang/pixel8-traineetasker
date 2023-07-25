@@ -2,7 +2,6 @@ import asyncHandler from "express-async-handler";
 import { Response, Request, NextFunction } from "express";
 import { IAccount } from "../interfaces/user.interface";
 import Account from "../models/accountModel";
-import Task from "../models/taskModel";
 import { generateToken } from "../utils/generateToken";
 
 export const getAllAccount = asyncHandler(
@@ -15,40 +14,29 @@ export const getAllAccount = asyncHandler(
       const roles = ["QA Personnel", "Task manager", "supervisor"];
       const accounts = await Account.find({ role: { $in: roles } });
       res.json(accounts);
-    } else if (res.locals.user.role === "trainee") {
-      const user = await Account.findOne({ email: res.locals.user.email });
-      const accounts = await Account.find({
-        course: user.course,
-        role: { $in: ["trainee"] },
-      });
-      res.json(
-        accounts.map((acc) => {
-          return {
-            name: acc.name,
-            picture: acc.picture,
-          };
-        })
-      );
     } else {
       const user = await Account.findOne({ email: res.locals.user.email });
-      const accounts = await Account.find({
-        course: user.course,
-        role: { $nin: ["trainee", "supervisor", "admin"] },
-      });
-      res.json(accounts);
+      if (res.locals.user.role === "trainee") {
+        const accounts = await Account.find({
+          course: user.course,
+          role: { $nin: ["admin"] },
+        });
+        res.json(
+          accounts.map((acc) => {
+            return {
+              name: acc.name,
+              picture: acc.picture,
+            };
+          })
+        );
+      } else {
+        const accounts = await Account.find({
+          course: user.course,
+          role: { $nin: ["admin", "trainee", "supervisor"] },
+        });
+        res.json(accounts);
+      }
     }
-    // if (res.locals.user.role === "admin") {
-    //   const roles = ["QA Personnel", "Task manager", "supervisor"];
-    //   const accounts = await Account.find({ role: { $in: roles } });
-    //   res.json(accounts);
-    // } else {
-    //   const user = await Account.findOne({ email: res.locals.user.email });
-    //   const accounts = await Account.find({
-    //     course: user.course,
-    //     role: { $nin: ["trainee", "supervisor", "admin"] },
-    //   });
-    //   res.json(accounts);
-    // }
   }
 );
 

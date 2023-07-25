@@ -238,7 +238,6 @@ const traineesTableCard = () => {
                       : name && "Member not found"
                   }
                 />
-                ;
               </>
             ) : (
               <tbody className="text-xs text-gray-600">{rows}</tbody>
