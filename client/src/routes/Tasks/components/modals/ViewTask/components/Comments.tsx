@@ -10,7 +10,7 @@ export interface Props {
   task: ITask;
 }
 
-const Comments = ({ task, user, assign }: Props) => {
+const Comments = ({ task, user }: Props) => {
   const { data: accounts } = useGetAllAccountQuery();
   return (
     <section className="space-y-3">
