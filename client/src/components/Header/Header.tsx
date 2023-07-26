@@ -36,6 +36,7 @@ import { useGetNotificationQuery } from "../../features/api/notification/notific
 import TimeAgo from "../../routes/Tasks/components/modals/ViewTask/components/TimeAgo";
 import Notifications from "../Notifications";
 import EmptyState from "../EmptyState";
+import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 
 const Header = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -46,6 +47,7 @@ const Header = () => {
   const [logoutUser, logoutState] = useLogoutUserMutation();
   const { data: members } = useGetAllTraineeQuery(user?.course!);
   const { data: notifications } = useGetNotificationQuery();
+  const { data: tasks } = useGetAllTasksQuery();
 
   const dispatch = useAppDispatch();
 
@@ -122,34 +124,10 @@ const Header = () => {
               </Indicator>
             </ActionIcon>
           </Menu.Target>
-          <Menu.Dropdown p={13}>
-            {notifications?.length !== 0 && (
-              <Flex align="center" justify="space-between" pb={10}>
-                <Text fw="bold" c="dark">
-                  Notifications
-                </Text>
-                <Button
-                  variant="white"
-                  size="xs"
-                  compact
-                  className="relative left-2"
-                  leftIcon={
-                    <IconChecks size={15} className="relative left-1" />
-                  }
-                >
-                  Mark all as read
-                </Button>
-              </Flex>
-            )}
-            {notifications?.length === 0 ? (
-              <Text fz="sm" c="dimmed">
-                No new notification!
-              </Text>
-            ) : (
-              <Menu.Item className="p-0 hover:bg-white">
-                <Notifications />
-              </Menu.Item>
-            )}
+          <Menu.Dropdown p={15}>
+            {/* <Menu.Item className="p-0 hover:bg-white"> */}
+            <Notifications />
+            {/* </Menu.Item> */}
           </Menu.Dropdown>
         </Menu>
 

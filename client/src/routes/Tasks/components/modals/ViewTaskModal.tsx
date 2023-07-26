@@ -55,7 +55,6 @@ interface ModalProps {
 
 const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
   const isMobile = useMediaQuery("(max-width: 50em)");
-
   const { data: tasks } = useGetAllTasksQuery();
   const fail = useRef<HTMLButtonElement>(null);
   const complete = useRef<HTMLButtonElement>(null);
@@ -65,9 +64,6 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
   const task = tasks?.find((task) => task._id === viewId);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   const { refetch } = useGetTraineeProfileQuery();
-  // const { data: trainee, refetch } = useGetTraineeProfileQuery(user?._id!, {
-  //   skip: user?.role !== "trainee",
-  // });
   const [taskStatus, taskState] = useTaskStatusMutation();
   const [comment, commentState] = useCommentOnTaskMutation();
   const [pushNotification] = usePushNotificationMutation();
@@ -89,7 +85,6 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
 
   // ? TRAINEE
   const handleTaskStatus = async () => {
-    // JoinRoom(user?.course!, user?.role!);
     const status =
       task?.status === "new" || task?.status === "pending"
         ? "inprogress"
@@ -104,24 +99,22 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     toggleView();
     ToastNotify(`Task status changed to ${status}`, "success");
     refetch();
-    if (status === "forqa") {
-      const notification: Notification = {
-        task: task?.taskname!,
-        type: "task",
-        to: "",
-        from: {
-          name: user?.name!,
-          picture: user?.picture!,
-        },
-        content: `${user?.name} mark this task as ${status}`,
-      };
-      await pushNotification(notification);
-    }
+    // if (status === "forqa") {
+    //   const notification: Notification = {
+    //     task: task?.taskname!,
+    //     type: "task",
+    //     to: "QA Personnel",
+    //     from: {
+    //       name: user?.name!,
+    //       picture: user?.picture!,
+    //     },
+    //     content: `${user?.name} mark this task as ${status}`,
+    //   };
+    //   await pushNotification(notification);
+    // }
   };
 
-  // ? SUPERVISOR
   const handleCheckTask = async (status: "completed" | "failed") => {
-    // JoinRoom(user?.course!, user?.role!);
     const data = { _id: task?._id, status };
     await taskStatus({ task: data, rooms: [user?.course] });
     toggleView();
@@ -141,7 +134,6 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
   };
 
   const addComment = async () => {
-    // JoinRoom(user?.course!, user?.role!);
     const message = {
       _id: task?._id,
       msg: msg.current?.value,

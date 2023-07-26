@@ -29,6 +29,7 @@ export interface IDtr {
 }
 
 export interface Notification {
+  _id?: string;
   task: string;
   type: "comment" | "task";
   to: string;

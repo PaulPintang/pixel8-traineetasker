@@ -29,6 +29,15 @@ export const getAllAccount = asyncHandler(
             };
           })
         );
+      } else if (
+        res.locals.user.role === "QA Personnel" ||
+        res.locals.user.role === "Task manager"
+      ) {
+        const accounts = await Account.find({
+          course: user.course,
+          role: { $nin: ["admin", "supervisor"] },
+        });
+        res.json(accounts);
       } else {
         const accounts = await Account.find({
           course: user.course,

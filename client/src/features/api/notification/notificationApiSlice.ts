@@ -17,19 +17,18 @@ export const accountApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Notification"],
     }),
 
-    readNotification: builder.mutation<Notification, string>({
-      query: (id) => ({
-        url: `/notif/${id}`,
-        method: "PUT",
+    readNotification: builder.mutation<Notification, { _id: string }>({
+      query: ({ _id }) => ({
+        url: `/notif/read/${_id}`,
+        method: "DELETE",
       }),
       invalidatesTags: ["Notification"],
     }),
 
     readAllNotification: builder.mutation({
-      query: (notification) => ({
-        url: "/readall",
+      query: () => ({
+        url: "/notif/readall",
         method: "PUT",
-        body: notification,
       }),
       invalidatesTags: ["Notification"],
     }),

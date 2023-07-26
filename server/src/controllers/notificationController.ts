@@ -46,9 +46,16 @@ export const pushNotification = asyncHandler(
 );
 
 export const readNotification = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {}
+  async (req: Request, res: Response, next: NextFunction) => {
+    const notification = await Notification.findByIdAndDelete(req.params.id);
+    res.json(notification);
+  }
 );
 
 export const readAllNotification = asyncHandler(
-  async (req: Request, res: Response, next: NextFunction) => {}
+  async (req: Request, res: Response, next: NextFunction) => {
+    const account = await Account.findOne({ email: res.locals.user.email });
+    const notif = await Notification.deleteMany({ to: account.name });
+    res.json(notif);
+  }
 );

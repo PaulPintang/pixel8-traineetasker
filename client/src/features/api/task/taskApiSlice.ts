@@ -44,7 +44,6 @@ export const taskApiSlice = apiSlice.injectEndpoints({
             });
           });
           socket.on("taskStatus", (data: ITask) => {
-            console.log("yahh", data);
             updateCachedData((draft) => {
               const index = draft.findIndex((task) => task._id === data._id);
               if (index !== -1) draft[index] = data;

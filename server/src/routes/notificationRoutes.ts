@@ -10,7 +10,7 @@ import { isAuth } from "../middleware/authMiddleware";
 
 router.get("/all", isAuth, getNotification);
 router.post("/add", isAuth, pushNotification);
-router.put("/read:id", isAuth, readNotification);
+router.delete("/read/:id", isAuth, readNotification);
 router.put("/readall", isAuth, readAllNotification);
 
 module.exports = router;
