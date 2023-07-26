@@ -20,7 +20,14 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
   return (
     <Menu shadow="md" position="bottom-end">
       <Menu.Target>
-        <div className="bg-gray-100  px-2 rounded-full  flex items-center gap-1 py-1 cursor-pointer hover:bg-gray-200 focus:bg-gray-200 transition-all">
+        <div
+          className={`bg-gray-100  px-2 rounded-full  flex items-center gap-1 py-1 cursor-pointer hover:bg-gray-200 focus:bg-gray-200 transition-all ${
+            tasks?.filter((task) => task.status === "pending").length !== 0 ||
+            tasks?.filter((task) => task.status === "failed").length !== 0
+              ? "animate-recording "
+              : ""
+          }`}
+        >
           <Text className="text-white py-1 px-2 text-xs rounded-full bg-yellow-300">
             {tasks?.filter((task) => task.status === "pending").length}
           </Text>
@@ -58,7 +65,11 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
               {tasks
                 ?.filter((task) => task.status === "pending")
                 .map((task) => (
-                  <Menu.Item p={0} className="bg-white hover:bg-white">
+                  <Menu.Item
+                    key={task._id}
+                    p={0}
+                    className="bg-white hover:bg-white"
+                  >
                     <Flex
                       gap={5}
                       className="hover:bg-slate-50 hover:opacity-80 transition-all rounded-md p-2 cursor-pointer"
@@ -114,7 +125,11 @@ const TaskUrgent = ({ tasks, setViewId, toggle }: Props) => {
                 ?.filter((task) => task.status === "failed")
                 .map((task) => {
                   return (
-                    <Menu.Item p={0} className="bg-white hover:bg-white">
+                    <Menu.Item
+                      key={task._id}
+                      p={0}
+                      className="bg-white hover:bg-white"
+                    >
                       <Flex
                         gap={5}
                         className="hover:bg-slate-50 hover:opacity-80 transition-all rounded-md p-2 cursor-pointer"

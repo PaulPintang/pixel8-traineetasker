@@ -1,28 +1,37 @@
 import { Card, Group, Text, Box } from "@mantine/core";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { reset } from "../../../features/notif/notificationSlice";
 interface Props {
   setViewId: Dispatch<SetStateAction<string | null>>;
   toggle: () => void;
 }
 
 const NewTask = ({ toggle, setViewId }: Props) => {
+  const dispatch = useAppDispatch();
+  const { taskOnNotif } = useAppSelector((state) => state.notif);
   const { data: tasks } = useGetAllTasksQuery();
   const { user } = useAppSelector((state) => state.auth);
   const newTasks = tasks?.filter(
     (task) => task.status === "new" && task.assign === user?.name
   );
+
   return (
     <div className="space-y-3">
       {newTasks?.map((task) => {
         return (
           <Card
             key={task._id}
-            className="cursor-pointer hover:shadow-xl rounded-md shadow-md transition-all"
+            className={`cursor-pointer hover:shadow-xl rounded-md shadow-md transition-all ${
+              task.taskname === taskOnNotif
+                ? "animate-recording shadow-xl "
+                : ""
+            }`}
             onClick={() => {
               toggle();
               setViewId(task._id!);
+              dispatch(reset());
             }}
           >
             <div className="bg-indigo-300 w-8 h-1"></div>

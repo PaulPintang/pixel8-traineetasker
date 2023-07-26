@@ -1,4 +1,4 @@
-import { parseISO, formatDistanceToNow } from "date-fns";
+import { parseISO, formatDistanceToNow, format } from "date-fns";
 import { Text } from "@mantine/core";
 
 type Props = {
@@ -7,10 +7,14 @@ type Props = {
 
 const TimeAgo = ({ timestamp }: Props) => {
   let timeAgo = "";
+  let formattedDate = "";
+  // let onNotif = "";
   if (timestamp) {
     const date = parseISO(timestamp);
     const timePeriod = formatDistanceToNow(date);
+    formattedDate = format(date, "EEE MMMM yyyy 'at' hh:mm a");
     timeAgo = `${timePeriod} ago`;
+    // onNotif = `${formattedDate} (${timeAgo})`;
   }
 
   return (

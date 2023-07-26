@@ -6,6 +6,8 @@ import { useAssignTaskMutation } from "../../../../features/api/task/taskApiSlic
 import { useState } from "react";
 import { JoinRoom } from "../../../../utils/socketConnect";
 import ToastNotify from "../../../../components/ToastNotify";
+import { usePushNotificationMutation } from "../../../../features/api/notification/notificationApiSlice";
+import { Notification } from "../../../../interfaces/records.interface";
 interface ModalProps {
   task: ITask;
   assign: boolean;
@@ -17,12 +19,25 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
   const { user } = useAppSelector((state) => state.auth);
   const { data: trainees } = useGetAllTraineeQuery(user?.course!);
   const [assignTask, { isLoading }] = useAssignTaskMutation();
+  const [pushNotification] = usePushNotificationMutation();
 
   const handleAssign = async (name: string) => {
+    const date = new Date();
     JoinRoom(user?.course!, user?.role!);
     setAssignTo(name);
     const data = { _id: task._id, name: name, course: user?.course };
     await assignTask({ task: data, rooms: [user?.course] });
+    const notification: Notification = {
+      task: task?.taskname!,
+      type: "task",
+      to: name,
+      from: {
+        name: user?.name!,
+        picture: user?.picture!,
+      },
+      content: `${user?.name} assigned new task for you`,
+    };
+    await pushNotification(notification);
     ToastNotify(`Task successfully assigned`, "success");
     toggle();
   };

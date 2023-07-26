@@ -29,6 +29,7 @@ app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/account", require("./routes/accountRoutes"));
 app.use("/api/trainee", require("./routes/traineeRoutes"));
 app.use("/api/task", require("./routes/taskRoutes"));
+app.use("/api/notif", require("./routes/notificationRoutes"));
 app.use(express.static("dist"));
 app.get("*", (req, res) => res.sendFile("index.html", { root: "dist" }));
 app.use(errorHandler);

@@ -32,6 +32,10 @@ import MenuManageAccounts from "./Menus/MenuManageAccounts";
 import { useGetAllTraineeQuery } from "../../features/api/trainee/traineeApiSlice";
 import { JoinRoom } from "../../utils/socketConnect";
 import { IconShoppingCart } from "@tabler/icons-react";
+import { useGetNotificationQuery } from "../../features/api/notification/notificationApiSlice";
+import TimeAgo from "../../routes/Tasks/components/modals/ViewTask/components/TimeAgo";
+import Notifications from "../Notifications";
+import EmptyState from "../EmptyState";
 
 const Header = () => {
   const { user } = useAppSelector((state) => state.auth);
@@ -41,6 +45,7 @@ const Header = () => {
   const [loginUser, loginState] = useLoginMutation();
   const [logoutUser, logoutState] = useLogoutUserMutation();
   const { data: members } = useGetAllTraineeQuery(user?.course!);
+  const { data: notifications } = useGetNotificationQuery();
 
   const dispatch = useAppDispatch();
 
@@ -96,144 +101,57 @@ const Header = () => {
           </Badge>
         )}
 
-        <Popover position="bottom-end" withArrow shadow="md">
-          <Popover.Target>
+        <Menu position="bottom-end" withArrow shadow="md" closeOnItemClick>
+          <Menu.Target>
             <ActionIcon
               variant="transparent"
               radius="xl"
-              className="animate-searching"
+              className={`${
+                notifications?.length !== 0 ? "animate-searching" : ""
+              }`}
             >
               <Indicator
                 inline
-                label={2}
+                label={notifications?.length}
                 color="red"
                 size={16}
                 offset={2}
-                // disabled={cart?.length === 0 ? true : false}
+                disabled={notifications?.length === 0 ? true : false}
               >
                 <IconBell size={20} className="text-gray-500 " />
               </Indicator>
             </ActionIcon>
-          </Popover.Target>
-          <Popover.Dropdown>
-            <Flex align="center" justify="space-between" pb={10}>
-              <Text fw="bold" c="dark">
-                Notifications
+          </Menu.Target>
+          <Menu.Dropdown p={13}>
+            {notifications?.length !== 0 && (
+              <Flex align="center" justify="space-between" pb={10}>
+                <Text fw="bold" c="dark">
+                  Notifications
+                </Text>
+                <Button
+                  variant="white"
+                  size="xs"
+                  compact
+                  className="relative left-2"
+                  leftIcon={
+                    <IconChecks size={15} className="relative left-1" />
+                  }
+                >
+                  Mark all as read
+                </Button>
+              </Flex>
+            )}
+            {notifications?.length === 0 ? (
+              <Text fz="sm" c="dimmed">
+                No new notification!
               </Text>
-              <Button
-                variant="white"
-                size="xs"
-                compact
-                className="relative left-2"
-                leftIcon={<IconChecks size={15} className="relative left-1" />}
-              >
-                Mark all as read
-              </Button>
-            </Flex>
-            <Indicator size={8} pb={5} position="top-start" offset={8}>
-              <Group
-                align="start"
-                spacing={10}
-                className="hover:bg-gray-50 px-3 py-1 rounded-md cursor-pointer transition-all"
-              >
-                <Avatar
-                  mt={5}
-                  radius={100}
-                  src={user?.picture}
-                  alt=""
-                  size={36}
-                  imageProps={{ referrerPolicy: "no-referrer" }}
-                />
-                <Stack spacing={0}>
-                  <Text c="dark" fz="sm">
-                    Eren Yeager assigned a new task for you
-                  </Text>
-                  <Group spacing={10}>
-                    <Text c="dark" fz="xs">
-                      Task name:
-                    </Text>
-                    <Text c="dimmed" fz="xs">
-                      Header Mobile
-                    </Text>
-                  </Group>
-                  <Text c="dimmed" fz="xs">
-                    Today at 08:32 PM (20 mins ago)
-                  </Text>
-                </Stack>
-              </Group>
-            </Indicator>
-            <Indicator size={8} pb={5} position="top-start" offset={8}>
-              <Group
-                align="start"
-                spacing={10}
-                className="hover:bg-gray-50 px-3 py-1 rounded-md cursor-pointer transition-all"
-              >
-                <Avatar
-                  mt={5}
-                  radius={100}
-                  src={user?.picture}
-                  alt=""
-                  size={36}
-                  imageProps={{ referrerPolicy: "no-referrer" }}
-                />
-                <Stack spacing={0}>
-                  <Text c="dark" fz="sm">
-                    Juan Dela Cruz marks your task as failed
-                  </Text>
-                  <Group spacing={10}>
-                    <Text c="dark" fz="xs">
-                      Task name:
-                    </Text>
-                    <Text c="dimmed" fz="xs">
-                      Dashboard
-                    </Text>
-                  </Group>
-                  <Text c="dimmed" fz="xs">
-                    Today at 03:32 PM (12 mins ago)
-                  </Text>
-                </Stack>
-              </Group>
-            </Indicator>
-            <Indicator size={8} pb={5} position="top-start" offset={8}>
-              <Group
-                align="start"
-                spacing={10}
-                className="hover:bg-gray-50 px-3 py-1 rounded-md cursor-pointer transition-all"
-              >
-                <Avatar
-                  mt={5}
-                  radius={100}
-                  src={user?.picture}
-                  alt=""
-                  size={36}
-                  imageProps={{ referrerPolicy: "no-referrer" }}
-                />
-                <Stack spacing={0}>
-                  <Text c="dark" fz="sm">
-                    Juan Dela Cruz comment on your task
-                  </Text>
-                  <Group spacing={10}>
-                    <Text c="dark" fz="xs">
-                      Task name:
-                    </Text>
-                    <Text c="dimmed" fz="xs">
-                      wahh wahh woo
-                    </Text>
-                  </Group>
-                  <Text c="dimmed" fz="xs">
-                    Today at 03:32 PM (12 mins ago)
-                  </Text>
-                  <div className="bg-gray-100 px-2 py-1 rounded-md">
-                    <Text c="dimmed" fz="xs" className="truncate w-[230px]">
-                      Please finish this on time motherfucker, im expecting that
-                      you finish this before 1pm. fuck
-                    </Text>
-                  </div>
-                </Stack>
-              </Group>
-            </Indicator>
-          </Popover.Dropdown>
-        </Popover>
+            ) : (
+              <Menu.Item className="p-0 hover:bg-white">
+                <Notifications />
+              </Menu.Item>
+            )}
+          </Menu.Dropdown>
+        </Menu>
 
         {user && user?.role !== "trainee" && pathname !== "/" && (
           <>

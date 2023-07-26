@@ -2,12 +2,16 @@ import { Card, Group, Text, Box, Badge } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import { ITask } from "../../../interfaces/task.interface";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { reset } from "../../../features/notif/notificationSlice";
 interface Props {
   setViewId: Dispatch<SetStateAction<string | null>>;
   toggle: () => void;
 }
 
 const Completed = ({ toggle, setViewId }: Props) => {
+  const dispatch = useAppDispatch();
+  const { taskOnNotif } = useAppSelector((state) => state.notif);
   const { data: tasks } = useGetAllTasksQuery();
   const completed = tasks?.filter((task: ITask) => task.status === "completed");
   return (
@@ -15,10 +19,13 @@ const Completed = ({ toggle, setViewId }: Props) => {
       {completed?.map((task) => (
         <Card
           key={task._id}
-          className="cursor-pointer hover:shadow-xl rounded-md shadow-md transition-all"
+          className={`cursor-pointer hover:shadow-xl rounded-md shadow-md transition-all ${
+            task.taskname === taskOnNotif ? "animate-recording shadow-xl " : ""
+          }`}
           onClick={() => {
             toggle();
             setViewId(task._id!);
+            dispatch(reset());
           }}
         >
           <div className="bg-indigo-300 w-8 h-1"></div>

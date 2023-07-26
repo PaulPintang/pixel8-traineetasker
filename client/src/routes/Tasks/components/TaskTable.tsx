@@ -31,7 +31,7 @@ import {
   useGetAllTasksQuery,
 } from "../../../features/api/task/taskApiSlice";
 import { formatDateTime } from "../../../utils/formatDateTime";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useLocation } from "react-router-dom";
 import { ITask } from "../../../interfaces/task.interface";
 import { ITrainee } from "../../../interfaces/user.interface";
@@ -41,6 +41,7 @@ import EmptyState from "../../../components/EmptyState";
 import { calculateSpentTime } from "../../../utils/calculateSpentTime";
 import ToastNotify from "../../../components/ToastNotify";
 import ViewTaskModal from "./modals/ViewTaskModal";
+import { reset } from "../../../features/notif/notificationSlice";
 
 interface Props {
   trainee: ITrainee;
@@ -60,6 +61,9 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
   const [page, setPage] = useState(1);
   const [task, setTask] = useState<ITask>({});
   const [query, setQuery] = useState("");
+
+  const dispatch = useAppDispatch();
+  const { taskOnNotif } = useAppSelector((state) => state.notif);
 
   useEffect(() => {
     if (filterBy) {
@@ -157,7 +161,9 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
 
           <td className=" md:table-cell lg:table-cell  pt-2">
             <Flex
-              className="rounded bg-gray-50 max-w-max px-2 py-1 gap-2"
+              className={`rounded bg-gray-50 max-w-max px-2 py-1 gap-2 ${
+                task.taskname === taskOnNotif ? "animate-searching" : ""
+              }`}
               align="center"
             >
               <div>
@@ -236,6 +242,7 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
                       onClick={() => {
                         view();
                         setViewId(task._id!);
+                        dispatch(reset());
                       }}
                       icon={<IconInfoCircle size={16} />}
                     >

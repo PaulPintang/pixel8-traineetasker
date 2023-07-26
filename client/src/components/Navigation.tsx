@@ -6,11 +6,12 @@ import {
   IconReport,
 } from "@tabler/icons-react";
 import { NavLink, useLocation } from "react-router-dom";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { formatDateTime } from "../utils/formatDateTime";
+import { reset } from "../features/notif/notificationSlice";
 
 const Navigation = () => {
-  const date = new Date();
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const location = useLocation();
   const { pathname } = location;
@@ -18,7 +19,11 @@ const Navigation = () => {
   return (
     <Flex justify="space-between" align="center">
       <Group spacing={0}>
-        <NavLink to="dashboard" className="text-gray-700">
+        <NavLink
+          to="dashboard"
+          onClick={() => dispatch(reset())}
+          className="text-gray-700"
+        >
           <Button
             leftIcon={<IconLayoutDashboard size={18} />}
             size="xs"
@@ -36,7 +41,11 @@ const Navigation = () => {
         </NavLink>
 
         {user?.role !== "admin" && (
-          <NavLink to="tasks" className="text-gray-700">
+          <NavLink
+            to="tasks"
+            onClick={() => dispatch(reset())}
+            className="text-gray-700"
+          >
             <Button
               leftIcon={<IconChecklist size={18} />}
               size="xs"
@@ -56,7 +65,11 @@ const Navigation = () => {
 
         {user?.role === "trainee" && (
           <>
-            <NavLink to="timesheet" className="text-gray-700">
+            <NavLink
+              to="timesheet"
+              onClick={() => dispatch(reset())}
+              className="text-gray-700"
+            >
               <Button
                 leftIcon={<IconCalendarStats size={18} />}
                 size="xs"
@@ -72,7 +85,11 @@ const Navigation = () => {
                 </Text>
               </Button>
             </NavLink>
-            <NavLink to="dtr" className="text-gray-700">
+            <NavLink
+              to="dtr"
+              onClick={() => dispatch(reset())}
+              className="text-gray-700"
+            >
               <Button
                 leftIcon={<IconReport size={18} />}
                 size="xs"

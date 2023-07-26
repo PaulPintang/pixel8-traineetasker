@@ -1,4 +1,4 @@
-import { lazy, useState, Suspense } from "react";
+import { lazy, useState, useEffect } from "react";
 import { Flex, Grid, Text, Button, Tabs, Stack } from "@mantine/core";
 import { ManageTaskLabels } from "../../components/ColorLabels";
 const NewTask = lazy(() => import("./components/NewTask"));
@@ -12,12 +12,13 @@ import { useDisclosure } from "@mantine/hooks";
 import { useDocumentTitle } from "@mantine/hooks";
 import ViewTaskModal from "./components/modals/ViewTaskModal";
 import UpdateTaskModal from "./components/modals/UpdateTaskModal";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useGetAllTasksQuery } from "../../features/api/task/taskApiSlice";
 import { ITrainee } from "../../interfaces/user.interface";
 import { useLocation } from "react-router-dom";
 import AssignTaskModal from "../Dashboard/components/AssignTaskModal";
 import AddTaskModal from "./components/modals/AddTaskModal";
+import { reset } from "../../features/notif/notificationSlice";
 
 interface Props {
   trainee?: ITrainee;

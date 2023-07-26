@@ -37,10 +37,14 @@ import { useAppSelector } from "../../../../app/hooks";
 import { useRef, useState } from "react";
 import TimelineComponent from "./ViewTask/components/Timeline";
 import { JoinRoom } from "../../../../utils/socketConnect";
-import { ISheets } from "../../../../interfaces/records.interface";
+import {
+  ISheets,
+  Notification,
+} from "../../../../interfaces/records.interface";
 import { useMediaQuery } from "@mantine/hooks";
 import { calculateSpentTime } from "../../../../utils/calculateSpentTime";
 import ToastNotify from "../../../../components/ToastNotify";
+import { usePushNotificationMutation } from "../../../../features/api/notification/notificationApiSlice";
 
 interface ModalProps {
   viewId?: string | null;
@@ -66,6 +70,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
   // });
   const [taskStatus, taskState] = useTaskStatusMutation();
   const [comment, commentState] = useCommentOnTaskMutation();
+  const [pushNotification] = usePushNotificationMutation();
   const assign = trainees?.find((trainee) => trainee.name === task?.assign);
 
   const sheet = trainees?.map((trainee) =>
@@ -99,6 +104,19 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     toggleView();
     ToastNotify(`Task status changed to ${status}`, "success");
     refetch();
+    if (status === "forqa") {
+      const notification: Notification = {
+        task: task?.taskname!,
+        type: "task",
+        to: "",
+        from: {
+          name: user?.name!,
+          picture: user?.picture!,
+        },
+        content: `${user?.name} mark this task as ${status}`,
+      };
+      await pushNotification(notification);
+    }
   };
 
   // ? SUPERVISOR
@@ -109,6 +127,17 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     toggleView();
     ToastNotify(`Task status changed to ${status}`, "success");
     refetch();
+    const notification: Notification = {
+      task: task?.taskname!,
+      type: "task",
+      to: task?.assign!,
+      from: {
+        name: user?.name!,
+        picture: user?.picture!,
+      },
+      content: `${user?.name} marks your task as ${status}`,
+    };
+    await pushNotification(notification);
   };
 
   const addComment = async () => {
@@ -120,6 +149,19 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
       date: new Date().toISOString(),
     };
     await comment({ msg: message, rooms: [user?.course] });
+    const notification: Notification = {
+      task: task?.taskname!,
+      type: "comment",
+      to: task?.assign!,
+      from: {
+        name: user?.name!,
+        picture: user?.picture!,
+      },
+      content: `${user?.name} comment on your task`,
+      comment: msg.current?.value!,
+    };
+
+    await pushNotification(notification);
     msg.current!.value = "";
   };
   return (

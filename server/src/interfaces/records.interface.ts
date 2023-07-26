@@ -27,3 +27,16 @@ export interface IDtr {
   };
   status?: "recorded" | "recording";
 }
+
+export interface Notification {
+  task: string;
+  type: "comment" | "task";
+  to: string;
+  from: {
+    name: string;
+    picture: string;
+  };
+  content: string;
+  comment?: string;
+  date?: string;
+}
