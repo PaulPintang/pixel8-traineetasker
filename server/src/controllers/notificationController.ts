@@ -11,12 +11,11 @@ export const getNotification = asyncHandler(
       const account = await Account.findOne({ email: res.locals.user.email });
       const notifications = await Notification.find({ to: account.name });
       res.json(notifications);
-    } else if (
-      res.locals.user.role === "QA Personnel" ||
-      res.locals.user.role === "Task manager"
-    ) {
+    } else {
+      const account = await Account.findOne({ email: res.locals.user.email });
       const notifications = await Notification.find({
-        to: "",
+        to: account.role,
+        course: account.course,
       });
       res.json(notifications);
     }
@@ -29,37 +28,40 @@ export const pushNotification = asyncHandler(
     res: Response,
     next: NextFunction
   ) => {
-    const newNotification = await Notification.create({
-      task: req.body.task,
-      type: req.body.type,
-      to: req.body.to,
-      from: {
-        name: req.body.from.name,
-        picture: req.body.from.picture,
-      },
-      content: req.body.content,
-      date: new Date().toISOString(),
-      comment: req.body.type === "comment" ? req.body.comment : null,
-    });
+    if (res.locals.user.role === "trainee" && req.body.type === "comment") {
+      const recipients = [
+        "QA Personnel",
+        "Task manager",
+        "supervisor",
+        "admin",
+      ];
+      const user = await Account.findOne({ email: res.locals.user.email });
+      async function createNotification(to: string) {
+        const notificationData = {
+          ...req.body,
+          to: to,
+          date: new Date().toISOString(),
+          course: user.course,
+        };
 
-    res.json(newNotification);
+        await Notification.create(notificationData);
+      }
+      await Promise.all(recipients.map(createNotification));
+    } else {
+      const newNotification = await Notification.create({
+        ...req.body,
+        date: new Date().toISOString(),
+        comment: req.body.type === "comment" ? req.body.comment : null,
+      });
+      res.json(newNotification);
+    }
   }
 );
 
 export const readNotification = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    // console.log(req.params.id, req.body);
-    // if (req.params.id !== null) {
-    // console.log("delete single");
     const notification = await Notification.findByIdAndDelete(req.params.id);
     res.json(notification);
-    // } else {
-    // console.log("delete many");
-    // const notification = await Notification.deleteMany({
-    //   task: req.body.taskName,
-    // });
-    // res.json(notification);
-    // }
   }
 );
 
@@ -70,7 +72,9 @@ export const readAllNotification = asyncHandler(
       res.json(notif);
     } else {
       const account = await Account.findOne({ email: res.locals.user.email });
-      const notif = await Notification.deleteMany({ to: account.name });
+      const notif = await Notification.deleteMany({
+        to: res.locals.user.role === "trainee" ? account.name : account.role,
+      });
       res.json(notif);
     }
   }

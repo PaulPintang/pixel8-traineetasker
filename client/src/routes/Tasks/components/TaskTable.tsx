@@ -17,6 +17,7 @@ import {
   IconDots,
   IconEdit,
   IconInfoCircle,
+  IconMessage,
   IconSearch,
   IconTrash,
   IconUser,
@@ -42,6 +43,10 @@ import { calculateSpentTime } from "../../../utils/calculateSpentTime";
 import ToastNotify from "../../../components/ToastNotify";
 import ViewTaskModal from "./modals/ViewTaskModal";
 import { reset } from "../../../features/notif/notificationSlice";
+import {
+  useGetNotificationQuery,
+  useReadAllNotificationMutation,
+} from "../../../features/api/notification/notificationApiSlice";
 
 interface Props {
   trainee: ITrainee;
@@ -56,6 +61,8 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
   const [filterBy, setFilterBy] = useState<string | null>("");
   const [gettingData, setGettingData] = useState(false);
   const { data: tasks, refetch } = useGetAllTasksQuery();
+  const { data: notifications } = useGetNotificationQuery();
+  const [readAllNotification] = useReadAllNotificationMutation();
   const [deleteTask, { isLoading: deleting }] = useDeleteTaskMutation();
   const [assign, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
@@ -88,6 +95,18 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
     ToastNotify("Task deleted successfully", "success");
   };
 
+  const onViewTask = (task: ITask) => {
+    view();
+    setViewId(task._id!);
+    dispatch(reset());
+    const notif = notifications?.find(
+      (notif) => notif.task === task.taskname && notif.course === user.course
+    );
+    if (notif) {
+      readAllNotification(task.taskname!);
+    }
+  };
+
   const items = chunk(data, 10);
 
   const rows = items[page - 1]
@@ -104,7 +123,12 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
         morning: sheet?.morning!,
         afternoon: sheet?.afternoon,
       };
-      const { spent, totalSpentString } = calculateSpentTime(time);
+      const { totalSpentString } = calculateSpentTime(time);
+
+      const newcomment = notifications?.filter(
+        (notif) => notif.task === task?.taskname
+      );
+
       return (
         <tr key={task._id}>
           <td className=" md:table-cell lg:table-cell pl-3 pt-2">
@@ -160,53 +184,60 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
           )}
 
           <td className=" md:table-cell lg:table-cell  pt-2">
-            <Flex
-              className={`rounded bg-gray-50 max-w-max px-2 py-1 gap-2 ${
-                task.taskname === taskOnNotif ? "animate-searching" : ""
-              }`}
-              align="center"
-            >
-              <div>
-                <div
-                  className={`p-1 ${
-                    task.status === "new"
-                      ? "bg-indigo-300"
-                      : task.status === "inprogress"
-                      ? "bg-violet-400"
-                      : task.status === "completed"
-                      ? "bg-green-300"
-                      : task.status === "forqa"
-                      ? "bg-yellow-300"
-                      : "bg-red-300"
-                  }`}
-                ></div>
-              </div>
-              <Text
-                fw="bold"
-                className={`text-[11px] ${
-                  task.status === "new"
-                    ? "text-indigo-300"
-                    : task.status === "inprogress"
-                    ? "text-violet-400"
-                    : task.status === "completed"
-                    ? "text-green-300"
-                    : task.status === "forqa"
-                    ? "text-yellow-300"
-                    : "text-red-300"
+            <Group>
+              <Flex
+                className={`rounded bg-gray-50 max-w-max px-2 py-1 gap-2 ${
+                  task.taskname === taskOnNotif ? "animate-searching" : ""
                 }`}
+                align="center"
               >
-                {task.status}
-              </Text>
-            </Flex>
+                <div>
+                  <div
+                    className={`p-1 ${
+                      task.status === "new"
+                        ? "bg-indigo-300"
+                        : task.status === "inprogress"
+                        ? "bg-violet-400"
+                        : task.status === "completed"
+                        ? "bg-green-300"
+                        : task.status === "forqa"
+                        ? "bg-yellow-300"
+                        : "bg-red-300"
+                    }`}
+                  ></div>
+                </div>
+                <Text
+                  fw="bold"
+                  className={`text-[11px] ${
+                    task.status === "new"
+                      ? "text-indigo-300"
+                      : task.status === "inprogress"
+                      ? "text-violet-400"
+                      : task.status === "completed"
+                      ? "text-green-300"
+                      : task.status === "forqa"
+                      ? "text-yellow-300"
+                      : "text-red-300"
+                  }`}
+                >
+                  {task.status}
+                </Text>
+              </Flex>
+              {newcomment?.length ?? 0 !== 0 ? (
+                <Group spacing={6} className="hidden lg:flex md:flex">
+                  <IconMessage size={17} className="text-blue-500" />
+                  <Text fz="xs" c="blue" className="animate-pulse">
+                    + {newcomment?.length} new
+                  </Text>
+                </Group>
+              ) : null}
+            </Group>
           </td>
 
           <td className=" md:table-cell lg:table-cell  pt-2">
             {user?.role === "supervisor" || user?.role === "admin" ? (
               <Button
-                onClick={() => {
-                  view();
-                  setViewId(task._id!);
-                }}
+                onClick={() => onViewTask(task)}
                 leftIcon={
                   <IconInfoCircle
                     size={16}
@@ -225,11 +256,22 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
                 transitionProps={{ transition: "rotate-right", duration: 150 }}
                 closeOnItemClick
                 withArrow
+                position="bottom-start"
               >
                 <Menu.Target>
-                  <ActionIcon variant="white" color="cyan">
-                    <IconDots size={19} />
-                  </ActionIcon>
+                  <Group>
+                    <ActionIcon variant="white" color="cyan">
+                      <IconDots size={19} />
+                    </ActionIcon>
+                    {task.comments?.length ?? 0 !== 0 ? (
+                      <Group spacing={6} className="hidden lg:flex md:flex">
+                        <IconMessage size={17} className="text-gray-500" />
+                        <Text fz="xs" c="dimmed">
+                          {task.comments?.length}
+                        </Text>
+                      </Group>
+                    ) : null}
+                  </Group>
                 </Menu.Target>
 
                 <Menu.Dropdown>
@@ -239,11 +281,7 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
                     <Menu.Item
                       className="bg-white hover:bg-white"
                       py={0}
-                      onClick={() => {
-                        view();
-                        setViewId(task._id!);
-                        dispatch(reset());
-                      }}
+                      onClick={() => onViewTask(task)}
                       icon={<IconInfoCircle size={16} />}
                     >
                       <Text fz="xs" fw="bold" c="dark">

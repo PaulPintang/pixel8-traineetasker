@@ -39,5 +39,6 @@ export interface Notification {
   };
   content: string;
   comment?: string;
+  course?: string;
   date?: string;
 }

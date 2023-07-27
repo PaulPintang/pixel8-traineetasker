@@ -21,6 +21,7 @@ const notificationSchema = new Schema<Notification>({
   comment: {
     type: String,
   },
+  course: String,
   date: String,
 });
 

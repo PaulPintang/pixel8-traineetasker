@@ -9,6 +9,8 @@ import { JoinRoom } from "../../../utils/socketConnect";
 import { useState } from "react";
 import { ITask } from "../../../interfaces/task.interface";
 import ToastNotify from "../../../components/ToastNotify";
+import { Notification } from "../../../interfaces/records.interface";
+import { usePushNotificationMutation } from "../../../features/api/notification/notificationApiSlice";
 interface ModalProps {
   assignTo: string;
   assign: boolean;
@@ -20,12 +22,23 @@ const AssignTaskModal = ({ assign, toggle, assignTo }: ModalProps) => {
   const [taskId, setTaskId] = useState("");
   const { user } = useAppSelector((state) => state.auth);
   const [assignTask, { isLoading }] = useAssignTaskMutation();
+  const [pushNotification] = usePushNotificationMutation();
 
   const handleAssign = async (task: ITask) => {
-    JoinRoom(user?.course!, user?.role!);
     setTaskId(task._id!);
     const data = { _id: task._id, name: assignTo, course: user?.course };
     await assignTask({ task: data, rooms: [user?.course] });
+    const notification: Notification = {
+      task: task?.taskname!,
+      type: "task",
+      to: assignTo,
+      from: {
+        name: user?.name!,
+        picture: user?.picture!,
+      },
+      content: `${user?.name} assigned new task for you`,
+    };
+    await pushNotification({ notification, rooms: [user?.course, "trainee"] });
     ToastNotify(`Task successfully assigned`, "success");
     toggle();
   };

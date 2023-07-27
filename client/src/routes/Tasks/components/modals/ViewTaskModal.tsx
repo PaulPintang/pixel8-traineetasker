@@ -98,7 +98,6 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     await taskStatus({ task: data, rooms: [user?.course] });
     toggleView();
     ToastNotify(`Task status changed to ${status}`, "success");
-    refetch();
   };
 
   const handleCheckTask = async (status: "completed" | "failed") => {
@@ -106,7 +105,6 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     await taskStatus({ task: data, rooms: [user?.course] });
     toggleView();
     ToastNotify(`Task status changed to ${status}`, "success");
-    refetch();
     const notification: Notification = {
       task: task?.taskname!,
       type: "task",
@@ -117,7 +115,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
       },
       content: `${user?.name} marks your task as ${status}`,
     };
-    await pushNotification({ notification, rooms: [user?.course, "trainee"] });
+    await pushNotification({ notification, rooms: [user?.course] });
   };
 
   const addComment = async () => {
@@ -131,16 +129,18 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     const notification: Notification = {
       task: task?.taskname!,
       type: "comment",
-      to: task?.assign!,
+      to: user?.role === "trainee" ? "" : task?.assign!,
       from: {
         name: user?.name!,
         picture: user?.picture!,
       },
-      content: `${user?.name} comment on your task`,
+      content:
+        user?.role !== "trainee"
+          ? `${user?.name} comment on your task`
+          : `${user?.name} comment on this task`,
       comment: msg.current?.value!,
     };
-
-    await pushNotification({ notification, rooms: [user?.course, "trainee"] });
+    await pushNotification({ notification, rooms: [user?.course] });
     msg.current!.value = "";
   };
   return (
@@ -315,19 +315,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
               <Text className="w-1/4" c="dimmed" fz="sm">
                 On timesheet
               </Text>
-              <Text fz="sm">
-                {/* {spent.totalSpent.hours === 1
-                  ? spent.totalSpent.hours + "hr"
-                  : spent.totalSpent.hours > 1
-                  ? spent.totalSpent.hours + "hrs"
-                  : spent.totalSpent.hours === 0 && ""}
-                {spent.totalSpent.minutes === 1
-                  ? spent.totalSpent.minutes + "min"
-                  : spent.totalSpent.minutes > 1
-                  ? spent.totalSpent.minutes + "mins"
-                  : spent.totalSpent.minutes === 0 && ""} */}
-                {totalSpentString}
-              </Text>
+              <Text fz="sm">{totalSpentString}</Text>
             </Group>
           )}
           <Group align="center">
@@ -388,12 +376,12 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
                 <IconSend size={19} />
               </ActionIcon>
             </Flex>
-            {task?.comments?.length === 0 ? (
+            {task?.comments?.length ?? 0 !== 0 ? (
+              <Comments task={task!} user={user!} assign={assign?.picture!} />
+            ) : (
               <Text c="dimmed" fz="sm" fs="italic">
                 No discussions yet
               </Text>
-            ) : (
-              <Comments task={task!} user={user!} assign={assign?.picture!} />
             )}
           </Tabs.Panel>
           <Tabs.Panel value="second" className="space-y-2">

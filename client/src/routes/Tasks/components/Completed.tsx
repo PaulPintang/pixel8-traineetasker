@@ -54,15 +54,14 @@ const Completed = ({ toggle, setViewId }: Props) => {
           >
             <Flex justify="space-between" align="center">
               <div className="bg-indigo-300 w-8 h-1"></div>
-              {task.comments?.length ??
-                (0 !== 0 && (
-                  <Group spacing={6}>
-                    <IconMessage size={17} className="text-gray-500" />
-                    <Text fz="xs" c="dimmed">
-                      {task.comments?.length}
-                    </Text>
-                  </Group>
-                ))}
+              {task.comments?.length ?? 0 !== 0 ? (
+                <Group spacing={6}>
+                  <IconMessage size={17} className="text-gray-500" />
+                  <Text fz="xs" c="dimmed">
+                    {task.comments?.length}
+                  </Text>
+                </Group>
+              ) : null}
             </Flex>
             <Box pt={15} className="space-y-1">
               <Text fw="bold" c="dark" fz="sm">

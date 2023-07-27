@@ -40,4 +40,5 @@ export interface Notification {
   content: string;
   comment?: string;
   date?: string;
+  course?: string;
 }
