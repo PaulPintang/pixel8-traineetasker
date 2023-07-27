@@ -10,9 +10,6 @@ import {
   Badge,
   ScrollArea,
   Indicator,
-  Popover,
-  Stack,
-  Divider,
 } from "@mantine/core";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -49,6 +46,9 @@ const Header = () => {
   const { data: notifications } = useGetNotificationQuery();
   const { data: tasks } = useGetAllTasksQuery();
 
+  const onnotif = tasks?.filter((task) => task.status === "forqa");
+  const mynotif = notifications?.filter((notif) => notif.to === user?.name);
+
   const dispatch = useAppDispatch();
 
   const GoogleUseAuth = useGoogleLogin({
@@ -66,7 +66,6 @@ const Header = () => {
         const user = await loginUser({ name, email, picture }).unwrap();
         dispatch(setUser(user));
         navigate("dashboard");
-        // JoinRoom(user.course!, user.role!);
       };
 
       OAuth().catch((err) => console.log(err));
@@ -109,16 +108,26 @@ const Header = () => {
               variant="transparent"
               radius="xl"
               className={`${
-                notifications?.length !== 0 ? "animate-searching" : ""
+                mynotif?.length !== 0 || onnotif?.length !== 0
+                  ? "animate-searching"
+                  : ""
               }`}
             >
               <Indicator
                 inline
-                label={notifications?.length}
+                label={
+                  user?.role === "trainee" ? mynotif?.length : onnotif?.length
+                }
                 color="red"
                 size={16}
                 offset={2}
-                disabled={notifications?.length === 0 ? true : false}
+                disabled={
+                  user?.role === "trainee" && mynotif?.length === 0
+                    ? true
+                    : user?.role !== "trainee" && onnotif?.length === 0
+                    ? true
+                    : false
+                }
               >
                 <IconBell size={20} className="text-gray-500 " />
               </Indicator>

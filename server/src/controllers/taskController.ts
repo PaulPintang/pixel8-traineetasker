@@ -103,9 +103,7 @@ export const updateTaskStatus = asyncHandler(
             status: "forqa",
             timeline: {
               ...task.timeline,
-              doneAt: !task.timeline.doneAt
-                ? spentTimeFormat
-                : task.timeline.doneAt,
+              doneAt: new Date().toISOString(),
             },
             spent:
               task.spent === ""

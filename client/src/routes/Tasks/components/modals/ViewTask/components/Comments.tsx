@@ -12,6 +12,7 @@ export interface Props {
 
 const Comments = ({ task, user }: Props) => {
   const { data: accounts } = useGetAllAccountQuery();
+
   return (
     <section className="space-y-3">
       {task?.comments?.map((item, index) => {

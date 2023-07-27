@@ -77,6 +77,12 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("newTask", ({ notification, rooms }) => {
+    rooms.forEach((room: string) => {
+      socket.to(room).emit("newTaskNotification", notification);
+    });
+  });
+
   socket.on("disconnect", () => {});
 });
 

@@ -2,6 +2,7 @@ import { Response, Request, NextFunction } from "express";
 import asyncHandler from "express-async-handler";
 import Notification from "../models/notificationModel";
 import Account from "../models/accountModel";
+import Task from "../models/taskModel";
 import { Notification as INotitification } from "../interfaces/records.interface";
 
 export const getNotification = asyncHandler(
@@ -47,15 +48,30 @@ export const pushNotification = asyncHandler(
 
 export const readNotification = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
+    // console.log(req.params.id, req.body);
+    // if (req.params.id !== null) {
+    // console.log("delete single");
     const notification = await Notification.findByIdAndDelete(req.params.id);
     res.json(notification);
+    // } else {
+    // console.log("delete many");
+    // const notification = await Notification.deleteMany({
+    //   task: req.body.taskName,
+    // });
+    // res.json(notification);
+    // }
   }
 );
 
 export const readAllNotification = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const account = await Account.findOne({ email: res.locals.user.email });
-    const notif = await Notification.deleteMany({ to: account.name });
-    res.json(notif);
+    if (req.body.taskname) {
+      const notif = await Notification.deleteMany({ task: req.body.taskname });
+      res.json(notif);
+    } else {
+      const account = await Account.findOne({ email: res.locals.user.email });
+      const notif = await Notification.deleteMany({ to: account.name });
+      res.json(notif);
+    }
   }
 );

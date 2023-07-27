@@ -7,6 +7,9 @@ import {
   List,
   ThemeIcon,
 } from "@mantine/core";
+import { format, parseISO } from "date-fns";
+import { enUS } from "date-fns/locale";
+
 import { Props } from "./Comments";
 import { IconCheck, IconCircleX } from "@tabler/icons-react";
 import { useGetAllAccountQuery } from "../../../../../../features/api/account/accountApiSlice";
@@ -17,6 +20,15 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
 
   const failedby = accounts?.find((acc) => acc.role === "QA Personnel");
   const startedby = accounts?.find((acc) => acc.role === "Task manager");
+
+  let doneAt = "";
+  if (task.timeline?.doneAt) {
+    const dateObj = parseISO(task.timeline?.doneAt!);
+
+    doneAt = format(dateObj, "EEE MMM dd, yyyy 'at' hh:mm a", {
+      locale: enUS,
+    });
+  }
 
   return (
     <Timeline active={0} bulletSize={20} lineWidth={3} pt={10} color="cyan">
@@ -119,7 +131,7 @@ const TimelineComponent = ({ user, task, assign }: Props) => {
             Task for-QA
           </Text>
           <Text size="xs" mt={4}>
-            {task.timeline.doneAt}
+            {doneAt}
           </Text>
         </Timeline.Item>
       ) : null}

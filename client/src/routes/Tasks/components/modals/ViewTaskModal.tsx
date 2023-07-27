@@ -99,19 +99,6 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     toggleView();
     ToastNotify(`Task status changed to ${status}`, "success");
     refetch();
-    // if (status === "forqa") {
-    //   const notification: Notification = {
-    //     task: task?.taskname!,
-    //     type: "task",
-    //     to: "QA Personnel",
-    //     from: {
-    //       name: user?.name!,
-    //       picture: user?.picture!,
-    //     },
-    //     content: `${user?.name} mark this task as ${status}`,
-    //   };
-    //   await pushNotification(notification);
-    // }
   };
 
   const handleCheckTask = async (status: "completed" | "failed") => {
@@ -130,7 +117,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
       },
       content: `${user?.name} marks your task as ${status}`,
     };
-    await pushNotification(notification);
+    await pushNotification({ notification, rooms: [user?.course, "trainee"] });
   };
 
   const addComment = async () => {
@@ -153,7 +140,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
       comment: msg.current?.value!,
     };
 
-    await pushNotification(notification);
+    await pushNotification({ notification, rooms: [user?.course, "trainee"] });
     msg.current!.value = "";
   };
   return (
@@ -360,7 +347,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
           </Group>
         </div>
 
-        <Tabs defaultValue="second" pt={10} color="cyan">
+        <Tabs defaultValue="first" pt={10} color="cyan">
           <Tabs.List>
             <Tabs.Tab className="w-2/4 text-xs" value="first">
               Comments
@@ -401,7 +388,13 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
                 <IconSend size={19} />
               </ActionIcon>
             </Flex>
-            <Comments task={task!} user={user!} assign={assign?.picture!} />
+            {task?.comments?.length === 0 ? (
+              <Text c="dimmed" fz="sm" fs="italic">
+                No discussions yet
+              </Text>
+            ) : (
+              <Comments task={task!} user={user!} assign={assign?.picture!} />
+            )}
           </Tabs.Panel>
           <Tabs.Panel value="second" className="space-y-2">
             <TimelineComponent

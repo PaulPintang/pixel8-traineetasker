@@ -103,7 +103,7 @@ const TimeSheets = ({ profile }: PropsOnProfile) => {
               className={
                 (sheet.status === "recording" &&
                   sheet.afternoon?.start !== "") ||
-                sheet.morning?.end === ""
+                (sheet.status === "recording" && sheet.morning?.end === "")
                   ? "animate-recording"
                   : ""
               }

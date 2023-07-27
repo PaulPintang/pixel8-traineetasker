@@ -9,6 +9,7 @@ import {
   Flex,
   Badge,
   Menu,
+  Loader,
 } from "@mantine/core";
 import TimeAgo from "../routes/Tasks/components/modals/ViewTask/components/TimeAgo";
 import {
@@ -27,8 +28,8 @@ const Notifications = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { data: notifications } = useGetNotificationQuery();
   const { data: tasks } = useGetAllTasksQuery();
-  const { data: accounts } = useGetAllAccountQuery();
-  const [readAll, { isLoading }] = useReadAllNotificationMutation();
+  const { data: accounts, isLoading } = useGetAllAccountQuery();
+  const [readAllNotification, status] = useReadAllNotificationMutation();
   const [readNotification] = useReadNotificationMutation();
   const dispatch = useAppDispatch();
   return (
@@ -46,29 +47,31 @@ const Notifications = () => {
                   Notifications
                 </Text>
                 <Button
-                  onClick={readAll}
+                  onClick={() => readAllNotification()}
                   variant="white"
                   size="xs"
                   compact
                   leftIcon={
                     <IconChecks size={15} className="relative left-1" />
                   }
-                  loading={isLoading}
+                  loading={status.isLoading}
                 >
                   Mark all as read
                 </Button>
               </Flex>
               {notifications
+                ?.filter((notif) => notif.to === user.name)
                 ?.slice()
                 .reverse()
                 ?.map((notif) => (
-                  <Menu.Item className="p-0 hover:bg-white">
+                  <Menu.Item key={notif._id} className="p-0 hover:bg-white">
                     <Link
-                      key={notif.date}
                       to="tasks"
                       onClick={() => {
                         dispatch(setView(notif.task));
-                        readNotification({ _id: notif._id! });
+                        if (notif.type === "task") {
+                          readNotification({ _id: notif._id! });
+                        }
                       }}
                     >
                       <Indicator
@@ -125,82 +128,93 @@ const Notifications = () => {
         </>
       ) : (
         <>
-          {tasks?.filter((task) => task.status === "forqa").length === 0 ? (
-            <Text fz="sm" c="dimmed">
-              No new notification!
-            </Text>
+          {isLoading ? (
+            <Loader size="xs" color="gray" />
           ) : (
             <>
-              <Flex align="center" justify="space-between" pb={10}>
-                <Text fw="bold" c="dark">
-                  To check tasks
+              {tasks?.filter((task) => task.status === "forqa").length === 0 ? (
+                <Text fz="sm" c="dimmed">
+                  No new notification!
                 </Text>
-                <Badge
-                  size="sm"
-                  color="indigo"
-                  variant="light"
-                  className="lowercase"
-                >
-                  {tasks?.filter((task) => task.status === "forqa").length}
-                </Badge>
-              </Flex>
-
-              {tasks
-                ?.filter((task) => task.status === "forqa")
-                .map((task) => {
-                  const account = accounts?.find(
-                    (acc) => acc.name === task.assign
-                  );
-                  return (
-                    <Link
-                      key={task._id}
-                      to="tasks"
-                      onClick={() => {
-                        dispatch(setView(task.taskname));
-                      }}
+              ) : (
+                <>
+                  <Flex align="center" justify="space-between" pb={10}>
+                    <Text fw="bold" c="dark">
+                      To check tasks
+                    </Text>
+                    <Badge
+                      size="sm"
+                      color="indigo"
+                      variant="light"
+                      className="lowercase"
                     >
-                      <Indicator
-                        disabled
-                        size={8}
-                        pb={5}
-                        position="top-start"
-                        offset={8}
-                      >
-                        <Group
-                          align="start"
-                          spacing={10}
-                          className="hover:bg-gray-50 px-3 py-1 rounded-md cursor-pointer transition-all"
+                      {tasks?.filter((task) => task.status === "forqa").length}
+                    </Badge>
+                  </Flex>
+
+                  {tasks
+                    ?.filter((task) => task.status === "forqa")
+                    ?.slice()
+                    .sort((a, b) =>
+                      b.timeline!.doneAt!.localeCompare(a.timeline!.doneAt!)
+                    )
+                    .map((task) => {
+                      const account = accounts?.find(
+                        (acc) => acc.name === task.assign
+                      );
+                      return (
+                        <Menu.Item
+                          key={task._id}
+                          className="p-0 hover:bg-white"
                         >
-                          <Avatar
-                            mt={5}
-                            radius={100}
-                            src={account?.picture}
-                            alt=""
-                            size={36}
-                            imageProps={{ referrerPolicy: "no-referrer" }}
-                          />
-                          <Stack spacing={0}>
-                            <Text c="dark" fz="sm">
-                              {`${account?.name} marks this task as forqa`}
-                            </Text>
-                            <Group spacing={10}>
-                              <Text c="dark" fz="xs">
-                                Task name:
-                              </Text>
-                              <Text c="dimmed" fz="xs">
-                                {task.taskname}
-                              </Text>
-                            </Group>
-                            <Text c="dimmed" fz="xs">
-                              {task.timeline?.doneAt}
-                            </Text>
-                            {/* <TimeAgo timestamp={task.timeline?.doneAt!} /> */}
-                          </Stack>
-                        </Group>
-                      </Indicator>
-                    </Link>
-                  );
-                })}
+                          <Link
+                            to="tasks"
+                            onClick={() => {
+                              dispatch(setView(task.taskname));
+                            }}
+                          >
+                            <Indicator
+                              disabled
+                              size={8}
+                              pb={5}
+                              position="top-start"
+                              offset={8}
+                            >
+                              <Group
+                                align="start"
+                                spacing={10}
+                                className="hover:bg-gray-50 px-3 py-1 rounded-md cursor-pointer transition-all"
+                              >
+                                <Avatar
+                                  mt={5}
+                                  radius={100}
+                                  src={account?.picture}
+                                  alt=""
+                                  size={36}
+                                  imageProps={{ referrerPolicy: "no-referrer" }}
+                                />
+                                <Stack spacing={0}>
+                                  <Text c="dark" fz="sm">
+                                    {`${account?.name} marks this task as forqa`}
+                                  </Text>
+                                  <Group spacing={10}>
+                                    <Text c="dark" fz="xs">
+                                      Task name:
+                                    </Text>
+                                    <Text c="dimmed" fz="xs">
+                                      {task.taskname}
+                                    </Text>
+                                  </Group>
+                                  <TimeAgo timestamp={task.timeline?.doneAt!} />
+                                </Stack>
+                              </Group>
+                            </Indicator>
+                          </Link>
+                        </Menu.Item>
+                      );
+                    })}
+                </>
+              )}
             </>
           )}
         </>

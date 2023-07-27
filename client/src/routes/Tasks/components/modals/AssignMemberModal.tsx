@@ -4,7 +4,7 @@ import { useAppSelector } from "../../../../app/hooks";
 import { ITask } from "../../../../interfaces/task.interface";
 import { useAssignTaskMutation } from "../../../../features/api/task/taskApiSlice";
 import { useState } from "react";
-import { JoinRoom } from "../../../../utils/socketConnect";
+import { socket } from "../../../../utils/socketConnect";
 import ToastNotify from "../../../../components/ToastNotify";
 import { usePushNotificationMutation } from "../../../../features/api/notification/notificationApiSlice";
 import { Notification } from "../../../../interfaces/records.interface";
@@ -22,8 +22,6 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
   const [pushNotification] = usePushNotificationMutation();
 
   const handleAssign = async (name: string) => {
-    const date = new Date();
-    JoinRoom(user?.course!, user?.role!);
     setAssignTo(name);
     const data = { _id: task._id, name: name, course: user?.course };
     await assignTask({ task: data, rooms: [user?.course] });
@@ -37,7 +35,7 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
       },
       content: `${user?.name} assigned new task for you`,
     };
-    await pushNotification(notification);
+    await pushNotification({ notification, rooms: [user?.course, "trainee"] });
     ToastNotify(`Task successfully assigned`, "success");
     toggle();
   };
