@@ -11,7 +11,7 @@ import {
   Highlight,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconInfoCircle, IconX } from "@tabler/icons-react";
+import { IconInfoCircle, IconMessage, IconX } from "@tabler/icons-react";
 import { chunk, filter } from "lodash";
 import { useEffect, useState } from "react";
 import ViewTaskModal from "../../Tasks/components/modals/ViewTaskModal";
@@ -22,10 +22,18 @@ import { useGetAllTasksQuery } from "../../../features/api/task/taskApiSlice";
 import EmptyState from "../../../components/EmptyState";
 import GettingData from "../../../components/GettingData";
 import { IconSearch } from "@tabler/icons-react";
+import {
+  useGetNotificationQuery,
+  useReadAllNotificationMutation,
+} from "../../../features/api/notification/notificationApiSlice";
+import { ITask } from "../../../interfaces/task.interface";
 
 const TaskTableCard = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { data: tasks, refetch, isLoading, isFetching } = useGetAllTasksQuery();
+  const { taskOnNotif } = useAppSelector((state) => state.notif);
+  const { data: notifications } = useGetNotificationQuery();
+  const [readAllNotification] = useReadAllNotificationMutation();
   const [view, { toggle }] = useDisclosure();
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
@@ -41,7 +49,7 @@ const TaskTableCard = () => {
     morning: sheet?.morning!,
     afternoon: sheet?.afternoon,
   };
-  const { spent, totalSpentString } = calculateSpentTime(time);
+  const { totalSpentString } = calculateSpentTime(time);
 
   const alltask = tasks?.filter((search) =>
     search.taskname?.toLowerCase().includes(query.toLowerCase())
@@ -63,6 +71,17 @@ const TaskTableCard = () => {
     }
   }, [filterBy]);
 
+  const onViewTask = (task: ITask) => {
+    toggle();
+    setViewId(task._id!);
+    const notif = notifications?.find(
+      (notif) => notif.task === taskOnNotif || notif.task === task.taskname
+    );
+    if (notif) {
+      readAllNotification({ task: task.taskname! });
+    }
+  };
+
   const rows = items[page - 1]?.map((task) => {
     return (
       <tr key={task._id}>
@@ -78,23 +97,7 @@ const TaskTableCard = () => {
         </td>
         <td className="px-5 py-2  md:table-cell lg:table-cell ">
           <Text>
-            {task.spent !== "" ? (
-              task.spent
-            ) : (
-              <span>
-                {/* {spent.totalSpent.hours === 1
-                  ? spent.totalSpent.hours + "hr"
-                  : spent.totalSpent.hours > 1
-                  ? spent.totalSpent.hours + "hrs"
-                  : spent.totalSpent.hours === 0 && ""}
-                {spent.totalSpent.minutes === 1
-                  ? spent.totalSpent.minutes + "min"
-                  : spent.totalSpent.minutes > 1
-                  ? spent.totalSpent.minutes + "mins"
-                  : spent.totalSpent.minutes === 0 && ""} */}
-                {totalSpentString}
-              </span>
-            )}
+            {task.spent !== "" ? task.spent : <span>{totalSpentString}</span>}
           </Text>
         </td>
         <td className=" py-2 hidden md:table-cell lg:table-cell">
@@ -132,10 +135,7 @@ const TaskTableCard = () => {
         </td>
         <td className="dark:text-gray-400   md:table-cell lg:table-cell">
           <Button
-            onClick={() => {
-              toggle();
-              setViewId(task._id!);
-            }}
+            onClick={() => onViewTask(task)}
             leftIcon={<IconInfoCircle size={16} />}
             variant="white"
             color="cyan"

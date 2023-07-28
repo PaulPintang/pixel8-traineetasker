@@ -28,8 +28,6 @@ import { Notification } from "../interfaces/records.interface";
 const Notifications = () => {
   const { user } = useAppSelector((state) => state.auth);
   const { data: notifications } = useGetNotificationQuery();
-  const { data: tasks } = useGetAllTasksQuery();
-  const { data: accounts, isLoading } = useGetAllAccountQuery();
   const [readAllNotification, status] = useReadAllNotificationMutation();
   const [readNotification] = useReadNotificationMutation();
   const dispatch = useAppDispatch();
@@ -46,8 +44,6 @@ const Notifications = () => {
       readNotification({ _id: notif._id! });
     }
   };
-
-  console.log(notifications);
 
   return (
     <ScrollArea.Autosize mah={290} scrollbarSize={7}>

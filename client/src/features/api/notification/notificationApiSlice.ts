@@ -50,7 +50,10 @@ export const accountApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Notification"],
     }),
 
-    readAllNotification: builder.mutation<Notification, { task: string }>({
+    readAllNotification: builder.mutation<
+      Notification,
+      { task: string } | void
+    >({
       query: (toread) => ({
         url: "/notif/readall",
         method: "PUT",

@@ -71,20 +71,37 @@ export const readAllNotification = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const account = await Account.findOne({ email: res.locals.user.email });
 
-    const filter = {
-      task: req.body.task,
-      to: { $in: [account.role === "trainee" ? account.name : account.role] },
-      course: account.course,
-    };
+    if (req.body.task) {
+      const filter = {
+        task: req.body.task,
+        to: { $in: [account.role === "trainee" ? account.name : account.role] },
+        course: account.course,
+      };
 
-    if (account.role === "trainee") {
-      const notif = await Notification.deleteMany(filter);
-      res.json(notif);
+      if (account.role === "trainee") {
+        const notif = await Notification.deleteMany(filter);
+        res.json(notif);
+      } else {
+        const update = await Notification.updateMany(filter, {
+          $pull: { to: account.role },
+        });
+        res.json(update);
+      }
     } else {
-      const update = await Notification.updateMany(filter, {
-        $pull: { to: account.role },
-      });
-      res.json(update);
+      if (account.role === "trainee") {
+        const notif = await Notification.deleteMany({
+          to: { $in: [account.name] },
+        });
+        res.json(notif);
+      } else {
+        const update = await Notification.updateMany(
+          { to: { $in: [account.role] } },
+          {
+            $pull: { to: account.role },
+          }
+        );
+        res.json(update);
+      }
     }
   }
 );
