@@ -5,12 +5,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        // target: "https://traineetasker.up.railway.app",
-        target: "http://localhost:5000",
+        target: "https://traineetasker.up.railway.app",
+        // target: "http://localhost:5000",
       },
       "/socket.io": {
-        target: "ws://localhost:5000",
-        // target: "wss://traineetasker.up.railway.app",
+        // target: "ws://localhost:5000",
+        target: "wss://traineetasker.up.railway.app",
       },
     },
   },
