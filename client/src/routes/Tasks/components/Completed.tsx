@@ -27,11 +27,11 @@ const Completed = ({ toggle, setViewId }: Props) => {
     toggle();
     setViewId(task._id!);
     dispatch(reset());
-    const notif = notifications?.find(
+    const notif = notifications?.some(
       (notif) => notif.task === taskOnNotif || notif.task === task.taskname
     );
     if (notif) {
-      readAllNotification(task.taskname!);
+      readAllNotification({ task: task.taskname! });
     }
   };
 

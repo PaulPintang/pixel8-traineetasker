@@ -46,8 +46,14 @@ const Header = () => {
   const { data: notifications } = useGetNotificationQuery();
   const { data: tasks } = useGetAllTasksQuery();
 
-  const onnotif = tasks?.filter((task) => task.status === "forqa");
-  const mynotif = notifications?.filter((notif) => notif.to === user?.name);
+  // const onnotif = tasks?.filter((task) => task.status === "forqa");
+  // const mynotif = notifications?.filter((notif) => notif.to === user?.name);
+
+  const mynotif = notifications?.filter((notif) =>
+    user?.role === "trainee"
+      ? notif.to.includes(user?.name!) && notif.course === user?.course
+      : notif.to.includes(user?.role!) && notif.course === user?.course
+  );
 
   const dispatch = useAppDispatch();
 
@@ -107,27 +113,15 @@ const Header = () => {
             <ActionIcon
               variant="transparent"
               radius="xl"
-              className={`${
-                mynotif?.length !== 0 || onnotif?.length !== 0
-                  ? "animate-searching"
-                  : ""
-              }`}
+              className={`${mynotif?.length !== 0 ? "animate-searching" : ""}`}
             >
               <Indicator
                 inline
-                label={
-                  user?.role === "trainee" ? mynotif?.length : onnotif?.length
-                }
+                label={mynotif?.length}
                 color="red"
                 size={16}
                 offset={2}
-                disabled={
-                  user?.role === "trainee" && mynotif?.length === 0
-                    ? true
-                    : user?.role !== "trainee" && onnotif?.length === 0
-                    ? true
-                    : false
-                }
+                disabled={mynotif?.length === 0 ? true : false}
               >
                 <IconBell size={20} className="text-gray-500 " />
               </Indicator>

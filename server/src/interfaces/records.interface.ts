@@ -32,7 +32,7 @@ export interface Notification {
   _id?: string;
   task: string;
   type: "comment" | "task";
-  to: string;
+  to: string[];
   from: {
     name: string;
     picture: string;

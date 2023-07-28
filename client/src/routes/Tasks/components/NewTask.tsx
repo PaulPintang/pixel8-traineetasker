@@ -34,7 +34,7 @@ const NewTask = ({ toggle, setViewId }: Props) => {
       (notif) => notif.task === taskOnNotif || notif.task === task.taskname
     );
     if (notif) {
-      readAllNotification(task.taskname!);
+      readAllNotification({ task: task.taskname! });
     }
   };
 

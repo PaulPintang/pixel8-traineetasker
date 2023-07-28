@@ -95,15 +95,18 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
     ToastNotify("Task deleted successfully", "success");
   };
 
+  const mynotif = notifications?.filter((notif) =>
+    notif.to.includes(user?.role!)
+  );
+
   const onViewTask = (task: ITask) => {
     view();
     setViewId(task._id!);
     dispatch(reset());
-    const notif = notifications?.find(
-      (notif) => notif.task === task.taskname && notif.course === user.course
-    );
+    const notif = mynotif?.some((notif) => notif.task === task.taskname);
+
     if (notif) {
-      readAllNotification(task.taskname!);
+      readAllNotification({ task: task.taskname! });
     }
   };
 
@@ -125,8 +128,8 @@ const TaskTable = ({ trainee, view, setViewId }: Props) => {
       };
       const { totalSpentString } = calculateSpentTime(time);
 
-      const newcomment = notifications?.filter(
-        (notif) => notif.task === task?.taskname
+      const newcomment = mynotif?.filter(
+        (notif) => notif.task === task.taskname && notif.type === "comment"
       );
 
       return (

@@ -28,14 +28,15 @@ const AssignMemberModal = ({ task, assign, toggle }: ModalProps) => {
     const notification: Notification = {
       task: task?.taskname!,
       type: "task",
-      to: name,
+      to: [name],
       from: {
         name: user?.name!,
         picture: user?.picture!,
       },
       content: `${user?.name} assigned new task for you`,
+      course: user?.course,
     };
-    await pushNotification({ notification, rooms: [user?.course, "trainee"] });
+    await pushNotification({ notification, rooms: [user?.course] });
     ToastNotify(`Task successfully assigned`, "success");
     toggle();
   };

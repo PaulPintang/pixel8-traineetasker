@@ -9,7 +9,7 @@ const notificationSchema = new Schema<Notification>({
     type: String,
   },
   to: {
-    type: String,
+    type: [String],
   },
   from: {
     name: String,

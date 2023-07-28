@@ -82,6 +82,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
   };
 
   const { totalSpentString } = calculateSpentTime(time);
+  const recipients = ["QA Personnel", "Task manager", "supervisor", "admin"];
 
   // ? TRAINEE
   const handleTaskStatus = async () => {
@@ -98,6 +99,20 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     await taskStatus({ task: data, rooms: [user?.course] });
     toggleView();
     ToastNotify(`Task status changed to ${status}`, "success");
+    if (status === "forqa") {
+      const notification: Notification = {
+        task: task?.taskname!,
+        type: "task",
+        to: recipients,
+        from: {
+          name: user?.name!,
+          picture: user?.picture!,
+        },
+        content: `${user?.name} marks this task as ${status}`,
+        course: user?.course,
+      };
+      await pushNotification({ notification, rooms: [user?.course] });
+    }
   };
 
   const handleCheckTask = async (status: "completed" | "failed") => {
@@ -108,12 +123,13 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     const notification: Notification = {
       task: task?.taskname!,
       type: "task",
-      to: task?.assign!,
+      to: [task?.assign!],
       from: {
         name: user?.name!,
         picture: user?.picture!,
       },
       content: `${user?.name} marks your task as ${status}`,
+      course: user?.course,
     };
     await pushNotification({ notification, rooms: [user?.course] });
   };
@@ -129,7 +145,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
     const notification: Notification = {
       task: task?.taskname!,
       type: "comment",
-      to: user?.role === "trainee" ? "" : task?.assign!,
+      to: user?.role === "trainee" ? recipients : [task?.assign!],
       from: {
         name: user?.name!,
         picture: user?.picture!,
@@ -139,6 +155,7 @@ const ViewTaskModal = ({ view, viewId, toggleView }: ModalProps) => {
           ? `${user?.name} comment on your task`
           : `${user?.name} comment on this task`,
       comment: msg.current?.value!,
+      course: user?.course,
     };
     await pushNotification({ notification, rooms: [user?.course] });
     msg.current!.value = "";

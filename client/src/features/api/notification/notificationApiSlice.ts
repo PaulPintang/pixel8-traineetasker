@@ -13,9 +13,9 @@ export const accountApiSlice = apiSlice.injectEndpoints({
       ) {
         try {
           await cacheDataLoaded;
-          socket.on("newTaskNotification", (task) => {
+          socket.on("newTaskNotification", (notification) => {
             updateCachedData((draft) => {
-              draft.push(task);
+              draft.push(notification);
             });
           });
         } catch {}
@@ -50,11 +50,11 @@ export const accountApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Notification"],
     }),
 
-    readAllNotification: builder.mutation<Notification, string | void>({
-      query: (taskname) => ({
+    readAllNotification: builder.mutation<Notification, { task: string }>({
+      query: (toread) => ({
         url: "/notif/readall",
         method: "PUT",
-        body: taskname,
+        body: toread,
       }),
       invalidatesTags: ["Notification"],
     }),
