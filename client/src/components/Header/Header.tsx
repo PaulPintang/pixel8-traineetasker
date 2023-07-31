@@ -108,31 +108,33 @@ const Header = () => {
           </Badge>
         )}
 
-        <Menu position="bottom-end" withArrow shadow="md" closeOnItemClick>
-          <Menu.Target>
-            <ActionIcon
-              variant="transparent"
-              radius="xl"
-              className={`${mynotif?.length !== 0 ? "animate-searching" : ""}`}
-            >
-              <Indicator
-                inline
-                label={mynotif?.length}
-                color="red"
-                size={16}
-                offset={2}
-                disabled={mynotif?.length === 0 ? true : false}
+        {user && (
+          <Menu position="bottom-end" withArrow shadow="md" closeOnItemClick>
+            <Menu.Target>
+              <ActionIcon
+                variant="transparent"
+                radius="xl"
+                className={`${
+                  mynotif?.length !== 0 ? "animate-searching" : ""
+                }`}
               >
-                <IconBell size={20} className="text-gray-500 " />
-              </Indicator>
-            </ActionIcon>
-          </Menu.Target>
-          <Menu.Dropdown p={15}>
-            {/* <Menu.Item className="p-0 hover:bg-white"> */}
-            <Notifications />
-            {/* </Menu.Item> */}
-          </Menu.Dropdown>
-        </Menu>
+                <Indicator
+                  inline
+                  label={mynotif?.length}
+                  color="red"
+                  size={16}
+                  offset={2}
+                  disabled={mynotif?.length === 0 ? true : false}
+                >
+                  <IconBell size={20} className="text-gray-500 " />
+                </Indicator>
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown p={15}>
+              <Notifications />
+            </Menu.Dropdown>
+          </Menu>
+        )}
 
         {user && user?.role !== "trainee" && pathname !== "/" && (
           <>
